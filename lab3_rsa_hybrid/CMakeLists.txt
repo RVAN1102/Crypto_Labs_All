@@ -23,16 +23,41 @@ if(WIN32 AND CRYPTOPP_ROOT AND NOT CRYPTOPP_LIBRARY)
 endif()
 
 if(NOT CRYPTOPP_INCLUDE_DIR)
-    find_path(CRYPTOPP_INCLUDE_DIR
-        NAMES cryptlib.h cryptopp/cryptlib.h
-        PATH_SUFFIXES cryptopp crypto++
+    find_path(CRYPTOPP_INCLUDE_DIR_DETECTED
+        NAMES cryptlib.h
+        HINTS
+            "${CRYPTOPP_ROOT}"
+            /usr
+            /usr/local
+        PATH_SUFFIXES
+            include/cryptopp
+            include/crypto++
+            cryptopp
+            crypto++
     )
+
+    if(CRYPTOPP_INCLUDE_DIR_DETECTED)
+        set(CRYPTOPP_INCLUDE_DIR "${CRYPTOPP_INCLUDE_DIR_DETECTED}" CACHE PATH "Crypto++ include directory" FORCE)
+    endif()
 endif()
 
 if(NOT CRYPTOPP_LIBRARY)
-    find_library(CRYPTOPP_LIBRARY
+    find_library(CRYPTOPP_LIBRARY_DETECTED
         NAMES cryptopp crypto++ libcryptopp
+        HINTS
+            "${CRYPTOPP_ROOT}"
+            /usr
+            /usr/local
+        PATH_SUFFIXES
+            lib
+            lib64
+            lib/x86_64-linux-gnu
+            lib/aarch64-linux-gnu
     )
+
+    if(CRYPTOPP_LIBRARY_DETECTED)
+        set(CRYPTOPP_LIBRARY "${CRYPTOPP_LIBRARY_DETECTED}" CACHE FILEPATH "Crypto++ library file" FORCE)
+    endif()
 endif()
 
 if(NOT CRYPTOPP_INCLUDE_DIR)

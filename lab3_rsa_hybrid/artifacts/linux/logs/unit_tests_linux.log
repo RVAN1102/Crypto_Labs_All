@@ -1,0 +1,39 @@
+Running main() from ./googletest/src/gtest_main.cc
+[==========] Running 12 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 6 tests from RsaOaepUnitTest
+[ RUN      ] RsaOaepUnitTest.RequiredPlaintextLimitsAreCorrect
+[       OK ] RsaOaepUnitTest.RequiredPlaintextLimitsAreCorrect (0 ms)
+[ RUN      ] RsaOaepUnitTest.RoundTripWithLabelWorks
+[       OK ] RsaOaepUnitTest.RoundTripWithLabelWorks (351 ms)
+[ RUN      ] RsaOaepUnitTest.WrongLabelIsRejected
+[       OK ] RsaOaepUnitTest.WrongLabelIsRejected (233 ms)
+[ RUN      ] RsaOaepUnitTest.DirectPlaintextLimitIsEnforced
+[       OK ] RsaOaepUnitTest.DirectPlaintextLimitIsEnforced (563 ms)
+[ RUN      ] RsaOaepUnitTest.Rsa4096BoundaryLimitWorks
+[       OK ] RsaOaepUnitTest.Rsa4096BoundaryLimitWorks (262 ms)
+[ RUN      ] RsaOaepUnitTest.PemKeyFilesRoundTripWorks
+[       OK ] RsaOaepUnitTest.PemKeyFilesRoundTripWorks (481 ms)
+[----------] 6 tests from RsaOaepUnitTest (1892 ms total)
+
+[----------] 1 test from AesGcmUnitTest
+[ RUN      ] AesGcmUnitTest.TamperedTagIsRejected
+[       OK ] AesGcmUnitTest.TamperedTagIsRejected (0 ms)
+[----------] 1 test from AesGcmUnitTest (0 ms total)
+
+[----------] 5 tests from HybridEnvelopeUnitTest
+[ RUN      ] HybridEnvelopeUnitTest.HybridRoundTripWorks
+[       OK ] HybridEnvelopeUnitTest.HybridRoundTripWorks (394 ms)
+[ RUN      ] HybridEnvelopeUnitTest.TamperedCiphertextIsRejected
+[       OK ] HybridEnvelopeUnitTest.TamperedCiphertextIsRejected (255 ms)
+[ RUN      ] HybridEnvelopeUnitTest.TamperedEncryptedKeyIsRejected
+[       OK ] HybridEnvelopeUnitTest.TamperedEncryptedKeyIsRejected (431 ms)
+[ RUN      ] HybridEnvelopeUnitTest.TamperedLabelIndicatorIsRejected
+[       OK ] HybridEnvelopeUnitTest.TamperedLabelIndicatorIsRejected (258 ms)
+[ RUN      ] HybridEnvelopeUnitTest.UnsupportedVersionIsRejected
+[       OK ] HybridEnvelopeUnitTest.UnsupportedVersionIsRejected (0 ms)
+[----------] 5 tests from HybridEnvelopeUnitTest (1340 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 3 test suites ran. (3232 ms total)
+[  PASSED  ] 12 tests.

@@ -1,0 +1,32 @@
+rsatool - Lab 3 RSA-OAEP(SHA-256) and hybrid encryption tool
+
+Commands:
+  keygen         --bits 3072|4096 --private private.der --public public.der [--meta key_metadata.json]
+  keygen         --bits 3072|4096 --priv private.pem --pub public.pem [--meta key_metadata.json]
+  encrypt        --pub public.der|public.pem --in file.bin --out out.bin [--envelope env.json] [--label-text TEXT]
+  decrypt        --priv private.der|private.pem --in file.bin --out out.bin [--envelope env.json] [--label-text TEXT]
+  oaep-encrypt   --pub public.der|public.pem --in msg.bin --out msg.rsa [--label-text TEXT]
+  oaep-decrypt   --priv private.der|private.pem --in msg.rsa --out msg.bin [--label-text TEXT]
+  seal           --pub public.der|public.pem --in plain.bin --out cipher.bin [--envelope env.json] [--label-text TEXT]
+  open           --priv private.der|private.pem --in cipher.bin --envelope env.json --out plain.bin [--label-text TEXT]
+  hybrid-encrypt Alias for seal
+  hybrid-decrypt Alias for open
+  kat            --kat vectors/rsa_hybrid_kat.json
+  bench          --out raw.csv --summary summary.csv [--runs N] [--ops N]
+
+Options:
+  --private FILE, --priv FILE      RSA private key in DER or PEM format
+  --public FILE, --pub FILE        RSA public key in DER or PEM format
+  --meta FILE                      Optional keygen metadata JSON
+  --in FILE, --text TEXT           Binary file input or UTF-8 text input
+  --out FILE                       Binary output path
+  --envelope FILE                  Hybrid envelope JSON path
+  --label-text TEXT                Optional OAEP label text
+  --label FILE                     Optional OAEP label file
+  --label-hex HEX                  Optional OAEP label bytes in hex
+  --sizes LIST                     Hybrid benchmark sizes, e.g. 1k,16k,1m
+  --rsa-sizes LIST                 RSA-OAEP benchmark message sizes, e.g. 32,190,318
+  --rsa-bits LIST                  RSA sizes to benchmark, default 3072,4096
+
+Direct RSA-OAEP uses SHA-256 and is limited to 318 bytes for RSA-3072 and 446 bytes for RSA-4096.
+encrypt/decrypt auto-select direct RSA for small inputs and hybrid mode for large inputs.

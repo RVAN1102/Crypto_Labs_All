@@ -1,0 +1,38 @@
+[PASS] keygen RSA-3072
+[PASS] keygen wrong RSA-3072
+[PASS] keygen RSA-3072 PEM aliases with metadata
+[PASS] keygen RSA-2048 rejected
+[PASS] key metadata records MGF1-SHA256
+[PASS] OAEP encrypt baseline
+[PASS] OAEP decrypt baseline
+[PASS] OAEP plaintext recovered
+[PASS] OAEP wrong label rejected
+[PASS] OAEP wrong private key rejected
+[PASS] OAEP PEM encrypt baseline
+[PASS] OAEP PEM decrypt baseline
+[PASS] OAEP PEM plaintext recovered
+[PASS] corrupted PEM public key rejected
+[PASS] OAEP oversized plaintext rejected
+[PASS] hybrid encrypt baseline
+[PASS] hybrid decrypt baseline
+[PASS] hybrid plaintext recovered
+[PASS] hybrid PEM encrypt baseline
+[PASS] hybrid PEM decrypt baseline
+[PASS] hybrid PEM plaintext recovered
+[PASS] hybrid wrong label rejected
+[PASS] hybrid wrong private key rejected
+[PASS] hybrid tampered ciphertext rejected
+[PASS] hybrid unsupported version rejected
+[PASS] hybrid algorithm mismatch rejected
+[PASS] hybrid label indicator mismatch rejected
+[PASS] auto encrypt small uses OAEP
+[PASS] auto small output is direct RSA ciphertext
+[PASS] auto decrypt small OAEP
+[PASS] auto small plaintext recovered
+[PASS] auto decrypt wrong label rejected
+[PASS] auto encrypt large switches to hybrid
+[PASS] auto large envelope sidecar created
+[PASS] auto decrypt large discovers envelope
+[PASS] auto large plaintext recovered
+[PASS] auto decrypt malformed envelope rejected
+Negative test summary: pass=37 fail=0

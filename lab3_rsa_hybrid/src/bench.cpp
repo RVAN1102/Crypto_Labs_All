@@ -136,6 +136,18 @@ static int parse_int_option(const std::map<std::string, std::string>& opts, cons
     }
 }
 
+static std::string default_platform_label() {
+#if defined(_WIN32)
+    return "windows-mingw64";
+#elif defined(__linux__)
+    return "linux";
+#elif defined(__APPLE__)
+    return "macos";
+#else
+    return "unknown";
+#endif
+}
+
 static Bytes synthetic_data(std::size_t n) {
     Bytes out(n);
     XorShift32 rng(0xC0FFEEu);
@@ -293,7 +305,7 @@ static void run_case(
 void command_bench(const std::map<std::string, std::string>& opts) {
     const std::string out_path = require_option(opts, "out");
     const std::string summary_path = get_option_or(opts, "summary", out_path + ".summary.csv");
-    const std::string platform = get_option_or(opts, "platform", "windows-mingw64");
+    const std::string platform = get_option_or(opts, "platform", default_platform_label());
     const int runs = parse_int_option(opts, "runs", 10);
     const int ops = parse_int_option(opts, "ops", 10);
     const std::vector<int> bits_list = parse_bits_list(get_option_or(opts, "rsa-bits", "3072,4096"));

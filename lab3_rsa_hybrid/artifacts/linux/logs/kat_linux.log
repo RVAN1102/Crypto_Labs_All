@@ -1,0 +1,10 @@
+Running RSA/hybrid correctness KAT file: vectors/rsa_hybrid_kat.json
+Total cases: 5
+
+[PASS] RSA-3072 OAEP-SHA256 empty label roundtrip
+[PASS] RSA-3072 OAEP-SHA256 labeled roundtrip
+[PASS] RSA-4096 OAEP-SHA256 comparison roundtrip
+[PASS] RSA-3072 hybrid AES-256-GCM roundtrip
+[PASS] RSA-4096 hybrid AES-256-GCM comparison roundtrip
+
+KAT summary: pass=5, fail=0, total=5
