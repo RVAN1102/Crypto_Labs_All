@@ -1,0 +1,51 @@
+[FAIL] Generate AES-256 key
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] Generate wrong AES-256 key
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] GCM encrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] GCM decrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[PASS] GCM wrong key rejected
+[PASS] GCM wrong AAD rejected
+cp: cannot stat 'gcm.bin': No such file or directory
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'gcm_tampered.bin'
+[PASS] GCM tampered ciphertext rejected
+[FAIL] CCM encrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] CCM decrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+cp: cannot stat 'ccm.bin': No such file or directory
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/usr/lib/python3.12/pathlib.py", line 1021, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'ccm_tampered.bin'
+[PASS] CCM tampered ciphertext rejected
+[FAIL] CTR encrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] CTR decrypt
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[PASS] ECB large file blocked by default
+[FAIL] ECB large file allowed with allow flag
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] Generate XTS key material
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[PASS] XTS short input rejected
+[FAIL] XTS encrypt valid data unit
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+[FAIL] XTS decrypt valid data unit
+scripts/negative_tests_linux.sh: line 27: ./build-linux/aestool: No such file or directory
+Linux negative test summary: pass=6 fail=12

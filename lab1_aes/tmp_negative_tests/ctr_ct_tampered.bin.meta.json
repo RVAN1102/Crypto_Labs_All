@@ -1,7 +1,0 @@
-{
-  "alg": "AES-256-ctr",
-  "mode": "ctr",
-  "key_bits": 256,
-  "iv_hex": "00112233445566778899aabbccddeeff",
-  "ciphertext_file": "D:\\Newfolder\\Lab1_AES_CryptoPP\\tmp_negative_tests\\ctr_ct.bin"
-}

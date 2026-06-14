@@ -1,1 +1,0 @@
-GCM negative testing message

@@ -6,6 +6,10 @@ set(CRYPTOPP_ROOT "" CACHE PATH "Crypto++ root directory")
 set(CRYPTOPP_INCLUDE_DIR "" CACHE PATH "Crypto++ include directory")
 set(CRYPTOPP_LIBRARY "" CACHE FILEPATH "Crypto++ library file")
 
+if(WIN32 AND NOT CRYPTOPP_ROOT)
+    set(CRYPTOPP_ROOT "D:/Newfolder/Crypto++" CACHE PATH "Crypto++ root directory" FORCE)
+endif()
+
 if(CRYPTOPP_ROOT AND NOT CRYPTOPP_INCLUDE_DIR)
     set(CRYPTOPP_INCLUDE_DIR "${CRYPTOPP_ROOT}")
 endif()
@@ -15,16 +19,42 @@ if(WIN32 AND CRYPTOPP_ROOT AND NOT CRYPTOPP_LIBRARY)
 endif()
 
 if(NOT CRYPTOPP_INCLUDE_DIR)
-    find_path(CRYPTOPP_INCLUDE_DIR
+    find_path(CRYPTOPP_INCLUDE_DIR_DETECTED
         NAMES cryptlib.h
-        PATH_SUFFIXES cryptopp crypto++
+        HINTS
+            "${CRYPTOPP_ROOT}"
+            /usr
+            /usr/local
+        PATH_SUFFIXES
+            include/cryptopp
+            include/crypto++
+            include
+            cryptopp
+            crypto++
     )
+
+    if(CRYPTOPP_INCLUDE_DIR_DETECTED)
+        set(CRYPTOPP_INCLUDE_DIR "${CRYPTOPP_INCLUDE_DIR_DETECTED}" CACHE PATH "Crypto++ include directory" FORCE)
+    endif()
 endif()
 
 if(NOT CRYPTOPP_LIBRARY)
-    find_library(CRYPTOPP_LIBRARY
+    find_library(CRYPTOPP_LIBRARY_DETECTED
         NAMES cryptopp crypto++ libcryptopp
+        HINTS
+            "${CRYPTOPP_ROOT}"
+            /usr
+            /usr/local
+        PATH_SUFFIXES
+            lib
+            lib64
+            lib/x86_64-linux-gnu
+            lib/aarch64-linux-gnu
     )
+
+    if(CRYPTOPP_LIBRARY_DETECTED)
+        set(CRYPTOPP_LIBRARY "${CRYPTOPP_LIBRARY_DETECTED}" CACHE FILEPATH "Crypto++ library file" FORCE)
+    endif()
 endif()
 
 if(NOT CRYPTOPP_INCLUDE_DIR)
@@ -33,6 +63,14 @@ endif()
 
 if(NOT CRYPTOPP_LIBRARY)
     message(FATAL_ERROR "Crypto++ library not found.")
+endif()
+
+if(NOT EXISTS "${CRYPTOPP_INCLUDE_DIR}/cryptlib.h")
+    message(FATAL_ERROR "Crypto++ header not found at ${CRYPTOPP_INCLUDE_DIR}/cryptlib.h")
+endif()
+
+if(NOT EXISTS "${CRYPTOPP_LIBRARY}")
+    message(FATAL_ERROR "Crypto++ library not found at ${CRYPTOPP_LIBRARY}")
 endif()
 
 message(STATUS "Crypto++ include dir: ${CRYPTOPP_INCLUDE_DIR}")
@@ -60,17 +98,6 @@ gtest_discover_tests(aestool_unit_tests)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CRYPTOPP_ROOT "D:/Newfolder/Crypto++" CACHE PATH "Crypto++ root directory")
-set(CRYPTOPP_LIB "${CRYPTOPP_ROOT}/libcryptopp.a")
-
-if(NOT EXISTS "${CRYPTOPP_ROOT}/cryptlib.h")
-    message(FATAL_ERROR "Crypto++ header not found at ${CRYPTOPP_ROOT}/cryptlib.h")
-endif()
-
-if(NOT EXISTS "${CRYPTOPP_LIB}")
-    message(FATAL_ERROR "Crypto++ static library not found at ${CRYPTOPP_LIB}")
-endif()
 
 set(AESTOOL_CORE_SOURCES
     src/cli.cpp
@@ -128,11 +155,11 @@ target_link_libraries(aestool PRIVATE
 
 target_include_directories(aestool PRIVATE
     "${PROJECT_SOURCE_DIR}/include"
-    "${CRYPTOPP_ROOT}"
+    "${CRYPTOPP_INCLUDE_DIR}"
 )
 
 target_link_libraries(aestool PRIVATE
-    "${CRYPTOPP_LIB}"
+    "${CRYPTOPP_LIBRARY}"
 )
 
 if(WIN32)

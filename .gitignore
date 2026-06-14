@@ -33,6 +33,12 @@ Testing/
 *.dec
 *.rsa
 
+# Lab 1 root-level generated outputs
+/lab1_aes/bench*.csv
+/lab1_aes/pt*.txt
+/lab1_aes/*.bin.meta.json
+/lab1_aes/*.meta.json
+
 # Local nonce/registry/temp
 *.jsonl
 .aestool_nonce_registry.jsonl

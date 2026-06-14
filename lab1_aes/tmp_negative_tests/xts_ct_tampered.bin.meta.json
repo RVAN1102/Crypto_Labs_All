@@ -1,7 +1,0 @@
-{
-  "alg": "AES-XTS",
-  "mode": "xts",
-  "key_material_bits": 512,
-  "tweak_hex": "f3d2ca7930807f49a34c1bb34a92c3be",
-  "ciphertext_file": "D:\\Newfolder\\Lab1_AES_CryptoPP\\tmp_negative_tests\\xts_ct.bin"
-}

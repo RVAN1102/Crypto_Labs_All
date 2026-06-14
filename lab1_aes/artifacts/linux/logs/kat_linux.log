@@ -1,0 +1,19 @@
+Running AES KAT file: vectors/aes_kat_extended.json
+Total cases: 14
+
+[PASS] FIPS-197 AES-128 ECB single block
+[PASS] NIST SP800-38A AES-128 CBC block 1
+[PASS] NIST SP800-38A AES-128 CFB128 block 1
+[PASS] NIST SP800-38A AES-128 OFB block 1
+[PASS] NIST SP800-38A AES-128 CTR block 1
+[PASS] NIST GCM AES-128 empty plaintext
+[PASS] NIST GCM AES-128 one block plaintext
+[PASS] RFC3610 AES-CCM packet vector 1
+[PASS] FIPS-197 AES-192 ECB single block
+[PASS] FIPS-197 AES-256 ECB single block
+[PASS] NIST SP800-38A AES-128 CBC 4 blocks
+[PASS] NIST SP800-38A AES-128 CFB128 4 blocks
+[PASS] NIST SP800-38A AES-128 OFB 4 blocks
+[PASS] NIST SP800-38A AES-128 CTR 4 blocks
+
+KAT summary: pass=14, fail=0, total=14
