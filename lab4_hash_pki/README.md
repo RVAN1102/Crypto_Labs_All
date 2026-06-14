@@ -10,11 +10,11 @@ Implemented milestones:
 - KAT runner for hash and SHAKE vectors.
 - HMAC and intentionally vulnerable naive MAC demonstration.
 - X.509 certificate parsing, signature verification, and policy checks.
+- TLS deployment evidence scaffold with local self-signed practice scripts.
 - Windows negative tests registered with CTest.
 
 Later milestone placeholders only:
 
-- TLS
 - MD5 collision demonstration
 - Benchmarks
 - Length-extension forging
@@ -145,6 +145,29 @@ bash lab4_hash_pki/scripts/verify_md5_collision.sh
 ```powershell
 powershell -ExecutionPolicy Bypass -File lab4_hash_pki\scripts\verify_md5_collision_windows.ps1
 ```
+
+## TLS Deployment Evidence Scaffold
+
+`demos/tls/` contains the Lab 4 TLS evidence scaffold. It documents the target requirement of Apache or Nginx with TLS 1.2 or TLS 1.3 and a trusted-root certificate, preferably ECDSA, when an owned domain and CA-issued certificate are available.
+
+Current status: trusted-root deployment is pending. The repository does not claim public browser/OS trust because no owned-domain CA-issued certificate chain has been added. Local self-signed TLS is included only for parser and configuration practice.
+
+Example snippets:
+
+- `scripts/nginx_tls_example.conf`
+- `scripts/apache_tls_example.conf`
+
+Local self-signed practice scripts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File lab4_hash_pki\scripts\tls_local_self_signed_demo_windows.ps1
+```
+
+```bash
+bash lab4_hash_pki/scripts/tls_local_self_signed_demo_linux.sh
+```
+
+Do not use third-party targets. Use only a local server or an owned domain.
 
 Supported algorithms exactly:
 
