@@ -53,4 +53,11 @@ Thumbs.db
 **/tmp_acceptance/
 **/tmp_negative_tests/
 **/tmp*/
+
+# Lab 4 generated build/benchmark/demo outputs
+/lab4_hash_pki/build-linux/
+/lab4_hash_pki/tmp_benchmark/
+/lab4_hash_pki/tmp_negative_tests/
+/lab4_hash_pki/demos/length_extension/demo_key.bin
+/lab4_hash_pki/demos/length_extension/forged_message.bin
 RTK.md

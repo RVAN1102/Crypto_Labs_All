@@ -22,9 +22,27 @@ Later milestone placeholders only:
 ## Build on Windows
 
 ```powershell
-cmake -S lab4_hash_pki -B lab4_hash_pki/build
+cmake -S lab4_hash_pki -B lab4_hash_pki/build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 cmake --build lab4_hash_pki/build
 ctest --test-dir lab4_hash_pki/build --output-on-failure
+```
+
+If OpenSSL is not found automatically on Windows, pass standard CMake OpenSSL hints:
+
+```powershell
+cmake -S lab4_hash_pki -B lab4_hash_pki/build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR=C:/msys64/mingw64
+```
+
+## Build on Ubuntu
+
+Install the usual OpenSSL development package, then build out of source:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential cmake libssl-dev
+cmake -S lab4_hash_pki -B lab4_hash_pki/build-linux -DCMAKE_BUILD_TYPE=Release
+cmake --build lab4_hash_pki/build-linux -j$(nproc)
+ctest --test-dir lab4_hash_pki/build-linux --output-on-failure
 ```
 
 ## Examples

@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Optional hints for Windows/OpenSSL installs. Leave unset on Ubuntu so
+# FindOpenSSL uses normal libssl-dev discovery.
+set(OPENSSL_ROOT_DIR "" CACHE PATH "Optional OpenSSL root directory")
+set(OPENSSL_INCLUDE_DIR "" CACHE PATH "Optional OpenSSL include directory")
+set(OPENSSL_CRYPTO_LIBRARY "" CACHE FILEPATH "Optional OpenSSL crypto library")
 find_package(OpenSSL REQUIRED COMPONENTS Crypto)
 
 set(HASHTOOL_CORE_SOURCES
@@ -101,34 +106,6 @@ add_test(
 set_tests_properties(cert_verify_wrong_issuer_fails PROPERTIES WILL_FAIL TRUE)
 
 add_test(
-    NAME cert_policy_missing_san_flagged
-    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_no_san.pem" -Needle "CHECK tls_server_san FAIL"
-)
-
-add_test(
-    NAME cert_policy_weak_key_flagged
-    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_weak.pem" -Needle "CHECK public_key_strength WARN"
-)
-
-add_test(
-    NAME cert_policy_expired_flagged
-    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/expired_leaf.pem" -Needle "CHECK validity_not_after FAIL"
-)
-
-add_test(
-    NAME bench_smoke_windows
-    COMMAND hashtool bench
-        --out "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_raw.csv"
-        --summary "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_summary.csv"
-        --runs 2
-        --ops 2
-        --warmup-ms 10
-        --sizes 1m
-        --algos sha256,sha512,sha3-256,sha3-512
-        --platform windows11-mingw64
-)
-
-add_test(
     NAME length_extension_demo_smoke
     COMMAND hashtool length-extension-demo --out-dir "${PROJECT_SOURCE_DIR}/demos/length_extension"
 )
@@ -152,7 +129,70 @@ endif()
 
 if(WIN32)
     add_test(
+        NAME bench_smoke_windows
+        COMMAND hashtool bench
+            --out "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_raw.csv"
+            --summary "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_summary.csv"
+            --runs 2
+            --ops 2
+            --warmup-ms 10
+            --sizes 1m
+            --algos sha256,sha512,sha3-256,sha3-512
+            --platform windows11-mingw64
+    )
+
+    add_test(
+        NAME cert_policy_missing_san_flagged
+        COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_no_san.pem" -Needle "CHECK tls_server_san FAIL"
+    )
+
+    add_test(
+        NAME cert_policy_weak_key_flagged
+        COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_weak.pem" -Needle "CHECK public_key_strength WARN"
+    )
+
+    add_test(
+        NAME cert_policy_expired_flagged
+        COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/expired_leaf.pem" -Needle "CHECK validity_not_after FAIL"
+    )
+
+    add_test(
         NAME negative_tests_windows
         COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/negative_tests_windows.ps1" -Exe "$<TARGET_FILE:hashtool>"
+    )
+endif()
+
+if(UNIX AND NOT APPLE)
+    add_test(
+        NAME bench_smoke_linux
+        COMMAND hashtool bench
+            --out "${PROJECT_SOURCE_DIR}/artifacts/linux/bench/bench_linux_smoke_raw.csv"
+            --summary "${PROJECT_SOURCE_DIR}/artifacts/linux/bench/bench_linux_smoke_summary.csv"
+            --runs 2
+            --ops 2
+            --warmup-ms 10
+            --sizes 1m
+            --algos sha256,sha512,sha3-256,sha3-512
+            --platform ubuntu-linux
+    )
+
+    add_test(
+        NAME cert_policy_missing_san_flagged
+        COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_linux.sh" "$<TARGET_FILE:hashtool>" "CHECK tls_server_san FAIL" cert-policy --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_no_san.pem"
+    )
+
+    add_test(
+        NAME cert_policy_weak_key_flagged
+        COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_linux.sh" "$<TARGET_FILE:hashtool>" "CHECK public_key_strength WARN" cert-policy --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_weak.pem"
+    )
+
+    add_test(
+        NAME cert_policy_expired_flagged
+        COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_linux.sh" "$<TARGET_FILE:hashtool>" "CHECK validity_not_after FAIL" cert-policy --cert "${PROJECT_SOURCE_DIR}/tests/certs/expired_leaf.pem"
+    )
+
+    add_test(
+        NAME negative_tests_linux
+        COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/negative_tests_linux.sh" "$<TARGET_FILE:hashtool>"
     )
 endif()
