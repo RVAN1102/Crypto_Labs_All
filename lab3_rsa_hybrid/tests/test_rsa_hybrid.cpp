@@ -3,6 +3,7 @@
 #include "aes_gcm.hpp"
 #include "encoding.hpp"
 #include "envelope.hpp"
+#include "file_utils.hpp"
 #include "rsa_oaep.hpp"
 
 #include <string>
@@ -78,6 +79,26 @@ TEST(RsaOaepUnitTest, Rsa4096BoundaryLimitWorks) {
         },
         std::exception
     );
+}
+
+TEST(RsaOaepUnitTest, PemKeyFilesRoundTripWorks) {
+    const RsaKeyPairDer keys = generate_rsa_keypair_der(3072);
+    const std::string private_path = "gtest_rsa_private.pem";
+    const std::string public_path = "gtest_rsa_public.pem";
+    const Bytes label = bytes_from_text("pem-roundtrip");
+    const Bytes plaintext = bytes_from_text("PEM wrapped DER key material works");
+
+    write_rsa_private_key_file_auto(private_path, keys.private_key_der);
+    write_rsa_public_key_file_auto(public_path, keys.public_key_der);
+
+    const Bytes public_der = load_rsa_public_key_file_der(public_path);
+    const Bytes private_der = load_rsa_private_key_file_der(private_path);
+    const Bytes ciphertext = rsa_oaep_sha256_encrypt_der(public_der, plaintext, label);
+    const Bytes recovered = rsa_oaep_sha256_decrypt_der(private_der, ciphertext, label);
+
+    EXPECT_EQ(rsa_public_key_bits_der(public_der), 3072);
+    EXPECT_EQ(rsa_private_key_bits_der(private_der), 3072);
+    EXPECT_EQ(recovered, plaintext);
 }
 
 TEST(AesGcmUnitTest, TamperedTagIsRejected) {

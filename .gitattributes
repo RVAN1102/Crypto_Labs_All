@@ -1,0 +1,36 @@
+# Default text handling
+* text=auto
+
+# Source/config/docs should stay LF for cross-platform builds
+*.cpp text eol=lf
+*.hpp text eol=lf
+*.h text eol=lf
+*.c text eol=lf
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.log text eol=lf
+
+# Shell scripts must be LF on Ubuntu/Linux
+*.sh text eol=lf
+
+# Windows scripts
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.exe binary
+*.dll binary
+*.a binary
+*.lib binary
+*.so binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary
+*.der binary
+*.bin binary

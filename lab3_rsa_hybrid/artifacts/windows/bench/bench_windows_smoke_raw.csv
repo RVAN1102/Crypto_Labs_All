@@ -1,9 +1,9 @@
 platform,rsa_bits,family,operation,payload_bytes,run_index,ops,total_ms,ms_per_op,throughput_mib_s
-windows-mingw64,3072,rsa-oaep,encrypt,32,1,1,0.544500,0.544500,0.056047
-windows-mingw64,3072,rsa-oaep,decrypt,32,1,1,131.942600,131.942600,0.000231
-windows-mingw64,3072,hybrid,encrypt,1024,1,1,0.727700,0.727700,1.341985
-windows-mingw64,3072,hybrid,decrypt,1024,1,1,218.542000,218.542000,0.004469
-windows-mingw64,4096,rsa-oaep,encrypt,32,1,1,0.422800,0.422800,0.072180
-windows-mingw64,4096,rsa-oaep,decrypt,32,1,1,149.039000,149.039000,0.000205
-windows-mingw64,4096,hybrid,encrypt,1024,1,1,0.678400,0.678400,1.439508
-windows-mingw64,4096,hybrid,decrypt,1024,1,1,288.939300,288.939300,0.003380
+windows-mingw64,3072,rsa-oaep,encrypt,32,1,1,0.550700,0.550700,0.055416
+windows-mingw64,3072,rsa-oaep,decrypt,32,1,1,123.633300,123.633300,0.000247
+windows-mingw64,3072,hybrid,encrypt,1024,1,1,0.883600,0.883600,1.105209
+windows-mingw64,3072,hybrid,decrypt,1024,1,1,236.841500,236.841500,0.004123
+windows-mingw64,4096,rsa-oaep,encrypt,32,1,1,0.386400,0.386400,0.078979
+windows-mingw64,4096,rsa-oaep,decrypt,32,1,1,147.024400,147.024400,0.000208
+windows-mingw64,4096,hybrid,encrypt,1024,1,1,0.699900,0.699900,1.395289
+windows-mingw64,4096,hybrid,decrypt,1024,1,1,337.221000,337.221000,0.002896

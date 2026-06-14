@@ -28,6 +28,40 @@ static void validate_minimum_rsa_bits(int bits) {
     }
 }
 
+static std::string lower_copy(std::string s) {
+    for (char& c : s) {
+        if (c >= 'A' && c <= 'Z') {
+            c = static_cast<char>(c - 'A' + 'a');
+        }
+    }
+    return s;
+}
+
+static bool ends_with_ci(const std::string& s, const std::string& suffix) {
+    const std::string a = lower_copy(s);
+    const std::string b = lower_copy(suffix);
+    return a.size() >= b.size() && a.compare(a.size() - b.size(), b.size(), b) == 0;
+}
+
+static bool looks_like_pem(const Bytes& data) {
+    const std::string text(data.begin(), data.end());
+    return text.find("-----BEGIN ") != std::string::npos;
+}
+
+static std::string wrap_pem(const std::string& label, const Bytes& der) {
+    const std::string b64 = base64_encode(der);
+    std::string out;
+    out += "-----BEGIN " + label + "-----\n";
+
+    for (std::size_t i = 0; i < b64.size(); i += 64) {
+        out += b64.substr(i, 64);
+        out += "\n";
+    }
+
+    out += "-----END " + label + "-----\n";
+    return out;
+}
+
 static Bytes der_encode_private(const CryptoPP::RSA::PrivateKey& key) {
     std::string out;
     CryptoPP::StringSink sink(out);
@@ -108,8 +142,85 @@ void generate_rsa_keypair_der_files(
     const std::string& public_path
 ) {
     const RsaKeyPairDer pair = generate_rsa_keypair_der(bits);
-    write_file_binary(private_path, pair.private_key_der);
-    write_file_binary(public_path, pair.public_key_der);
+    write_rsa_private_key_file_auto(private_path, pair.private_key_der);
+    write_rsa_public_key_file_auto(public_path, pair.public_key_der);
+}
+
+std::string rsa_private_key_pem_from_der(const Bytes& private_key_der) {
+    return wrap_pem("RSA PRIVATE KEY", private_key_der);
+}
+
+std::string rsa_public_key_pem_from_der(const Bytes& public_key_der) {
+    return wrap_pem("RSA PUBLIC KEY", public_key_der);
+}
+
+Bytes rsa_key_der_from_pem_text(const std::string& pem_text) {
+    const std::size_t begin_pos = pem_text.find("-----BEGIN ");
+    if (begin_pos == std::string::npos) {
+        throw std::runtime_error("PEM key is missing BEGIN marker.");
+    }
+
+    const std::size_t begin_line_end = pem_text.find('\n', begin_pos);
+    if (begin_line_end == std::string::npos) {
+        throw std::runtime_error("PEM key has malformed BEGIN line.");
+    }
+
+    const std::size_t end_pos = pem_text.find("-----END ", begin_line_end);
+    if (end_pos == std::string::npos) {
+        throw std::runtime_error("PEM key is missing END marker.");
+    }
+
+    std::string b64;
+    for (std::size_t i = begin_line_end + 1; i < end_pos; ++i) {
+        const char c = pem_text[i];
+        if (c != '\r' && c != '\n' && c != ' ' && c != '\t') {
+            b64 += c;
+        }
+    }
+
+    if (b64.empty()) {
+        throw std::runtime_error("PEM key contains no base64 DER payload.");
+    }
+
+    return base64_decode(b64);
+}
+
+Bytes load_rsa_private_key_file_der(const std::string& path) {
+    const Bytes data = read_file_binary(path);
+    Bytes der = (looks_like_pem(data) || ends_with_ci(path, ".pem"))
+        ? rsa_key_der_from_pem_text(std::string(data.begin(), data.end()))
+        : data;
+
+    (void)load_private_der(der);
+    return der;
+}
+
+Bytes load_rsa_public_key_file_der(const std::string& path) {
+    const Bytes data = read_file_binary(path);
+    Bytes der = (looks_like_pem(data) || ends_with_ci(path, ".pem"))
+        ? rsa_key_der_from_pem_text(std::string(data.begin(), data.end()))
+        : data;
+
+    (void)load_public_der(der);
+    return der;
+}
+
+void write_rsa_private_key_file_auto(const std::string& path, const Bytes& private_key_der) {
+    (void)load_private_der(private_key_der);
+    if (ends_with_ci(path, ".pem")) {
+        write_text_file(path, rsa_private_key_pem_from_der(private_key_der));
+    } else {
+        write_file_binary(path, private_key_der);
+    }
+}
+
+void write_rsa_public_key_file_auto(const std::string& path, const Bytes& public_key_der) {
+    (void)load_public_der(public_key_der);
+    if (ends_with_ci(path, ".pem")) {
+        write_text_file(path, rsa_public_key_pem_from_der(public_key_der));
+    } else {
+        write_file_binary(path, public_key_der);
+    }
 }
 
 int rsa_public_key_bits_der(const Bytes& public_key_der) {

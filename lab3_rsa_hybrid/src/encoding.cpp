@@ -1,5 +1,6 @@
 #include "encoding.hpp"
 
+#include <base64.h>
 #include <filters.h>
 #include <hex.h>
 #include <sha.h>
@@ -36,6 +37,27 @@ Bytes hex_decode(const std::string& hex) {
         new CryptoPP::HexDecoder(new CryptoPP::StringSink(decoded))
     );
 
+    return Bytes(decoded.begin(), decoded.end());
+}
+
+std::string base64_encode(const Bytes& data) {
+    std::string out;
+    CryptoPP::StringSource ss(
+        data.data(),
+        data.size(),
+        true,
+        new CryptoPP::Base64Encoder(new CryptoPP::StringSink(out), false)
+    );
+    return out;
+}
+
+Bytes base64_decode(const std::string& base64) {
+    std::string decoded;
+    CryptoPP::StringSource ss(
+        base64,
+        true,
+        new CryptoPP::Base64Decoder(new CryptoPP::StringSink(decoded))
+    );
     return Bytes(decoded.begin(), decoded.end());
 }
 

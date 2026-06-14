@@ -6,7 +6,12 @@
 #include "kat.hpp"
 #include "rsa_oaep.hpp"
 
+#include <chrono>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 
 static bool starts_with_dash(const std::string& s) {
@@ -31,6 +36,45 @@ static int parse_int(const std::string& value, const std::string& name) {
     } catch (...) {
         throw std::runtime_error("Invalid integer for --" + name + ".");
     }
+}
+
+static bool file_exists(const std::string& path) {
+    std::ifstream in(path, std::ios::binary);
+    return static_cast<bool>(in);
+}
+
+static std::string utc_creation_time() {
+    const auto now = std::chrono::system_clock::now();
+    const std::time_t t = std::chrono::system_clock::to_time_t(now);
+    std::tm tm_utc{};
+
+#if defined(_WIN32)
+    gmtime_s(&tm_utc, &t);
+#else
+    gmtime_r(&t, &tm_utc);
+#endif
+
+    std::ostringstream out;
+    out << std::put_time(&tm_utc, "%Y-%m-%dT%H:%M:%SZ");
+    return out.str();
+}
+
+static std::string key_metadata_json(
+    int bits,
+    const std::string& private_path,
+    const std::string& public_path
+) {
+    std::string json;
+    json += "{\n";
+    json += "  \"creation_time\": \"" + utc_creation_time() + "\",\n";
+    json += "  \"modulus_bits\": " + std::to_string(bits) + ",\n";
+    json += "  \"hash\": \"SHA-256\",\n";
+    json += "  \"padding\": \"OAEP\",\n";
+    json += "  \"mgf\": \"MGF1-SHA256\",\n";
+    json += "  \"private_key_file\": \"" + json_escape(private_path) + "\",\n";
+    json += "  \"public_key_file\": \"" + json_escape(public_path) + "\"\n";
+    json += "}\n";
+    return json;
 }
 
 std::map<std::string, std::string> parse_options(int argc, char* argv[], int start_index) {
@@ -103,17 +147,27 @@ static void command_keygen(const std::map<std::string, std::string>& opts) {
     const std::string private_path = key_path(opts, "private", "priv");
     const std::string public_path = key_path(opts, "public", "pub");
 
-    generate_rsa_keypair_der_files(bits, private_path, public_path);
-    std::cout << "Generated RSA-" << bits << " DER key pair\n";
+    const RsaKeyPairDer pair = generate_rsa_keypair_der(bits);
+    write_rsa_private_key_file_auto(private_path, pair.private_key_der);
+    write_rsa_public_key_file_auto(public_path, pair.public_key_der);
+
+    if (opts.count("meta")) {
+        write_text_file(opts.at("meta"), key_metadata_json(bits, private_path, public_path));
+    }
+
+    std::cout << "Generated RSA-" << bits << " key pair\n";
     std::cout << "Private key: " << private_path << "\n";
     std::cout << "Public key:  " << public_path << "\n";
+    if (opts.count("meta")) {
+        std::cout << "Metadata:    " << opts.at("meta") << "\n";
+    }
 }
 
 static void command_oaep_encrypt(const std::map<std::string, std::string>& opts) {
     const std::string public_path = key_path(opts, "public", "pub");
     const std::string out_path = require_option(opts, "out");
 
-    const Bytes public_key = read_file_binary(public_path);
+    const Bytes public_key = load_rsa_public_key_file_der(public_path);
     const Bytes plaintext = load_input_data(opts);
     const Bytes label = load_label(opts);
     const Bytes ciphertext = rsa_oaep_sha256_encrypt_der(public_key, plaintext, label);
@@ -130,7 +184,7 @@ static void command_oaep_decrypt(const std::map<std::string, std::string>& opts)
     const std::string in_path = require_option(opts, "in");
     const std::string out_path = require_option(opts, "out");
 
-    const Bytes private_key = read_file_binary(private_path);
+    const Bytes private_key = load_rsa_private_key_file_der(private_path);
     const Bytes ciphertext = read_file_binary(in_path);
     const Bytes label = load_label(opts);
     const Bytes plaintext = rsa_oaep_sha256_decrypt_der(private_key, ciphertext, label);
@@ -145,7 +199,7 @@ static void command_hybrid_encrypt(const std::map<std::string, std::string>& opt
     const std::string out_path = require_option(opts, "out");
     const std::string envelope_path = get_option_or(opts, "envelope", out_path + ".envelope.json");
 
-    const Bytes public_key = read_file_binary(public_path);
+    const Bytes public_key = load_rsa_public_key_file_der(public_path);
     const Bytes plaintext = load_input_data(opts);
     const Bytes label = load_label(opts);
     const HybridEncryptResult result = hybrid_encrypt(public_key, plaintext, label, out_path);
@@ -165,7 +219,7 @@ static void command_hybrid_decrypt(const std::map<std::string, std::string>& opt
     const std::string envelope_path = require_option(opts, "envelope");
     const std::string out_path = require_option(opts, "out");
 
-    const Bytes private_key = read_file_binary(private_path);
+    const Bytes private_key = load_rsa_private_key_file_der(private_path);
     const Bytes ciphertext = read_file_binary(in_path);
     const HybridEnvelope envelope = HybridEnvelope::from_json(read_text_file(envelope_path));
     const Bytes label = load_label(opts);
@@ -176,22 +230,95 @@ static void command_hybrid_decrypt(const std::map<std::string, std::string>& opt
     std::cout << "Plaintext file: " << out_path << "\n";
 }
 
+static void command_encrypt_auto(const std::map<std::string, std::string>& opts) {
+    const std::string public_path = key_path(opts, "public", "pub");
+    const std::string out_path = require_option(opts, "out");
+
+    const Bytes public_key = load_rsa_public_key_file_der(public_path);
+    const Bytes plaintext = load_input_data(opts);
+    const Bytes label = load_label(opts);
+    const std::size_t rsa_limit = rsa_oaep_sha256_max_plaintext_der(public_key);
+
+    if (plaintext.size() <= rsa_limit) {
+        const Bytes ciphertext = rsa_oaep_sha256_encrypt_der(public_key, plaintext, label);
+        write_file_binary(out_path, ciphertext);
+
+        std::cout << "Auto encryption selected RSA-OAEP(SHA-256)\n";
+        std::cout << "Plaintext bytes: " << plaintext.size() << "\n";
+        std::cout << "RSA limit bytes: " << rsa_limit << "\n";
+        std::cout << "Ciphertext file: " << out_path << "\n";
+        return;
+    }
+
+    const std::string envelope_path = get_option_or(opts, "envelope", out_path + ".envelope.json");
+    const HybridEncryptResult result = hybrid_encrypt(public_key, plaintext, label, out_path);
+
+    write_file_binary(out_path, result.ciphertext);
+    write_text_file(envelope_path, result.envelope.to_json());
+
+    std::cout << "Auto encryption selected hybrid RSA-OAEP(SHA-256)+AES-256-GCM\n";
+    std::cout << "Plaintext bytes: " << plaintext.size() << "\n";
+    std::cout << "RSA limit bytes: " << rsa_limit << "\n";
+    std::cout << "Ciphertext file: " << out_path << "\n";
+    std::cout << "Envelope file:   " << envelope_path << "\n";
+}
+
+static void command_decrypt_auto(const std::map<std::string, std::string>& opts) {
+    const std::string private_path = key_path(opts, "private", "priv");
+    const std::string in_path = require_option(opts, "in");
+    const std::string out_path = require_option(opts, "out");
+
+    std::string envelope_path;
+    if (opts.count("envelope")) {
+        envelope_path = opts.at("envelope");
+    } else if (file_exists(in_path + ".envelope.json")) {
+        envelope_path = in_path + ".envelope.json";
+    } else if (file_exists(out_path + ".envelope.json")) {
+        envelope_path = out_path + ".envelope.json";
+    }
+
+    const Bytes private_key = load_rsa_private_key_file_der(private_path);
+    const Bytes input = read_file_binary(in_path);
+    const Bytes label = load_label(opts);
+
+    if (!envelope_path.empty()) {
+        const HybridEnvelope envelope = HybridEnvelope::from_json(read_text_file(envelope_path));
+        const Bytes plaintext = hybrid_decrypt(private_key, input, envelope, label);
+        write_file_binary(out_path, plaintext);
+
+        std::cout << "Auto decryption selected hybrid RSA-OAEP(SHA-256)+AES-256-GCM\n";
+        std::cout << "Envelope file: " << envelope_path << "\n";
+        std::cout << "Plaintext file: " << out_path << "\n";
+        return;
+    }
+
+    const Bytes plaintext = rsa_oaep_sha256_decrypt_der(private_key, input, label);
+    write_file_binary(out_path, plaintext);
+
+    std::cout << "Auto decryption selected RSA-OAEP(SHA-256)\n";
+    std::cout << "Plaintext file: " << out_path << "\n";
+}
+
 void print_usage() {
     std::cout
         << "rsatool - Lab 3 RSA-OAEP(SHA-256) and hybrid encryption tool\n\n"
         << "Commands:\n"
-        << "  keygen         --bits 3072|4096 --private private.der --public public.der\n"
-        << "  oaep-encrypt   --pub public.der --in msg.bin --out msg.rsa [--label-text TEXT]\n"
-        << "  oaep-decrypt   --priv private.der --in msg.rsa --out msg.bin [--label-text TEXT]\n"
-        << "  seal           --pub public.der --in plain.bin --out cipher.bin [--envelope env.json] [--label-text TEXT]\n"
-        << "  open           --priv private.der --in cipher.bin --envelope env.json --out plain.bin [--label-text TEXT]\n"
+        << "  keygen         --bits 3072|4096 --private private.der --public public.der [--meta key_metadata.json]\n"
+        << "  keygen         --bits 3072|4096 --priv private.pem --pub public.pem [--meta key_metadata.json]\n"
+        << "  encrypt        --pub public.der|public.pem --in file.bin --out out.bin [--envelope env.json] [--label-text TEXT]\n"
+        << "  decrypt        --priv private.der|private.pem --in file.bin --out out.bin [--envelope env.json] [--label-text TEXT]\n"
+        << "  oaep-encrypt   --pub public.der|public.pem --in msg.bin --out msg.rsa [--label-text TEXT]\n"
+        << "  oaep-decrypt   --priv private.der|private.pem --in msg.rsa --out msg.bin [--label-text TEXT]\n"
+        << "  seal           --pub public.der|public.pem --in plain.bin --out cipher.bin [--envelope env.json] [--label-text TEXT]\n"
+        << "  open           --priv private.der|private.pem --in cipher.bin --envelope env.json --out plain.bin [--label-text TEXT]\n"
         << "  hybrid-encrypt Alias for seal\n"
         << "  hybrid-decrypt Alias for open\n"
         << "  kat            --kat vectors/rsa_hybrid_kat.json\n"
         << "  bench          --out raw.csv --summary summary.csv [--runs N] [--ops N]\n\n"
         << "Options:\n"
-        << "  --private FILE, --priv FILE      RSA private key in DER format\n"
-        << "  --public FILE, --pub FILE        RSA public key in DER format\n"
+        << "  --private FILE, --priv FILE      RSA private key in DER or PEM format\n"
+        << "  --public FILE, --pub FILE        RSA public key in DER or PEM format\n"
+        << "  --meta FILE                      Optional keygen metadata JSON\n"
         << "  --in FILE, --text TEXT           Binary file input or UTF-8 text input\n"
         << "  --out FILE                       Binary output path\n"
         << "  --envelope FILE                  Hybrid envelope JSON path\n"
@@ -202,7 +329,7 @@ void print_usage() {
         << "  --rsa-sizes LIST                 RSA-OAEP benchmark message sizes, e.g. 32,190,318\n"
         << "  --rsa-bits LIST                  RSA sizes to benchmark, default 3072,4096\n\n"
         << "Direct RSA-OAEP uses SHA-256 and is limited to 318 bytes for RSA-3072 and 446 bytes for RSA-4096.\n"
-        << "Use seal/open or hybrid-encrypt/hybrid-decrypt for large files.\n";
+        << "encrypt/decrypt auto-select direct RSA for small inputs and hybrid mode for large inputs.\n";
 }
 
 int run_command(int argc, char* argv[]) {
@@ -221,6 +348,10 @@ int run_command(int argc, char* argv[]) {
 
     if (command == "keygen") {
         command_keygen(opts);
+    } else if (command == "encrypt") {
+        command_encrypt_auto(opts);
+    } else if (command == "decrypt") {
+        command_decrypt_auto(opts);
     } else if (command == "oaep-encrypt") {
         command_oaep_encrypt(opts);
     } else if (command == "oaep-decrypt") {

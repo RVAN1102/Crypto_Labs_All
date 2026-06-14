@@ -42,3 +42,8 @@ Testing/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Temporary acceptance/negative test folders
+**/tmp_acceptance/
+**/tmp_negative_tests/
+**/tmp*/

@@ -18,6 +18,14 @@ void generate_rsa_keypair_der_files(
     const std::string& public_path
 );
 
+std::string rsa_private_key_pem_from_der(const Bytes& private_key_der);
+std::string rsa_public_key_pem_from_der(const Bytes& public_key_der);
+Bytes rsa_key_der_from_pem_text(const std::string& pem_text);
+Bytes load_rsa_private_key_file_der(const std::string& path);
+Bytes load_rsa_public_key_file_der(const std::string& path);
+void write_rsa_private_key_file_auto(const std::string& path, const Bytes& private_key_der);
+void write_rsa_public_key_file_auto(const std::string& path, const Bytes& public_key_der);
+
 int rsa_public_key_bits_der(const Bytes& public_key_der);
 int rsa_private_key_bits_der(const Bytes& private_key_der);
 
