@@ -1,0 +1,3 @@
+[PASS] certificate signature verified
+signature_algorithm: sha256WithRSAEncryption
+signature_algorithm_consistent: yes

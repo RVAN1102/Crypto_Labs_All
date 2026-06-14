@@ -1,0 +1,7 @@
+CHECK signature_md5 PASS detail=sha256withrsaencryption
+CHECK signature_sha1 PASS detail=sha256withrsaencryption
+CHECK public_key_strength PASS detail=bits=2048
+CHECK validity_not_before PASS detail=active
+CHECK validity_not_after PASS detail=not_expired
+CHECK tls_server_san FAIL detail=missing
+Policy summary: pass=5 warn=0 fail=1 total=6

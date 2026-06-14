@@ -9,11 +9,11 @@ Implemented milestones:
 - `hash` for SHA-2, SHA-3, SHAKE128, and SHAKE256 using OpenSSL.
 - KAT runner for hash and SHAKE vectors.
 - HMAC and intentionally vulnerable naive MAC demonstration.
+- X.509 certificate parsing, signature verification, and policy checks.
 - Windows negative tests registered with CTest.
 
 Later milestone placeholders only:
 
-- X.509
 - TLS
 - MD5 collision demonstration
 - Benchmarks
@@ -39,7 +39,32 @@ lab4_hash_pki\build\hashtool.exe kat --kat lab4_hash_pki\vectors\hash_kat.json
 lab4_hash_pki\build\hashtool.exe kat --kat lab4_hash_pki\vectors\shake_kat.json
 lab4_hash_pki\build\hashtool.exe naive-mac --algo sha256 --key-hex 001122 --text "comment=10&uid=1"
 lab4_hash_pki\build\hashtool.exe hmac --algo sha256 --key-hex 001122 --text hello
+lab4_hash_pki\build\hashtool.exe cert-info --cert lab4_hash_pki\tests\certs\leaf_valid.pem
+lab4_hash_pki\build\hashtool.exe cert-info --cert lab4_hash_pki\tests\certs\leaf_valid.der --format der
+lab4_hash_pki\build\hashtool.exe cert-info --cert lab4_hash_pki\tests\certs\leaf_valid.pem --json lab4_hash_pki\artifacts\windows\logs\cert_info.json
+lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\leaf_valid.pem --issuer lab4_hash_pki\tests\certs\test_ca.pem
+lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\leaf_valid.pem
+lab4_hash_pki\build\hashtool.exe cert-policy --cert lab4_hash_pki\tests\certs\leaf_valid.pem
 ```
+
+## Certificate Commands
+
+`cert-info` extracts the subject, issuer, subject public key algorithm and parameters, signature algorithm, validity window, key usage, extended key usage, subject alternative names, serial number, SHA-256 fingerprint, and a legacy SHA-1 fingerprint display.
+
+`cert-verify` with `--issuer` verifies the certificate signature using the issuer public key and fails closed on malformed certificates, wrong issuers, or failed signatures. Without `--issuer`, it performs only structural parsing and prints:
+
+```text
+issuer key unavailable; full signature verification not performed
+```
+
+`cert-policy` prints machine-testable checks:
+
+```text
+CHECK <name> PASS|WARN|FAIL detail=<detail>
+Policy summary: pass=N warn=M fail=K total=T
+```
+
+Current policy checks flag MD5 and SHA-1 signatures, RSA keys below 2048 bits, expired or not-yet-valid certificates, and missing SAN for TLS server use.
 
 Supported algorithms exactly:
 
@@ -59,4 +84,3 @@ Output encodings:
 - `hex` default
 - `base64`
 - `raw`, only with `--out`
-

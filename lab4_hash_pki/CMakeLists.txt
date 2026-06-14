@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenSSL REQUIRED COMPONENTS Crypto)
 
 set(HASHTOOL_CORE_SOURCES
+    src/cert.cpp
     src/cli.cpp
     src/encoding.cpp
     src/file_utils.cpp
@@ -60,6 +61,48 @@ add_test(
     COMMAND hashtool kat --kat "${PROJECT_SOURCE_DIR}/vectors/shake_kat.json"
 )
 
+add_test(
+    NAME cert_info_valid_pem
+    COMMAND hashtool cert-info --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_valid.pem"
+)
+
+add_test(
+    NAME cert_info_valid_der
+    COMMAND hashtool cert-info --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_valid.der" --format der
+)
+
+add_test(
+    NAME cert_info_malformed_rejected
+    COMMAND hashtool cert-info --cert "${PROJECT_SOURCE_DIR}/tests/certs/malformed_cert.pem"
+)
+set_tests_properties(cert_info_malformed_rejected PROPERTIES WILL_FAIL TRUE)
+
+add_test(
+    NAME cert_verify_correct_issuer
+    COMMAND hashtool cert-verify --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_valid.pem" --issuer "${PROJECT_SOURCE_DIR}/tests/certs/test_ca.pem"
+)
+
+add_test(
+    NAME cert_verify_wrong_issuer_fails
+    COMMAND hashtool cert-verify --cert "${PROJECT_SOURCE_DIR}/tests/certs/leaf_valid.pem" --issuer "${PROJECT_SOURCE_DIR}/tests/certs/wrong_ca.pem"
+)
+set_tests_properties(cert_verify_wrong_issuer_fails PROPERTIES WILL_FAIL TRUE)
+
+add_test(
+    NAME cert_policy_missing_san_flagged
+    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_no_san.pem" -Needle "CHECK tls_server_san FAIL"
+)
+
+add_test(
+    NAME cert_policy_weak_key_flagged
+    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/leaf_weak.pem" -Needle "CHECK public_key_strength WARN"
+)
+
+add_test(
+    NAME cert_policy_expired_flagged
+    COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/expired_leaf.pem" -Needle "CHECK validity_not_after FAIL"
+)
+
 find_package(GTest CONFIG QUIET)
 if(NOT GTest_FOUND)
     find_package(GTest QUIET)
@@ -83,4 +126,3 @@ if(WIN32)
         COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/negative_tests_windows.ps1" -Exe "$<TARGET_FILE:hashtool>"
     )
 endif()
-

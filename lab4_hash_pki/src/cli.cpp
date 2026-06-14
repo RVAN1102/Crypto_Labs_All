@@ -1,5 +1,6 @@
 #include "hashtool/cli.hpp"
 
+#include "hashtool/cert.hpp"
 #include "hashtool/encoding.hpp"
 #include "hashtool/file_utils.hpp"
 #include "hashtool/hash.hpp"
@@ -31,6 +32,9 @@ void print_help() {
         << "  hashtool naive-mac --algo ALG --key-hex HEX (--text TEXT | --in FILE) [--out FILE] [--encode hex|base64|raw]\n"
         << "  hashtool hmac --algo ALG --key-hex HEX (--text TEXT | --in FILE) [--out FILE] [--encode hex|base64|raw]\n"
         << "  hashtool hmac-verify --algo ALG --key-hex HEX (--text TEXT | --in FILE) --mac-hex HEX\n"
+        << "  hashtool cert-info --cert FILE [--format pem|der] [--json FILE]\n"
+        << "  hashtool cert-verify --cert FILE [--format pem|der] [--issuer FILE] [--issuer-format pem|der]\n"
+        << "  hashtool cert-policy --cert FILE [--format pem|der]\n"
         << "\n"
         << "Algorithms: sha224 sha256 sha384 sha512 sha3-224 sha3-256 sha3-384 sha3-512 shake128 shake256\n";
 }
@@ -308,6 +312,77 @@ int run_hmac_verify_command(const ParsedArgs& args) {
     return 1;
 }
 
+std::string optional_format(const ParsedArgs& args, const std::string& key) {
+    const auto it = args.values.find(key);
+    return it == args.values.end() ? "pem" : it->second;
+}
+
+int run_cert_info_command(const ParsedArgs& args) {
+    std::string error;
+    std::string cert_path;
+    if (!require_option(args, "cert", cert_path, error)) {
+        return fail(error);
+    }
+
+    CertInfo info;
+    if (!get_cert_info(cert_path, optional_format(args, "format"), info, error)) {
+        return fail(error);
+    }
+
+    const auto json_it = args.values.find("json");
+    if (json_it != args.values.end()) {
+        if (!write_text_file(json_it->second, cert_info_to_json(info), error)) {
+            return fail(error);
+        }
+    }
+
+    std::cout << cert_info_to_text(info);
+    return 0;
+}
+
+int run_cert_verify_command(const ParsedArgs& args) {
+    std::string error;
+    std::string cert_path;
+    if (!require_option(args, "cert", cert_path, error)) {
+        return fail(error);
+    }
+
+    std::string output;
+    const auto issuer_it = args.values.find("issuer");
+    if (issuer_it == args.values.end()) {
+        if (!limited_certificate_readability_check(cert_path, optional_format(args, "format"), output, error)) {
+            return fail(error);
+        }
+    } else if (!verify_certificate_signature(
+                   cert_path,
+                   optional_format(args, "format"),
+                   issuer_it->second,
+                   optional_format(args, "issuer-format"),
+                   output,
+                   error)) {
+        return fail(error);
+    }
+
+    std::cout << output;
+    return 0;
+}
+
+int run_cert_policy_command(const ParsedArgs& args) {
+    std::string error;
+    std::string cert_path;
+    if (!require_option(args, "cert", cert_path, error)) {
+        return fail(error);
+    }
+
+    std::string output;
+    if (!run_certificate_policy(cert_path, optional_format(args, "format"), output, error)) {
+        return fail(error);
+    }
+
+    std::cout << output;
+    return 0;
+}
+
 } // namespace
 
 int run_cli(int argc, char** argv) {
@@ -342,9 +417,17 @@ int run_cli(int argc, char** argv) {
     if (command == "hmac-verify") {
         return run_hmac_verify_command(args);
     }
+    if (command == "cert-info") {
+        return run_cert_info_command(args);
+    }
+    if (command == "cert-verify") {
+        return run_cert_verify_command(args);
+    }
+    if (command == "cert-policy") {
+        return run_cert_policy_command(args);
+    }
 
     return fail("unsupported command");
 }
 
 } // namespace hashtool
-

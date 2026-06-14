@@ -1,5 +1,5 @@
 Running Lab 4 negative tests with: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\build\hashtool.exe
-Working directory: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\tmp_negative_tests\20260614_065629_3302
+Working directory: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\tmp_negative_tests\20260614_091248_0278
 
 [PASS] unsupported algorithm rejected
 [PASS] SHAKE without outlen rejected
@@ -11,5 +11,10 @@ Working directory: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\tmp_negative_tests
 [PASS] wrong HMAC fails verification
 [PASS] malformed key hex rejected
 [PASS] valid hash still works
+[PASS] malformed certificate rejected
+[PASS] wrong issuer fails certificate verification
+[PASS] correct issuer verifies certificate
+[PASS] missing SAN flagged
+[PASS] expired certificate flagged
 
-Negative test summary: pass=10 fail=0
+Negative test summary: pass=15 fail=0

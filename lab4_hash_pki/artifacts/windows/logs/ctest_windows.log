@@ -1,19 +1,35 @@
 Test project D:/Newfolder/Crypto_Labs_All/lab4_hash_pki/build
-    Start 1: HashCore.Sha256AbcMatchesKnownAnswer
-1/7 Test #1: HashCore.Sha256AbcMatchesKnownAnswer ...   Passed    0.04 sec
-    Start 2: HashCore.ShakeRequiresOutlen
-2/7 Test #2: HashCore.ShakeRequiresOutlen ...........   Passed    0.02 sec
-    Start 3: HashCore.HmacVerifyRejectsWrongMac
-3/7 Test #3: HashCore.HmacVerifyRejectsWrongMac .....   Passed    0.02 sec
-    Start 4: hashtool_help
-4/7 Test #4: hashtool_help ..........................   Passed    0.02 sec
-    Start 5: hashtool_kat_hash
-5/7 Test #5: hashtool_kat_hash ......................   Passed    0.02 sec
-    Start 6: hashtool_kat_shake
-6/7 Test #6: hashtool_kat_shake .....................   Passed    0.02 sec
-    Start 7: negative_tests_windows
-7/7 Test #7: negative_tests_windows .................   Passed    0.81 sec
+      Start  1: HashCore.Sha256AbcMatchesKnownAnswer
+ 1/15 Test  #1: HashCore.Sha256AbcMatchesKnownAnswer ...   Passed    0.03 sec
+      Start  2: HashCore.ShakeRequiresOutlen
+ 2/15 Test  #2: HashCore.ShakeRequiresOutlen ...........   Passed    0.02 sec
+      Start  3: HashCore.HmacVerifyRejectsWrongMac
+ 3/15 Test  #3: HashCore.HmacVerifyRejectsWrongMac .....   Passed    0.02 sec
+      Start  4: hashtool_help
+ 4/15 Test  #4: hashtool_help ..........................   Passed    0.02 sec
+      Start  5: hashtool_kat_hash
+ 5/15 Test  #5: hashtool_kat_hash ......................   Passed    0.02 sec
+      Start  6: hashtool_kat_shake
+ 6/15 Test  #6: hashtool_kat_shake .....................   Passed    0.02 sec
+      Start  7: cert_info_valid_pem
+ 7/15 Test  #7: cert_info_valid_pem ....................   Passed    0.02 sec
+      Start  8: cert_info_valid_der
+ 8/15 Test  #8: cert_info_valid_der ....................   Passed    0.03 sec
+      Start  9: cert_info_malformed_rejected
+ 9/15 Test  #9: cert_info_malformed_rejected ...........   Passed    0.02 sec
+      Start 10: cert_verify_correct_issuer
+10/15 Test #10: cert_verify_correct_issuer .............   Passed    0.03 sec
+      Start 11: cert_verify_wrong_issuer_fails
+11/15 Test #11: cert_verify_wrong_issuer_fails .........   Passed    0.03 sec
+      Start 12: cert_policy_missing_san_flagged
+12/15 Test #12: cert_policy_missing_san_flagged ........   Passed    0.64 sec
+      Start 13: cert_policy_weak_key_flagged
+13/15 Test #13: cert_policy_weak_key_flagged ...........   Passed    0.66 sec
+      Start 14: cert_policy_expired_flagged
+14/15 Test #14: cert_policy_expired_flagged ............   Passed    0.62 sec
+      Start 15: negative_tests_windows
+15/15 Test #15: negative_tests_windows .................   Passed    1.08 sec
 
-100% tests passed, 0 tests failed out of 7
+100% tests passed, 0 tests failed out of 15
 
-Total Test time (real) =   0.96 sec
+Total Test time (real) =   3.29 sec

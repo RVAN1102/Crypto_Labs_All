@@ -87,6 +87,34 @@ Expect-Fail "malformed key hex rejected" @("hmac", "--algo", "sha256", "--key-he
 
 Expect-Success "valid hash still works" @("hash", "--algo", "sha256", "--text", "abc")
 
+$certDir = Join-Path $Root "tests\certs"
+$leafValid = Join-Path $certDir "leaf_valid.pem"
+$testCa = Join-Path $certDir "test_ca.pem"
+$wrongCa = Join-Path $certDir "wrong_ca.pem"
+$malformedCert = Join-Path $certDir "malformed_cert.pem"
+$leafNoSan = Join-Path $certDir "leaf_no_san.pem"
+$expiredLeaf = Join-Path $certDir "expired_leaf.pem"
+
+Expect-Fail "malformed certificate rejected" @("cert-info", "--cert", $malformedCert)
+Expect-Fail "wrong issuer fails certificate verification" @("cert-verify", "--cert", $leafValid, "--issuer", $wrongCa)
+Expect-Success "correct issuer verifies certificate" @("cert-verify", "--cert", $leafValid, "--issuer", $testCa)
+
+$NoSanPolicy = Run-Cmd @("cert-policy", "--cert", $leafNoSan)
+if ($NoSanPolicy.Code -eq 0 -and $NoSanPolicy.Output -like "*CHECK tls_server_san FAIL*") {
+    Write-Pass "missing SAN flagged"
+} else {
+    Write-Fail "missing SAN flagged" "exit=$($NoSanPolicy.Code), output=$($NoSanPolicy.Output)"
+}
+
+if (Test-Path $expiredLeaf) {
+    $ExpiredPolicy = Run-Cmd @("cert-policy", "--cert", $expiredLeaf)
+    if ($ExpiredPolicy.Code -eq 0 -and $ExpiredPolicy.Output -like "*CHECK validity_not_after FAIL*") {
+        Write-Pass "expired certificate flagged"
+    } else {
+        Write-Fail "expired certificate flagged" "exit=$($ExpiredPolicy.Code), output=$($ExpiredPolicy.Output)"
+    }
+}
+
 Write-Host ""
 Write-Host "Negative test summary: pass=$Pass fail=$Fail"
 
@@ -95,4 +123,3 @@ if ($Fail -ne 0) {
 }
 
 exit 0
-
