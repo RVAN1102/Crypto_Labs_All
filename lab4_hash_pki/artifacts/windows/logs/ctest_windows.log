@@ -1,0 +1,19 @@
+Test project D:/Newfolder/Crypto_Labs_All/lab4_hash_pki/build
+    Start 1: HashCore.Sha256AbcMatchesKnownAnswer
+1/7 Test #1: HashCore.Sha256AbcMatchesKnownAnswer ...   Passed    0.04 sec
+    Start 2: HashCore.ShakeRequiresOutlen
+2/7 Test #2: HashCore.ShakeRequiresOutlen ...........   Passed    0.02 sec
+    Start 3: HashCore.HmacVerifyRejectsWrongMac
+3/7 Test #3: HashCore.HmacVerifyRejectsWrongMac .....   Passed    0.02 sec
+    Start 4: hashtool_help
+4/7 Test #4: hashtool_help ..........................   Passed    0.02 sec
+    Start 5: hashtool_kat_hash
+5/7 Test #5: hashtool_kat_hash ......................   Passed    0.02 sec
+    Start 6: hashtool_kat_shake
+6/7 Test #6: hashtool_kat_shake .....................   Passed    0.02 sec
+    Start 7: negative_tests_windows
+7/7 Test #7: negative_tests_windows .................   Passed    0.81 sec
+
+100% tests passed, 0 tests failed out of 7
+
+Total Test time (real) =   0.96 sec

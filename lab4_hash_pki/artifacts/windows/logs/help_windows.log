@@ -1,0 +1,11 @@
+hashtool - Lab 4 hash and MAC CLI
+
+Usage:
+  hashtool --help
+  hashtool hash --algo ALG (--text TEXT | --in FILE) [--stream] [--out FILE] [--encode hex|base64|raw] [--outlen N]
+  hashtool kat --kat FILE
+  hashtool naive-mac --algo ALG --key-hex HEX (--text TEXT | --in FILE) [--out FILE] [--encode hex|base64|raw]
+  hashtool hmac --algo ALG --key-hex HEX (--text TEXT | --in FILE) [--out FILE] [--encode hex|base64|raw]
+  hashtool hmac-verify --algo ALG --key-hex HEX (--text TEXT | --in FILE) --mac-hex HEX
+
+Algorithms: sha224 sha256 sha384 sha512 sha3-224 sha3-256 sha3-384 sha3-512 shake128 shake256

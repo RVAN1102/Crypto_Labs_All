@@ -1,0 +1,15 @@
+Running Lab 4 negative tests with: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\build\hashtool.exe
+Working directory: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\tmp_negative_tests\20260614_065629_3302
+
+[PASS] unsupported algorithm rejected
+[PASS] SHAKE without outlen rejected
+[PASS] fixed hash with outlen rejected
+[PASS] missing input rejected
+[PASS] both in and text rejected
+[PASS] invalid encoding rejected
+[PASS] file not found rejected
+[PASS] wrong HMAC fails verification
+[PASS] malformed key hex rejected
+[PASS] valid hash still works
+
+Negative test summary: pass=10 fail=0

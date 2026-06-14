@@ -1,0 +1,17 @@
+[PASS] sha224-empty
+[PASS] sha224-abc
+[PASS] sha256-empty
+[PASS] sha256-abc
+[PASS] sha384-empty
+[PASS] sha384-abc
+[PASS] sha512-empty
+[PASS] sha512-abc
+[PASS] sha3-224-empty
+[PASS] sha3-224-abc
+[PASS] sha3-256-empty
+[PASS] sha3-256-abc
+[PASS] sha3-384-empty
+[PASS] sha3-384-abc
+[PASS] sha3-512-empty
+[PASS] sha3-512-abc
+KAT summary: pass=16 fail=0 total=16
