@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(ENABLE_MD5_COLLISION_TEST "Enable verification of pre-generated MD5 collision demo files" OFF)
+
 # Optional hints for Windows/OpenSSL installs. Leave unset on Ubuntu so
 # FindOpenSSL uses normal libssl-dev discovery.
 set(OPENSSL_ROOT_DIR "" CACHE PATH "Optional OpenSSL root directory")
@@ -195,4 +197,23 @@ if(UNIX AND NOT APPLE)
         NAME negative_tests_linux
         COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/negative_tests_linux.sh" "$<TARGET_FILE:hashtool>"
     )
+endif()
+
+if(ENABLE_MD5_COLLISION_TEST)
+    set(MD5_COLLISION_DIR "${PROJECT_SOURCE_DIR}/demos/md5_collision")
+    if(EXISTS "${MD5_COLLISION_DIR}/collision_a.bin" AND EXISTS "${MD5_COLLISION_DIR}/collision_b.bin")
+        if(WIN32)
+            add_test(
+                NAME md5_collision_verify_windows
+                COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/verify_md5_collision_windows.ps1" -Dir "${MD5_COLLISION_DIR}"
+            )
+        elseif(UNIX AND NOT APPLE)
+            add_test(
+                NAME md5_collision_verify_linux
+                COMMAND bash "${PROJECT_SOURCE_DIR}/scripts/verify_md5_collision.sh" "${MD5_COLLISION_DIR}"
+            )
+        endif()
+    else()
+        message(WARNING "ENABLE_MD5_COLLISION_TEST is ON, but demos/md5_collision/collision_a.bin and collision_b.bin do not both exist. No MD5 collision verification test was registered.")
+    endif()
 endif()

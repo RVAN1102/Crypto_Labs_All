@@ -126,6 +126,26 @@ Supported benchmark sizes are `1k`, `4k`, `1m`, `100m`, and `1g`. Automated test
 
 The demo does not target a live service or network endpoint. It also shows that the forged message is accepted by the naive MAC check but rejected when checked as HMAC-SHA256.
 
+## MD5 Collision Demo Scaffold
+
+`demos/md5_collision/` contains documentation for a controlled offline MD5 collision demonstration using hashclash. No collision outputs are committed, and the README does not claim completion until real `collision_a.bin` and `collision_b.bin` files exist and pass verification.
+
+Generation is intended for Ubuntu when hashclash is available:
+
+```bash
+bash lab4_hash_pki/scripts/md5_collision_demo_linux.sh
+```
+
+Verification scripts are available for generated files:
+
+```bash
+bash lab4_hash_pki/scripts/verify_md5_collision.sh
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File lab4_hash_pki\scripts\verify_md5_collision_windows.ps1
+```
+
 Supported algorithms exactly:
 
 - `sha224`
