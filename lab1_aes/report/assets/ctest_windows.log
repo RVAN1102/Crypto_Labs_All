@@ -1,0 +1,33 @@
+Test project D:/Newfolder/Lab1_AES_CryptoPP/build
+      Start  1: AesGcmUnitTest.EncryptDecryptRoundTripWorks
+ 1/14 Test  #1: AesGcmUnitTest.EncryptDecryptRoundTripWorks ................   Passed    0.02 sec
+      Start  2: AesGcmUnitTest.TamperedTagIsRejected
+ 2/14 Test  #2: AesGcmUnitTest.TamperedTagIsRejected .......................   Passed    0.02 sec
+      Start  3: AesGcmUnitTest.WrongAadIsRejected
+ 3/14 Test  #3: AesGcmUnitTest.WrongAadIsRejected ..........................   Passed    0.02 sec
+      Start  4: AesCcmUnitTest.EncryptDecryptRoundTripWorks
+ 4/14 Test  #4: AesCcmUnitTest.EncryptDecryptRoundTripWorks ................   Passed    0.02 sec
+      Start  5: AesCcmUnitTest.TamperedCiphertextIsRejected
+ 5/14 Test  #5: AesCcmUnitTest.TamperedCiphertextIsRejected ................   Passed    0.02 sec
+      Start  6: AesClassicUnitTest.CtrRoundTripWorks
+ 6/14 Test  #6: AesClassicUnitTest.CtrRoundTripWorks .......................   Passed    0.02 sec
+      Start  7: AesClassicUnitTest.CbcRoundTripWorks
+ 7/14 Test  #7: AesClassicUnitTest.CbcRoundTripWorks .......................   Passed    0.02 sec
+      Start  8: AesClassicUnitTest.InvalidCbcIvLengthIsRejected
+ 8/14 Test  #8: AesClassicUnitTest.InvalidCbcIvLengthIsRejected ............   Passed    0.02 sec
+      Start  9: AesClassicUnitTest.EcbLargeFileIsBlockedWithoutAllowFlag
+ 9/14 Test  #9: AesClassicUnitTest.EcbLargeFileIsBlockedWithoutAllowFlag ...   Passed    0.02 sec
+      Start 10: AesXtsUnitTest.EncryptDecryptRoundTripWorks
+10/14 Test #10: AesXtsUnitTest.EncryptDecryptRoundTripWorks ................   Passed    0.02 sec
+      Start 11: AesXtsUnitTest.ShortDataUnitIsRejected
+11/14 Test #11: AesXtsUnitTest.ShortDataUnitIsRejected .....................   Passed    0.02 sec
+      Start 12: aes_kat_sample
+12/14 Test #12: aes_kat_sample .............................................   Passed    0.02 sec
+      Start 13: aes_kat_extended
+13/14 Test #13: aes_kat_extended ...........................................   Passed    0.02 sec
+      Start 14: negative_tests_windows
+14/14 Test #14: negative_tests_windows .....................................   Passed    2.05 sec
+
+100% tests passed, 0 tests failed out of 14
+
+Total Test time (real) =   2.32 sec

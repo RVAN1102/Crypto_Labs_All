@@ -1,0 +1,7 @@
+{
+  "alg": "AES-256-ofb",
+  "mode": "ofb",
+  "key_bits": 256,
+  "iv_hex": "5703cb490a4269a58722bfc40c790822",
+  "ciphertext_file": "ct_ofb.bin"
+}

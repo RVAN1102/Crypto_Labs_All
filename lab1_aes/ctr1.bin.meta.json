@@ -1,0 +1,7 @@
+{
+  "alg": "AES-256-ctr",
+  "mode": "ctr",
+  "key_bits": 256,
+  "iv_hex": "00112233445566778899aabbccddeeff",
+  "ciphertext_file": "ctr1.bin"
+}

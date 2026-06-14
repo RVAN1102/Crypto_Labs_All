@@ -1,0 +1,7 @@
+{
+  "alg": "AES-256-cbc",
+  "mode": "cbc",
+  "key_bits": 256,
+  "iv_hex": "9821cbe4524a94e53650ae362f121cc7",
+  "ciphertext_file": "ct_cbc.bin"
+}

@@ -1,0 +1,44 @@
+# Build directories
+build/
+build-*/
+**/build/
+**/build-*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+
+# Binaries / libraries
+*.exe
+*.dll
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.pdb
+
+# Temporary crypto/test files
+*.bin
+*.tmp
+*.key
+*.pem
+*.der
+*.priv
+*.pub
+*.enc
+*.dec
+*.rsa
+
+# Local nonce/registry/temp
+*.jsonl
+.aestool_nonce_registry.jsonl
+.rsa_tool_registry.jsonl
+
+# Editor/system
+.vscode/
+.DS_Store
+Thumbs.db

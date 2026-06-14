@@ -1,0 +1,10 @@
+{
+  "alg": "AES-256-CCM",
+  "mode": "ccm",
+  "key_bits": 256,
+  "nonce_hex": "eb5cf8ed257fefb8437cbccc",
+  "tag_hex": "1097811405556f9ed92ccb36644e8d3a",
+  "tag_len": 16,
+  "aad_hex": "6c6162312d63636d",
+  "ciphertext_file": "ct_ccm.bin"
+}

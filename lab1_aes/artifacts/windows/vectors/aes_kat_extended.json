@@ -1,0 +1,134 @@
+[
+  {
+    "name": "FIPS-197 AES-128 ECB single block",
+    "mode": "ecb",
+    "key": "000102030405060708090a0b0c0d0e0f",
+    "pt": "00112233445566778899aabbccddeeff",
+    "ct": "69c4e0d86a7b0430d8cdb78070b4c55a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CBC block 1",
+    "mode": "cbc",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "7649abac8119b246cee98e9b12e9197d"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CFB128 block 1",
+    "mode": "cfb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 OFB block 1",
+    "mode": "ofb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CTR block 1",
+    "mode": "ctr",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "874d6191b620e3261bef6864990db6ce"
+  },
+  {
+    "name": "NIST GCM AES-128 empty plaintext",
+    "mode": "gcm",
+    "key": "00000000000000000000000000000000",
+    "nonce": "000000000000000000000000",
+    "aad": "",
+    "pt": "",
+    "ct": "",
+    "tag": "58e2fccefa7e3061367f1d57a4e7455a",
+    "iv": "000000000000000000000000"
+  },
+  {
+    "name": "NIST GCM AES-128 one block plaintext",
+    "mode": "gcm",
+    "key": "00000000000000000000000000000000",
+    "nonce": "000000000000000000000000",
+    "aad": "",
+    "pt": "00000000000000000000000000000000",
+    "ct": "0388dace60b6a392f328c2b971b2fe78",
+    "tag": "ab6e47d42cec13bdf53a67b21257bddf",
+    "iv": "000000000000000000000000"
+  },
+  {
+    "name": "RFC3610 AES-CCM packet vector 1",
+    "mode": "ccm",
+    "key": "404142434445464748494a4b4c4d4e4f",
+    "nonce": "10111213141516",
+    "aad": "0001020304050607",
+    "pt": "20212223",
+    "ct": "7162015b",
+    "tag": "4dac255d",
+    "iv": "10111213141516"
+  },
+  {
+    "name": "FIPS-197 AES-192 ECB single block",
+    "mode": "ecb",
+    "key": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b",
+    "plaintext_hex": "6bc1bee22e409f96e93d7e117393172a",
+    "ciphertext_hex": "bd334f1d6e45f25ff712a214571fa5cc",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "bd334f1d6e45f25ff712a214571fa5cc"
+  },
+  {
+    "name": "FIPS-197 AES-256 ECB single block",
+    "mode": "ecb",
+    "key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "pt": "00112233445566778899aabbccddeeff",
+    "ct": "8ea2b7ca516745bfeafc49904b496089"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CBC 4 blocks",
+    "mode": "cbc",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv_hex": "000102030405060708090a0b0c0d0e0f",
+    "plaintext_hex": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ciphertext_hex": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a7",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ct": "7649abac8119b246cee98e9b12e9197d5086cb9b507219ee95db113a917678b273bed6b8e3c1743b7116e69e222295163ff1caa1681fac09120eca307586e1a7"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CFB128 4 blocks",
+    "mode": "cfb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv_hex": "000102030405060708090a0b0c0d0e0f",
+    "plaintext_hex": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ciphertext_hex": "3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4ac8a64537a0b3a93fcde3cdad9f1ce58b26751f67a3cbb140b1808cf187a4f4dfc04b05357c5d1c0eeac4c66f9ff7f2e6"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 OFB 4 blocks",
+    "mode": "ofb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv_hex": "000102030405060708090a0b0c0d0e0f",
+    "plaintext_hex": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ciphertext_hex": "3b3fd92eb72dad20333449f8e83cfb4a7789508d16918f03f53c52dac54ed8259740051e9c5fecf64344f7a82260edcc304c6528f659c77866a510d9c1d6ae5e",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4a7789508d16918f03f53c52dac54ed8259740051e9c5fecf64344f7a82260edcc304c6528f659c77866a510d9c1d6ae5e"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CTR 4 blocks",
+    "mode": "ctr",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv_hex": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+    "plaintext_hex": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ciphertext_hex": "874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee",
+    "iv": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+    "pt": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+    "ct": "874d6191b620e3261bef6864990db6ce9806f66b7970fdff8617187bb9fffdff5ae4df3edbd5d35e5b4f09020db03eab1e031dda2fbe03d1792170a0f3009cee"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "alg": "AES-256-GCM",
+  "mode": "gcm",
+  "key_bits": 256,
+  "tag_hex": "ca4260710e4f2e0c7aaf7d8b21cadc12",
+  "tag_len": 16,
+  "aad_hex": "6161642d6f6b",
+  "ciphertext_file": "D:\\Newfolder\\Lab1_AES_CryptoPP\\tmp_negative_tests\\gcm_ct.bin"
+}
+

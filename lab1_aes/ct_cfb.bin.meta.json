@@ -1,0 +1,7 @@
+{
+  "alg": "AES-256-cfb",
+  "mode": "cfb",
+  "key_bits": 256,
+  "iv_hex": "7390281bc8286e1636fba5505e253915",
+  "ciphertext_file": "ct_cfb.bin"
+}

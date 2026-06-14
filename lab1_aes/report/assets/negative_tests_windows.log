@@ -1,0 +1,34 @@
+Running negative tests with: .\build\aestool.exe
+Working directory: D:\Newfolder\Lab1_AES_CryptoPP\tmp_negative_tests
+
+[PASS] keygen AES-256
+[PASS] keygen wrong AES-256 key
+[PASS] keygen XTS-512 material
+[PASS] GCM encrypt baseline
+[PASS] GCM decrypt baseline
+[PASS] GCM recovered plaintext equals original
+[PASS] GCM wrong key rejected
+[PASS] GCM wrong AAD rejected
+[PASS] GCM tampered ciphertext rejected
+[PASS] GCM tampered tag rejected
+[PASS] GCM malformed metadata rejected
+[PASS] invalid AES key length rejected
+[PASS] invalid GCM nonce length rejected
+[PASS] GCM first fixed nonce accepted
+[PASS] GCM reused nonce rejected
+[PASS] CCM encrypt baseline
+[PASS] CCM tampered ciphertext rejected
+[PASS] CTR encrypt baseline
+[PASS] CTR tampered ciphertext decrypts without authentication
+[PASS] CTR tampering produces corrupted plaintext
+[PASS] CTR first IV accepted
+[PASS] CTR reused IV rejected
+[PASS] CBC invalid IV length rejected
+[PASS] ECB large file blocked by default
+[PASS] ECB large file allowed with --allow-ecb
+[PASS] XTS short input rejected
+[PASS] XTS encrypt baseline
+[PASS] XTS tampered ciphertext decrypts without authentication
+[PASS] XTS tampering produces corrupted plaintext
+
+Negative test summary: pass=29, fail=0, total=29

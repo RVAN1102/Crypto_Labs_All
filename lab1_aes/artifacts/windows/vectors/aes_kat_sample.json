@@ -1,0 +1,71 @@
+[
+  {
+    "name": "FIPS-197 AES-128 ECB single block",
+    "mode": "ecb",
+    "key": "000102030405060708090a0b0c0d0e0f",
+    "pt": "00112233445566778899aabbccddeeff",
+    "ct": "69c4e0d86a7b0430d8cdb78070b4c55a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CBC block 1",
+    "mode": "cbc",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "7649abac8119b246cee98e9b12e9197d"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CFB128 block 1",
+    "mode": "cfb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 OFB block 1",
+    "mode": "ofb",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "000102030405060708090a0b0c0d0e0f",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "3b3fd92eb72dad20333449f8e83cfb4a"
+  },
+  {
+    "name": "NIST SP800-38A AES-128 CTR block 1",
+    "mode": "ctr",
+    "key": "2b7e151628aed2a6abf7158809cf4f3c",
+    "iv": "f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+    "pt": "6bc1bee22e409f96e93d7e117393172a",
+    "ct": "874d6191b620e3261bef6864990db6ce"
+  },
+  {
+    "name": "NIST GCM AES-128 empty plaintext",
+    "mode": "gcm",
+    "key": "00000000000000000000000000000000",
+    "nonce": "000000000000000000000000",
+    "aad": "",
+    "pt": "",
+    "ct": "",
+    "tag": "58e2fccefa7e3061367f1d57a4e7455a"
+  },
+  {
+    "name": "NIST GCM AES-128 one block plaintext",
+    "mode": "gcm",
+    "key": "00000000000000000000000000000000",
+    "nonce": "000000000000000000000000",
+    "aad": "",
+    "pt": "00000000000000000000000000000000",
+    "ct": "0388dace60b6a392f328c2b971b2fe78",
+    "tag": "ab6e47d42cec13bdf53a67b21257bddf"
+  },
+  {
+    "name": "RFC3610 AES-CCM packet vector 1",
+    "mode": "ccm",
+    "key": "404142434445464748494a4b4c4d4e4f",
+    "nonce": "10111213141516",
+    "aad": "0001020304050607",
+    "pt": "20212223",
+    "ct": "7162015b",
+    "tag": "4dac255d"
+  }
+]

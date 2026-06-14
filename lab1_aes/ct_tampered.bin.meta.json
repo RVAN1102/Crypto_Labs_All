@@ -1,0 +1,10 @@
+{
+  "alg": "AES-256-GCM",
+  "mode": "gcm",
+  "key_bits": 256,
+  "nonce_hex": "5d14018b1c035ef6104c4792",
+  "tag_hex": "f5daae7f243c6208d69f77fb964e8087",
+  "tag_len": 16,
+  "aad_hex": "6c616231",
+  "ciphertext_file": "ct.bin"
+}

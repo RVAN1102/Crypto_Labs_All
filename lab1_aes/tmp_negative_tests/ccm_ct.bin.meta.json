@@ -1,0 +1,10 @@
+{
+  "alg": "AES-256-CCM",
+  "mode": "ccm",
+  "key_bits": 256,
+  "nonce_hex": "e1e5fdaf5bf9adb1d63288dc",
+  "tag_hex": "8c89acb793b66f152cfeb97968de2949",
+  "tag_len": 16,
+  "aad_hex": "63636d2d616164",
+  "ciphertext_file": "D:\\Newfolder\\Lab1_AES_CryptoPP\\tmp_negative_tests\\ccm_ct.bin"
+}

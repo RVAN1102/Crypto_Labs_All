@@ -1,0 +1,7 @@
+{
+  "alg": "AES-256-ecb",
+  "mode": "ecb",
+  "key_bits": 256,
+  "iv_hex": "",
+  "ciphertext_file": "D:\\Newfolder\\Lab1_AES_CryptoPP\\tmp_negative_tests\\big_ecb_allowed.bin"
+}

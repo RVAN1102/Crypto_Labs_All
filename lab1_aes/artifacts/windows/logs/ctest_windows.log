@@ -1,0 +1,9 @@
+Test project D:/Newfolder/Lab1_AES_CryptoPP/build
+    Start 1: aes_kat_sample
+1/2 Test #1: aes_kat_sample ...................   Passed    0.02 sec
+    Start 2: negative_tests_windows
+2/2 Test #2: negative_tests_windows ...........   Passed    1.47 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   1.52 sec

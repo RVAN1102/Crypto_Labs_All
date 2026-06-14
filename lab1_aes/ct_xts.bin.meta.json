@@ -1,0 +1,7 @@
+{
+  "alg": "AES-XTS",
+  "mode": "xts",
+  "key_material_bits": 512,
+  "tweak_hex": "e2c2bec2d774970a2992b588437e300b",
+  "ciphertext_file": "ct_xts.bin"
+}

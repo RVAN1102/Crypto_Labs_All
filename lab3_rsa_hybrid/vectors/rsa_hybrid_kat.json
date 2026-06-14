@@ -1,0 +1,37 @@
+[
+  {
+    "name": "RSA-3072 OAEP-SHA256 empty label roundtrip",
+    "kind": "oaep_roundtrip",
+    "rsa_bits": 3072,
+    "label_text": "",
+    "pt_hex": "4c61622033205253412d4f414550205348412d323536"
+  },
+  {
+    "name": "RSA-3072 OAEP-SHA256 labeled roundtrip",
+    "kind": "oaep_roundtrip",
+    "rsa_bits": 3072,
+    "label_text": "lab3-kat-label",
+    "pt_hex": "000102030405060708090a0b0c0d0e0f"
+  },
+  {
+    "name": "RSA-4096 OAEP-SHA256 comparison roundtrip",
+    "kind": "oaep_roundtrip",
+    "rsa_bits": 4096,
+    "label_text": "rsa4096",
+    "pt_hex": "5253412d3430393620636f72726563746e657373"
+  },
+  {
+    "name": "RSA-3072 hybrid AES-256-GCM roundtrip",
+    "kind": "hybrid_roundtrip",
+    "rsa_bits": 3072,
+    "label_text": "hybrid-label",
+    "pt_hex": "4879627269642074657374207061796c6f61642077697468204145532d3235362d47434d"
+  },
+  {
+    "name": "RSA-4096 hybrid AES-256-GCM comparison roundtrip",
+    "kind": "hybrid_roundtrip",
+    "rsa_bits": 4096,
+    "label_text": "",
+    "pt_hex": "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
+  }
+]
