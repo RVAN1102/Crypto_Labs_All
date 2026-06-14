@@ -1,5 +1,6 @@
 #include "hashtool/cli.hpp"
 
+#include "hashtool/bench.hpp"
 #include "hashtool/cert.hpp"
 #include "hashtool/encoding.hpp"
 #include "hashtool/file_utils.hpp"
@@ -8,9 +9,13 @@
 #include "hashtool/mac.hpp"
 
 #include <cstdlib>
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <string>
+#include <vector>
 
 namespace hashtool {
 
@@ -35,6 +40,7 @@ void print_help() {
         << "  hashtool cert-info --cert FILE [--format pem|der] [--json FILE]\n"
         << "  hashtool cert-verify --cert FILE [--format pem|der] [--issuer FILE] [--issuer-format pem|der]\n"
         << "  hashtool cert-policy --cert FILE [--format pem|der]\n"
+        << "  hashtool bench --out FILE --summary FILE --runs N --ops N --warmup-ms N --sizes LIST --algos LIST --platform NAME\n"
         << "\n"
         << "Algorithms: sha224 sha256 sha384 sha512 sha3-224 sha3-256 sha3-384 sha3-512 shake128 shake256\n";
 }
@@ -178,6 +184,88 @@ bool parse_algorithm_from_args(const ParsedArgs& args, HashAlgorithm& algorithm,
 int fail(const std::string& error) {
     std::cerr << "error: " << error << "\n";
     return 1;
+}
+
+std::string lowercase(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+    return value;
+}
+
+std::vector<std::string> split_csv(const std::string& text) {
+    std::vector<std::string> values;
+    std::stringstream ss(text);
+    std::string item;
+    while (std::getline(ss, item, ',')) {
+        values.push_back(item);
+    }
+    return values;
+}
+
+bool parse_positive_int_option(const ParsedArgs& args, const std::string& name, int& value, std::string& error) {
+    std::string text;
+    if (!require_option(args, name, text, error)) {
+        return false;
+    }
+    try {
+        std::size_t consumed = 0;
+        const long parsed = std::stol(text, &consumed, 10);
+        if (consumed != text.size() || parsed <= 0 || parsed > 1000000) {
+            error = "invalid --" + name;
+            return false;
+        }
+        value = static_cast<int>(parsed);
+        return true;
+    } catch (...) {
+        error = "invalid --" + name;
+        return false;
+    }
+}
+
+bool parse_nonnegative_int_option(const ParsedArgs& args, const std::string& name, int& value, std::string& error) {
+    std::string text;
+    if (!require_option(args, name, text, error)) {
+        return false;
+    }
+    try {
+        std::size_t consumed = 0;
+        const long parsed = std::stol(text, &consumed, 10);
+        if (consumed != text.size() || parsed < 0 || parsed > 3600000) {
+            error = "invalid --" + name;
+            return false;
+        }
+        value = static_cast<int>(parsed);
+        return true;
+    } catch (...) {
+        error = "invalid --" + name;
+        return false;
+    }
+}
+
+bool parse_bench_size(const std::string& text, std::size_t& size) {
+    const std::string lower = lowercase(text);
+    if (lower == "1k") {
+        size = 1024ULL;
+        return true;
+    }
+    if (lower == "4k") {
+        size = 4ULL * 1024ULL;
+        return true;
+    }
+    if (lower == "1m") {
+        size = 1024ULL * 1024ULL;
+        return true;
+    }
+    if (lower == "100m") {
+        size = 100ULL * 1024ULL * 1024ULL;
+        return true;
+    }
+    if (lower == "1g") {
+        size = 1024ULL * 1024ULL * 1024ULL;
+        return true;
+    }
+    return false;
 }
 
 int run_hash_command(const ParsedArgs& args) {
@@ -383,6 +471,59 @@ int run_cert_policy_command(const ParsedArgs& args) {
     return 0;
 }
 
+int run_bench_command(const ParsedArgs& args) {
+    std::string error;
+    BenchConfig config;
+    if (!require_option(args, "out", config.out_path, error) ||
+        !require_option(args, "summary", config.summary_path, error) ||
+        !parse_positive_int_option(args, "runs", config.runs, error) ||
+        !parse_positive_int_option(args, "ops", config.ops, error) ||
+        !parse_nonnegative_int_option(args, "warmup-ms", config.warmup_ms, error) ||
+        !require_option(args, "platform", config.platform, error)) {
+        return fail(error);
+    }
+
+    std::string algos_text;
+    if (!require_option(args, "algos", algos_text, error)) {
+        return fail(error);
+    }
+    if (algos_text.empty()) {
+        return fail("empty --algos");
+    }
+    for (const auto& algo : split_csv(algos_text)) {
+        const auto lower = lowercase(algo);
+        if (lower.empty()) {
+            return fail("empty --algos");
+        }
+        if (lower != "sha256" && lower != "sha512" && lower != "sha3-256" && lower != "sha3-512") {
+            return fail("unsupported benchmark algorithm: " + algo);
+        }
+        config.algos.push_back(lower);
+    }
+
+    std::string sizes_text;
+    if (!require_option(args, "sizes", sizes_text, error)) {
+        return fail(error);
+    }
+    if (sizes_text.empty()) {
+        return fail("empty --sizes");
+    }
+    for (const auto& size_text : split_csv(sizes_text)) {
+        std::size_t size = 0;
+        if (size_text.empty() || !parse_bench_size(size_text, size)) {
+            return fail("invalid size: " + size_text);
+        }
+        config.sizes.push_back(size);
+    }
+
+    std::string output;
+    if (!run_benchmark(config, output, error)) {
+        return fail(error);
+    }
+    std::cout << output;
+    return 0;
+}
+
 } // namespace
 
 int run_cli(int argc, char** argv) {
@@ -425,6 +566,9 @@ int run_cli(int argc, char** argv) {
     }
     if (command == "cert-policy") {
         return run_cert_policy_command(args);
+    }
+    if (command == "bench") {
+        return run_bench_command(args);
     }
 
     return fail("unsupported command");

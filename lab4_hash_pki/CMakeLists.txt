@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenSSL REQUIRED COMPONENTS Crypto)
 
 set(HASHTOOL_CORE_SOURCES
+    src/bench.cpp
     src/cert.cpp
     src/cli.cpp
     src/encoding.cpp
@@ -25,6 +26,16 @@ target_include_directories(hashtool_core PUBLIC
 )
 
 target_link_libraries(hashtool_core PUBLIC OpenSSL::Crypto)
+
+if(CMAKE_BUILD_TYPE)
+    set(HASHTOOL_BUILD_TYPE_VALUE "${CMAKE_BUILD_TYPE}")
+else()
+    set(HASHTOOL_BUILD_TYPE_VALUE "unspecified")
+endif()
+
+target_compile_definitions(hashtool_core PUBLIC
+    HASHTOOL_BUILD_TYPE="${HASHTOOL_BUILD_TYPE_VALUE}"
+)
 
 if(WIN32)
     target_compile_definitions(hashtool_core PUBLIC
@@ -101,6 +112,19 @@ add_test(
 add_test(
     NAME cert_policy_expired_flagged
     COMMAND powershell -ExecutionPolicy Bypass -File "${PROJECT_SOURCE_DIR}/scripts/assert_output_contains_windows.ps1" -Exe "$<TARGET_FILE:hashtool>" -Args "cert-policy --cert ${PROJECT_SOURCE_DIR}/tests/certs/expired_leaf.pem" -Needle "CHECK validity_not_after FAIL"
+)
+
+add_test(
+    NAME bench_smoke_windows
+    COMMAND hashtool bench
+        --out "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_raw.csv"
+        --summary "${PROJECT_SOURCE_DIR}/artifacts/windows/bench/bench_windows_smoke_summary.csv"
+        --runs 2
+        --ops 2
+        --warmup-ms 10
+        --sizes 1m
+        --algos sha256,sha512,sha3-256,sha3-512
+        --platform windows11-mingw64
 )
 
 find_package(GTest CONFIG QUIET)

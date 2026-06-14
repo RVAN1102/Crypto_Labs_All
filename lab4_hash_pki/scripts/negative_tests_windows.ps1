@@ -115,6 +115,12 @@ if (Test-Path $expiredLeaf) {
     }
 }
 
+$benchRaw = Join-Path $Work "bench_raw.csv"
+$benchSummary = Join-Path $Work "bench_summary.csv"
+Expect-Fail "unsupported benchmark algorithm rejected" @("bench", "--out", $benchRaw, "--summary", $benchSummary, "--runs", "1", "--ops", "1", "--warmup-ms", "0", "--sizes", "1m", "--algos", "sha256,md5", "--platform", "windows11-mingw64")
+Expect-Fail "invalid benchmark size rejected" @("bench", "--out", $benchRaw, "--summary", $benchSummary, "--runs", "1", "--ops", "1", "--warmup-ms", "0", "--sizes", "2m", "--algos", "sha256", "--platform", "windows11-mingw64")
+Expect-Fail "missing benchmark output rejected" @("bench", "--summary", $benchSummary, "--runs", "1", "--ops", "1", "--warmup-ms", "0", "--sizes", "1m", "--algos", "sha256", "--platform", "windows11-mingw64")
+
 Write-Host ""
 Write-Host "Negative test summary: pass=$Pass fail=$Fail"
 

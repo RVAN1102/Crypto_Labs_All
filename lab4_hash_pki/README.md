@@ -45,6 +45,7 @@ lab4_hash_pki\build\hashtool.exe cert-info --cert lab4_hash_pki\tests\certs\leaf
 lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\leaf_valid.pem --issuer lab4_hash_pki\tests\certs\test_ca.pem
 lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\leaf_valid.pem
 lab4_hash_pki\build\hashtool.exe cert-policy --cert lab4_hash_pki\tests\certs\leaf_valid.pem
+lab4_hash_pki\build\hashtool.exe bench --out lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_raw.csv --summary lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_summary.csv --runs 3 --ops 5 --warmup-ms 100 --sizes 1m --algos sha256,sha512,sha3-256,sha3-512 --platform windows11-mingw64
 ```
 
 ## Certificate Commands
@@ -65,6 +66,40 @@ Policy summary: pass=N warn=M fail=K total=T
 ```
 
 Current policy checks flag MD5 and SHA-1 signatures, RSA keys below 2048 bits, expired or not-yet-valid certificates, and missing SAN for TLS server use.
+
+## Benchmarks
+
+`bench` measures streaming file hashing with deterministic non-secret synthetic input generated in a temporary benchmark directory. The measured path uses the same streaming hash core as `hashtool hash --in FILE --stream`; large files are not loaded fully into memory during measurement.
+
+Smoke benchmark for quick validation:
+
+```powershell
+lab4_hash_pki\build\hashtool.exe bench ^
+  --out lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_raw.csv ^
+  --summary lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_summary.csv ^
+  --runs 3 ^
+  --ops 5 ^
+  --warmup-ms 100 ^
+  --sizes 1m ^
+  --algos sha256,sha512,sha3-256,sha3-512 ^
+  --platform windows11-mingw64
+```
+
+Full benchmark for manual runs:
+
+```powershell
+lab4_hash_pki\build\hashtool.exe bench ^
+  --out lab4_hash_pki\artifacts\windows\bench\bench_windows_raw.csv ^
+  --summary lab4_hash_pki\artifacts\windows\bench\bench_windows_summary.csv ^
+  --runs 30 ^
+  --ops 100 ^
+  --warmup-ms 1000 ^
+  --sizes 1m,100m ^
+  --algos sha256,sha512,sha3-256,sha3-512 ^
+  --platform windows11-mingw64
+```
+
+Supported benchmark sizes are `1k`, `4k`, `1m`, `100m`, and `1g`. Automated tests run only the 1 MiB smoke benchmark; 100 MiB and 1 GiB inputs are intended for manual benchmark runs.
 
 Supported algorithms exactly:
 
