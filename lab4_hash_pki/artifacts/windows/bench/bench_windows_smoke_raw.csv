@@ -1,9 +1,9 @@
 platform,algo,input_size_bytes,mode,run,ops,warmup_ms,total_ms,latency_ms_per_op,throughput_mib_s,digest_size_bytes,streaming,compiler,build_type
-windows11-mingw64,sha256,1048576,hash,1,2,10,2.400400,1.200200,833.194468,32,true,gcc-16.1,Release
-windows11-mingw64,sha256,1048576,hash,2,2,10,2.198200,1.099100,909.835320,32,true,gcc-16.1,Release
-windows11-mingw64,sha512,1048576,hash,1,2,10,5.730300,2.865150,349.021866,64,true,gcc-16.1,Release
-windows11-mingw64,sha512,1048576,hash,2,2,10,5.352700,2.676350,373.643208,64,true,gcc-16.1,Release
-windows11-mingw64,sha3-256,1048576,hash,1,2,10,7.010700,3.505350,285.278218,32,true,gcc-16.1,Release
-windows11-mingw64,sha3-256,1048576,hash,2,2,10,7.060400,3.530200,283.270070,32,true,gcc-16.1,Release
-windows11-mingw64,sha3-512,1048576,hash,1,2,10,14.087400,7.043700,141.970839,64,true,gcc-16.1,Release
-windows11-mingw64,sha3-512,1048576,hash,2,2,10,13.464300,6.732150,148.540956,64,true,gcc-16.1,Release
+windows11-mingw64,sha256,1048576,hash,1,2,10,2.501200,1.250600,799.616184,32,true,gcc-16.1,Release
+windows11-mingw64,sha256,1048576,hash,2,2,10,2.214500,1.107250,903.138406,32,true,gcc-16.1,Release
+windows11-mingw64,sha512,1048576,hash,1,2,10,4.283600,2.141800,466.897003,64,true,gcc-16.1,Release
+windows11-mingw64,sha512,1048576,hash,2,2,10,4.549900,2.274950,439.570100,64,true,gcc-16.1,Release
+windows11-mingw64,sha3-256,1048576,hash,1,2,10,11.769300,5.884650,169.933641,32,true,gcc-16.1,Release
+windows11-mingw64,sha3-256,1048576,hash,2,2,10,8.698800,4.349400,229.916770,32,true,gcc-16.1,Release
+windows11-mingw64,sha3-512,1048576,hash,1,2,10,19.006800,9.503400,105.225498,64,true,gcc-16.1,Release
+windows11-mingw64,sha3-512,1048576,hash,2,2,10,14.197600,7.098800,140.868879,64,true,gcc-16.1,Release
