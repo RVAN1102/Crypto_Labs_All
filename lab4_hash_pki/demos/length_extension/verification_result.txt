@@ -1,0 +1,3 @@
+naive_original_verify=PASS
+naive_forged_verify=PASS
+hmac_forged_verify=FAIL

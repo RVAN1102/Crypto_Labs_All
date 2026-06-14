@@ -1,0 +1,8 @@
+MAC construction: SHA256(key || message)
+guessed_key_length_bytes=16
+original_message_length_bytes=29
+glue_padding_length_bytes=19
+extension=&role=admin
+forged_message = original_message || glue_padding || extension
+glue_padding_hex=80000000000000000000000000000000000168
+processed_before_extension_bytes=64

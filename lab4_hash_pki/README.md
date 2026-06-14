@@ -46,6 +46,7 @@ lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\le
 lab4_hash_pki\build\hashtool.exe cert-verify --cert lab4_hash_pki\tests\certs\leaf_valid.pem
 lab4_hash_pki\build\hashtool.exe cert-policy --cert lab4_hash_pki\tests\certs\leaf_valid.pem
 lab4_hash_pki\build\hashtool.exe bench --out lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_raw.csv --summary lab4_hash_pki\artifacts\windows\bench\bench_windows_smoke_summary.csv --runs 3 --ops 5 --warmup-ms 100 --sizes 1m --algos sha256,sha512,sha3-256,sha3-512 --platform windows11-mingw64
+lab4_hash_pki\build\hashtool.exe length-extension-demo --out-dir lab4_hash_pki\demos\length_extension
 ```
 
 ## Certificate Commands
@@ -100,6 +101,12 @@ lab4_hash_pki\build\hashtool.exe bench ^
 ```
 
 Supported benchmark sizes are `1k`, `4k`, `1m`, `100m`, and `1g`. Automated tests run only the 1 MiB smoke benchmark; 100 MiB and 1 GiB inputs are intended for manual benchmark runs.
+
+## Length-Extension Demo
+
+`length-extension-demo` creates an offline defensive demonstration against the intentionally insecure construction `MAC = SHA256(key || message)`. It writes the original message/MAC, forged message/MAC, glue padding diagram, verification results, and a detailed README under `demos/length_extension/`.
+
+The demo does not target a live service or network endpoint. It also shows that the forged message is accepted by the naive MAC check but rejected when checked as HMAC-SHA256.
 
 Supported algorithms exactly:
 

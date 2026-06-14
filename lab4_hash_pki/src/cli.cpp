@@ -6,6 +6,7 @@
 #include "hashtool/file_utils.hpp"
 #include "hashtool/hash.hpp"
 #include "hashtool/kat.hpp"
+#include "hashtool/length_extension.hpp"
 #include "hashtool/mac.hpp"
 
 #include <cstdlib>
@@ -41,6 +42,7 @@ void print_help() {
         << "  hashtool cert-verify --cert FILE [--format pem|der] [--issuer FILE] [--issuer-format pem|der]\n"
         << "  hashtool cert-policy --cert FILE [--format pem|der]\n"
         << "  hashtool bench --out FILE --summary FILE --runs N --ops N --warmup-ms N --sizes LIST --algos LIST --platform NAME\n"
+        << "  hashtool length-extension-demo --out-dir DIR\n"
         << "\n"
         << "Algorithms: sha224 sha256 sha384 sha512 sha3-224 sha3-256 sha3-384 sha3-512 shake128 shake256\n";
 }
@@ -524,6 +526,22 @@ int run_bench_command(const ParsedArgs& args) {
     return 0;
 }
 
+int run_length_extension_demo_command(const ParsedArgs& args) {
+    std::string error;
+    std::string out_dir;
+    if (!require_option(args, "out-dir", out_dir, error)) {
+        return fail(error);
+    }
+
+    LengthExtensionDemoResult result;
+    std::string output;
+    if (!run_length_extension_demo(out_dir, result, output, error)) {
+        return fail(error);
+    }
+    std::cout << output;
+    return 0;
+}
+
 } // namespace
 
 int run_cli(int argc, char** argv) {
@@ -569,6 +587,9 @@ int run_cli(int argc, char** argv) {
     }
     if (command == "bench") {
         return run_bench_command(args);
+    }
+    if (command == "length-extension-demo") {
+        return run_length_extension_demo_command(args);
     }
 
     return fail("unsupported command");

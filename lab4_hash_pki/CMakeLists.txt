@@ -16,6 +16,7 @@ set(HASHTOOL_CORE_SOURCES
     src/file_utils.cpp
     src/hash.cpp
     src/kat.cpp
+    src/length_extension.cpp
     src/mac.cpp
 )
 
@@ -125,6 +126,11 @@ add_test(
         --sizes 1m
         --algos sha256,sha512,sha3-256,sha3-512
         --platform windows11-mingw64
+)
+
+add_test(
+    NAME length_extension_demo_smoke
+    COMMAND hashtool length-extension-demo --out-dir "${PROJECT_SOURCE_DIR}/demos/length_extension"
 )
 
 find_package(GTest CONFIG QUIET)

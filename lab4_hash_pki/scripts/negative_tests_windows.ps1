@@ -121,6 +121,21 @@ Expect-Fail "unsupported benchmark algorithm rejected" @("bench", "--out", $benc
 Expect-Fail "invalid benchmark size rejected" @("bench", "--out", $benchRaw, "--summary", $benchSummary, "--runs", "1", "--ops", "1", "--warmup-ms", "0", "--sizes", "2m", "--algos", "sha256", "--platform", "windows11-mingw64")
 Expect-Fail "missing benchmark output rejected" @("bench", "--summary", $benchSummary, "--runs", "1", "--ops", "1", "--warmup-ms", "0", "--sizes", "1m", "--algos", "sha256", "--platform", "windows11-mingw64")
 
+$lengthExtensionDir = Join-Path $Work "length_extension"
+Expect-Success "length-extension demo runs" @("length-extension-demo", "--out-dir", $lengthExtensionDir)
+$verificationFile = Join-Path $lengthExtensionDir "verification_result.txt"
+if ((Test-Path $verificationFile) -and ((Get-Content $verificationFile -Raw) -like "*naive_forged_verify=PASS*")) {
+    Write-Pass "forged naive MAC accepted"
+} else {
+    Write-Fail "forged naive MAC accepted" "verification_result.txt missing or did not contain naive_forged_verify=PASS"
+}
+
+if ((Test-Path $verificationFile) -and ((Get-Content $verificationFile -Raw) -like "*hmac_forged_verify=FAIL*")) {
+    Write-Pass "forged message rejected under HMAC"
+} else {
+    Write-Fail "forged message rejected under HMAC" "verification_result.txt missing or did not contain hmac_forged_verify=FAIL"
+}
+
 Write-Host ""
 Write-Host "Negative test summary: pass=$Pass fail=$Fail"
 
