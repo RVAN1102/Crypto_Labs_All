@@ -60,4 +60,5 @@ Thumbs.db
 /lab4_hash_pki/tmp_negative_tests/
 /lab4_hash_pki/demos/length_extension/demo_key.bin
 /lab4_hash_pki/demos/length_extension/forged_message.bin
+/lab4_hash_pki/demos/tls/local/
 RTK.md
