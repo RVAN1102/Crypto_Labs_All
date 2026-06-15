@@ -1,0 +1,40 @@
+Internal ctest changing into directory: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/build-linux
+Test project /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/build-linux
+      Start  1: HashCore.Sha256AbcMatchesKnownAnswer
+ 1/17 Test  #1: HashCore.Sha256AbcMatchesKnownAnswer ...   Passed    0.00 sec
+      Start  2: HashCore.ShakeRequiresOutlen
+ 2/17 Test  #2: HashCore.ShakeRequiresOutlen ...........   Passed    0.00 sec
+      Start  3: HashCore.HmacVerifyRejectsWrongMac
+ 3/17 Test  #3: HashCore.HmacVerifyRejectsWrongMac .....   Passed    0.00 sec
+      Start  4: hashtool_help
+ 4/17 Test  #4: hashtool_help ..........................   Passed    0.00 sec
+      Start  5: hashtool_kat_hash
+ 5/17 Test  #5: hashtool_kat_hash ......................   Passed    0.01 sec
+      Start  6: hashtool_kat_shake
+ 6/17 Test  #6: hashtool_kat_shake .....................   Passed    0.00 sec
+      Start  7: cert_info_valid_pem
+ 7/17 Test  #7: cert_info_valid_pem ....................   Passed    0.00 sec
+      Start  8: cert_info_valid_der
+ 8/17 Test  #8: cert_info_valid_der ....................   Passed    0.00 sec
+      Start  9: cert_info_malformed_rejected
+ 9/17 Test  #9: cert_info_malformed_rejected ...........   Passed    0.00 sec
+      Start 10: cert_verify_correct_issuer
+10/17 Test #10: cert_verify_correct_issuer .............   Passed    0.00 sec
+      Start 11: cert_verify_wrong_issuer_fails
+11/17 Test #11: cert_verify_wrong_issuer_fails .........   Passed    0.00 sec
+      Start 12: length_extension_demo_smoke
+12/17 Test #12: length_extension_demo_smoke ............   Passed    0.00 sec
+      Start 13: bench_smoke_linux
+13/17 Test #13: bench_smoke_linux ......................   Passed    0.08 sec
+      Start 14: cert_policy_missing_san_flagged
+14/17 Test #14: cert_policy_missing_san_flagged ........   Passed    0.01 sec
+      Start 15: cert_policy_weak_key_flagged
+15/17 Test #15: cert_policy_weak_key_flagged ...........   Passed    0.01 sec
+      Start 16: cert_policy_expired_flagged
+16/17 Test #16: cert_policy_expired_flagged ............   Passed    0.01 sec
+      Start 17: negative_tests_linux
+17/17 Test #17: negative_tests_linux ...................   Passed    0.07 sec
+
+100% tests passed, 0 tests failed out of 17
+
+Total Test time (real) =   0.21 sec

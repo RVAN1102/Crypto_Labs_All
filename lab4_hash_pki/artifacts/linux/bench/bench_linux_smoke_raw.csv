@@ -1,0 +1,13 @@
+platform,algo,input_size_bytes,mode,run,ops,warmup_ms,total_ms,latency_ms_per_op,throughput_mib_s,digest_size_bytes,streaming,compiler,build_type
+ubuntu24.04-gcc,sha256,1048576,hash,1,5,100,2.596680,0.519336,1925.535684,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha256,1048576,hash,2,5,100,2.655102,0.531020,1883.166824,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha256,1048576,hash,3,5,100,2.604926,0.520985,1919.440322,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha512,1048576,hash,1,5,100,5.423430,1.084686,921.925792,64,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha512,1048576,hash,2,5,100,5.420764,1.084153,922.379207,64,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha512,1048576,hash,3,5,100,5.426175,1.085235,921.459407,64,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-256,1048576,hash,1,5,100,9.762588,1.952518,512.159276,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-256,1048576,hash,2,5,100,9.961588,1.992318,501.928006,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-256,1048576,hash,3,5,100,9.780482,1.956096,511.222249,32,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-512,1048576,hash,1,5,100,17.186509,3.437302,290.925865,64,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-512,1048576,hash,2,5,100,17.064826,3.412965,293.000351,64,true,gcc-13.3,Release
+ubuntu24.04-gcc,sha3-512,1048576,hash,3,5,100,17.137064,3.427413,291.765264,64,true,gcc-13.3,Release
