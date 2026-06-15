@@ -18,7 +18,8 @@ Expected one of these commands on PATH:
   md5_fastcoll
   fastcoll
 
-Install/build hashclash on Ubuntu, then rerun this script.
+No collision files were generated. Install/build hashclash on Ubuntu using
+the steps in demos/md5_collision/README.md, then rerun this script.
 MSG
     exit 1
 fi
@@ -72,4 +73,3 @@ fi
 } > "$sha256_result"
 
 echo "MD5 collision demo complete: $demo_dir"
-

@@ -1,0 +1,3 @@
+MD5 collision verification: PASS
+collision_a_md5=ac848c354d23aad39fef6c27730d97a7
+collision_b_md5=ac848c354d23aad39fef6c27730d97a7

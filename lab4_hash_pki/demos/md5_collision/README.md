@@ -24,7 +24,39 @@ An MD5 collision means two different messages have the same MD5 digest. It does 
 
 ## Generate on Ubuntu
 
-Install or build hashclash so that a compatible `md5_fastcoll` or `fastcoll` command is available on `PATH`, then run:
+Install or build hashclash so that a compatible `md5_fastcoll` or `fastcoll` command is available on `PATH`. The upstream HashClash README lists these build requirements: a C++11 compiler, `make`, `autoconf`, `automake`, `libtool`, zlib development headers, and bzip2 development headers.
+
+One reproducible Ubuntu build path is:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git build-essential autoconf automake libtool zlib1g-dev libbz2-dev
+mkdir -p "$HOME/src"
+git clone https://github.com/cr-marcstevens/hashclash.git "$HOME/src/hashclash"
+cd "$HOME/src/hashclash"
+./build.sh
+```
+
+After the build, expose the fast MD5 collision binary through one of the command names used by this lab:
+
+```bash
+sudo install -m 0755 src/md5fastcoll/md5_fastcoll /usr/local/bin/md5_fastcoll
+```
+
+If the built binary has a different local filename, locate it and install it under the expected wrapper name instead:
+
+```bash
+find "$HOME/src/hashclash" -type f -perm -111 -name '*fastcoll*'
+sudo install -m 0755 /path/to/the/built/fastcoll-binary /usr/local/bin/md5_fastcoll
+```
+
+Confirm that the command is available:
+
+```bash
+command -v md5_fastcoll
+```
+
+Then run:
 
 ```bash
 bash lab4_hash_pki/scripts/md5_collision_demo_linux.sh
@@ -54,4 +86,3 @@ powershell -ExecutionPolicy Bypass -File lab4_hash_pki\scripts\verify_md5_collis
 ```
 
 The Windows script does not generate collisions. It only verifies `collision_a.bin` and `collision_b.bin` if they already exist.
-

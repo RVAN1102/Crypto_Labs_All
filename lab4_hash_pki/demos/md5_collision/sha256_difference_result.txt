@@ -1,0 +1,3 @@
+SHA-256 difference verification: PASS
+collision_a_sha256=2e34ce6c12f43427d09f08174f7d432d9e03d6290254dcd06287f32e829e59c9
+collision_b_sha256=371d136bc028385b865807d7b34d5c03d7c1e6308c50a5cbd8395e68cfbca2a9

@@ -1,0 +1,17 @@
+MD5 collision generator v1.5
+by Marc Stevens (http://www.win.tue.nl/hashclash/)
+
+Using output filenames: '/home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/md5_collision/collision_a.bin' and '/home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/md5_collision/collision_b.bin'
+Using prefixfile: '/home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/md5_collision/benign_prefix.txt'
+Using initial value: d2b034bdf348938c31e3fda5921376e4
+
+Generating first block: ......
+Generating second block: W...................
+Running time: 0.876499 s
+MD5 collision verification: PASS
+SHA-256 difference verification: PASS
+collision_a_md5=ac848c354d23aad39fef6c27730d97a7
+collision_b_md5=ac848c354d23aad39fef6c27730d97a7
+collision_a_sha256=2e34ce6c12f43427d09f08174f7d432d9e03d6290254dcd06287f32e829e59c9
+collision_b_sha256=371d136bc028385b865807d7b34d5c03d7c1e6308c50a5cbd8395e68cfbca2a9
+MD5 collision demo complete: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/md5_collision
