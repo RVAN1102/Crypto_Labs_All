@@ -1,0 +1,7 @@
+platform,algorithm,operation,message_size,runs,ops,mean_ms,median_ms,stddev_ms,ci95_ms,ops_per_sec
+windows-mingw64,ecdsa-p256,keygen,na,1,1,5.228000,5.228000,0.000000,0.000000,191.277735
+windows-mingw64,ecdsa-p256,sign,1KiB,1,1,0.190900,0.190900,0.000000,0.000000,5238.344683
+windows-mingw64,ecdsa-p256,verify,1KiB,1,1,0.600900,0.600900,0.000000,0.000000,1664.170411
+windows-mingw64,rsa-pss-3072,keygen,na,1,1,110.167400,110.167400,0.000000,0.000000,9.077095
+windows-mingw64,rsa-pss-3072,sign,1KiB,1,1,3.579400,3.579400,0.000000,0.000000,279.376432
+windows-mingw64,rsa-pss-3072,verify,1KiB,1,1,0.158300,0.158300,0.000000,0.000000,6317.119394

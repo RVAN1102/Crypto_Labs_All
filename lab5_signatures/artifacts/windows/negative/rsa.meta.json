@@ -1,0 +1,13 @@
+{
+  "creation_time": "2026-06-23T16:00:08Z",
+  "algorithm": "rsa-pss-3072",
+  "hash": "SHA-256",
+  "modulus_bits": 3072,
+  "padding": "RSA-PSS",
+  "mgf": "MGF1-SHA256",
+  "salt_length_bytes": 32,
+  "public_exponent": 65537,
+  "key_format": "PEM",
+  "private_key_file": "D:\\Newfolder\\Crypto_Labs_All\\lab5_signatures\\artifacts\\windows\\negative\\rsa.priv.pem",
+  "public_key_file": "D:\\Newfolder\\Crypto_Labs_All\\lab5_signatures\\artifacts\\windows\\negative\\rsa.pub.pem"
+}
