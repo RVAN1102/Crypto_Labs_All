@@ -1,0 +1,14 @@
+﻿Lab 4 Windows Environment
+Generated: 2026-06-25 06:43:42
+OS: Windows 11 25H2
+Compiler: g++.exe (Rev5, Built by MSYS2 project) 16.1.0
+CMake: cmake version 4.3.3
+OpenSSL: OpenSSL 3.6.2 7 Apr 2026 (Library: OpenSSL 3.6.2 7 Apr 2026)
+g++ path: C:\msys64\mingw64\bin\g++.exe
+cmake path: D:\Newfolder\cmake\bin\cmake.exe
+openssl path: C:\msys64\mingw64\bin\openssl.exe
+Build type: Release
+Generator: MinGW Makefiles
+OpenSSL root: C:/msys64/mingw64
+Tool: lab4_hash_pki/build/hashtool.exe
+Core library bonus artifact: lab4_hash_pki/artifacts/windows/binaries/libhashtool_core.a

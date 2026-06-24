@@ -1,0 +1,15 @@
+﻿## master...origin/master
+ M lab4_hash_pki/artifacts/windows/bench/bench_windows_smoke_raw.csv
+ M lab4_hash_pki/artifacts/windows/bench/bench_windows_smoke_summary.csv
+?? lab4_hash_pki/artifacts/windows/logs/build_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/configure_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/ctest_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/git_status_before_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/hash_suite_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/help_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/kat_hash_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/kat_shake_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/negative_tests_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/pki_wrong_issuer_windows_final.log
+?? lab4_hash_pki/artifacts/windows/logs/pki_x509_windows_final.log
+?? lab4_hash_pki/scripts/report/

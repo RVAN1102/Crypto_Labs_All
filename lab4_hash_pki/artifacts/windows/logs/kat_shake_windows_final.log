@@ -1,0 +1,5 @@
+﻿[PASS] shake128-empty-32
+[PASS] shake128-abc-64
+[PASS] shake256-empty-32
+[PASS] shake256-abc-64
+KAT summary: pass=4 fail=0 total=4

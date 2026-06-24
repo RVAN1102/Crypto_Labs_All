@@ -1,0 +1,10 @@
+﻿-- The CXX compiler identification is GNU 16.1.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/msys64/mingw64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenSSL: C:/msys64/mingw64/lib/libcrypto.dll.a (found version "3.6.2") found components: Crypto
+-- Configuring done (1.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/Newfolder/Crypto_Labs_All/lab4_hash_pki/build

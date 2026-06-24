@@ -1,0 +1,3 @@
+﻿error: certificate signature verification failed
+exit_code=1
+Wrong issuer rejected as expected with exit code 1

@@ -1,3 +1,16 @@
+﻿Local self-signed TLS practice files created under: D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\demos\tls\local
+No public trust is claimed.
+TLS local self-signed practice run: PASS
+
+Generated:
+- D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\demos\tls\local\localhost_ecdsa_key.pem
+- D:\Newfolder\Crypto_Labs_All\lab4_hash_pki\demos\tls\local\localhost_self_signed_cert.pem
+
+This certificate is self-signed and valid only for local configuration practice.
+It includes SAN DNS:localhost and IP:127.0.0.1.
+No admin privileges were required.
+No public trusted-root TLS deployment is claimed.
+Trusted-root evidence remains pending until an owned domain and CA-issued certificate chain are available.
 Certificate:
     Data:
         Version: 3 (0x2)
