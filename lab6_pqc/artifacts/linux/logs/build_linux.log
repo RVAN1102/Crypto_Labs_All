@@ -1,0 +1,21 @@
+OpenSSL root: /opt/openssl-4.0
+OpenSSL 4.0.1 9 Jun 2026 (Library: OpenSSL 4.0.1 9 Jun 2026)
+built on: Wed Jun 24 18:03:25 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DL_ENDIAN -DOPENSSL_PIC -DNDEBUG
+OPENSSLDIR: "/opt/openssl-4.0/ssl"
+MODULESDIR: "/opt/openssl-4.0/lib/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0x7ef8320b078bffff:0x0040069c219c97a9:0x0000000000000010:0x0000000000000000:0x0000000000000000
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux
+[ 46%] Built target pqtool_core
+[ 53%] Built target pqtool
+[ 61%] Built target test_json_canonical
+[ 69%] Built target test_mldsa_roundtrip
+[ 76%] Built target test_pq_cert
+[ 84%] Built target test_cli_negative
+[ 92%] Built target test_mlkem_roundtrip
+[100%] Built target test_encoding

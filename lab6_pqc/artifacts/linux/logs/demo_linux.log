@@ -1,0 +1,16 @@
+Generated ML-DSA-44 key pair.
+Generated ML-DSA-44 key pair.
+Signature written.
+VALID
+INVALID
+PASS: tampered message rejected
+Generated ML-KEM-512 key pair.
+Encapsulation complete; shared secret written to requested file.
+Decapsulation complete; shared secret written to requested file.
+PASS: ML-KEM shared secrets match (bytes not printed)
+Educational PQ certificate written.
+CERTIFICATE VALID
+CERTIFICATE INVALID
+PASS: tampered certificate rejected
+Self-test passed.
+DEMO PASS

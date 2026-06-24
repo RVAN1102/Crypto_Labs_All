@@ -1,0 +1,22 @@
+Generated ML-DSA-44 key pair.
+Generated ML-DSA-44 key pair.
+Signature written.
+PASS: modified ML-DSA message
+PASS: modified ML-DSA signature
+PASS: wrong ML-DSA public key
+PASS: unsupported algorithm
+PASS: missing input file
+PASS: malformed private key
+PASS: malformed public key
+Generated ML-KEM-512 key pair.
+Generated ML-KEM-512 key pair.
+Encapsulation complete; shared secret written to requested file.
+Decapsulation complete; shared secret written to requested file.
+PASS: modified ML-KEM ciphertext
+Decapsulation complete; shared secret written to requested file.
+PASS: wrong ML-KEM private key
+Educational PQ certificate written.
+PASS: tampered certificate subject
+PASS: tampered certificate public key
+PASS: tampered certificate signature
+NEGATIVE TESTS PASS

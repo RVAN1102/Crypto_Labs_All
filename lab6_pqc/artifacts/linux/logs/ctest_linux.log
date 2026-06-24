@@ -1,0 +1,46 @@
+Internal ctest changing into directory: /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux
+Test project /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux
+      Start  1: encoding_base64_roundtrip
+ 1/20 Test  #1: encoding_base64_roundtrip ........................   Passed    0.00 sec
+      Start  2: encoding_hex_roundtrip
+ 2/20 Test  #2: encoding_hex_roundtrip ...........................   Passed    0.00 sec
+      Start  3: json_canonical_stable_order
+ 3/20 Test  #3: json_canonical_stable_order ......................   Passed    0.00 sec
+      Start  4: mldsa44_keygen_sign_verify_roundtrip
+ 4/20 Test  #4: mldsa44_keygen_sign_verify_roundtrip .............   Passed    0.01 sec
+      Start  5: mldsa65_keygen_sign_verify_roundtrip
+ 5/20 Test  #5: mldsa65_keygen_sign_verify_roundtrip .............   Passed    0.01 sec
+      Start  6: mldsa44_modified_message_fails
+ 6/20 Test  #6: mldsa44_modified_message_fails ...................   Passed    0.01 sec
+      Start  7: mldsa44_modified_signature_fails
+ 7/20 Test  #7: mldsa44_modified_signature_fails .................   Passed    0.01 sec
+      Start  8: mldsa44_wrong_public_key_fails
+ 8/20 Test  #8: mldsa44_wrong_public_key_fails ...................   Passed    0.01 sec
+      Start  9: mlkem512_keygen_encaps_decaps_match
+ 9/20 Test  #9: mlkem512_keygen_encaps_decaps_match ..............   Passed    0.01 sec
+      Start 10: mlkem768_keygen_encaps_decaps_match
+10/20 Test #10: mlkem768_keygen_encaps_decaps_match ..............   Passed    0.01 sec
+      Start 11: mlkem512_modified_ciphertext_fails_or_mismatch
+11/20 Test #11: mlkem512_modified_ciphertext_fails_or_mismatch ...   Passed    0.01 sec
+      Start 12: mlkem512_wrong_private_key_fails_or_mismatch
+12/20 Test #12: mlkem512_wrong_private_key_fails_or_mismatch .....   Passed    0.01 sec
+      Start 13: pq_cert_create_verify_success
+13/20 Test #13: pq_cert_create_verify_success ....................   Passed    0.01 sec
+      Start 14: pq_cert_tampered_subject_fails
+14/20 Test #14: pq_cert_tampered_subject_fails ...................   Passed    0.01 sec
+      Start 15: pq_cert_tampered_public_key_fails
+15/20 Test #15: pq_cert_tampered_public_key_fails ................   Passed    0.01 sec
+      Start 16: pq_cert_tampered_signature_fails
+16/20 Test #16: pq_cert_tampered_signature_fails .................   Passed    0.01 sec
+      Start 17: cli_help_returns_zero
+17/20 Test #17: cli_help_returns_zero ............................   Passed    0.00 sec
+      Start 18: cli_unsupported_algorithm_fails
+18/20 Test #18: cli_unsupported_algorithm_fails ..................   Passed    0.00 sec
+      Start 19: cli_missing_file_fails
+19/20 Test #19: cli_missing_file_fails ...........................   Passed    0.00 sec
+      Start 20: cli_malformed_key_fails
+20/20 Test #20: cli_malformed_key_fails ..........................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 20
+
+Total Test time (real) =   0.13 sec

@@ -1,0 +1,49 @@
+=== OpenSSL ===
+OpenSSL 4.0.1 9 Jun 2026 (Library: OpenSSL 4.0.1 9 Jun 2026)
+built on: Wed Jun 24 18:03:25 2026 UTC
+platform: linux-x86_64
+options:  bn(64,64)
+compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DL_ENDIAN -DOPENSSL_PIC -DNDEBUG
+OPENSSLDIR: "/opt/openssl-4.0/ssl"
+MODULESDIR: "/opt/openssl-4.0/lib/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_ia32cap=0x7ef8320b078bffff:0x0040069c219c97a9:0x0000000000000010:0x0000000000000000:0x0000000000000000
+=== pkg-config OpenSSL ===
+4.0.1
+=== CMake ===
+cmake version 3.28.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+=== C++ compiler ===
+c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+=== Git branch ===
+master
+=== Git status ===
+?? lab6_pqc/
+=== pqtool SHA-256 ===
+d72c81afd1a2874e57829a53bc117be339212dfe96d8365f128b3bad41ae0a45  /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux/pqtool
+=== Quality logs ===
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/logs/build_linux.log
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/logs/ctest_linux.log
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/logs/demo_linux.log
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/logs/negative_tests_linux.log
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/logs/benchmark_linux.log
+=== Benchmark CSVs ===
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mldsa-44.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mldsa-44_summary.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mldsa-65.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mldsa-65_summary.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mlkem-512.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mlkem-512_summary.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mlkem-768.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/mlkem-768_summary.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/timing_variance_mldsa44.csv
+/home/rvan1102/Crypto_Labs_All/lab6_pqc/artifacts/linux/benchmarks/timing_variance_mlkem512.csv
+=== Non-secret summary ===
+OpenSSL provider algorithms, build, 20 CTest cases, functional demo,
+negative tests, and quick/full benchmark artifacts were collected.
+No private key or shared-secret bytes are included in this log.

@@ -1,0 +1,12 @@
+/build*/
+/.vs/
+/.vscode/
+*.tmp
+*.bak
+*.swp
+artifacts/*/keys/*
+artifacts/*/demos/*
+artifacts/*/certs/*
+artifacts/*/benchmarks/*.csv
+!artifacts/**/.gitkeep
+!artifacts/*/logs/*.log
