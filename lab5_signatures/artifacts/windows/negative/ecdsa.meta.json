@@ -1,0 +1,10 @@
+{
+  "creation_time": "2026-06-23T16:00:08Z",
+  "algorithm": "ecdsa-p256",
+  "hash": "SHA-256",
+  "curve": "NIST P-256 / secp256r1",
+  "nonce": "RFC6979 deterministic HMAC-SHA256",
+  "key_format": "PEM",
+  "private_key_file": "D:\\Newfolder\\Crypto_Labs_All\\lab5_signatures\\artifacts\\windows\\negative\\ecdsa.priv.pem",
+  "public_key_file": "D:\\Newfolder\\Crypto_Labs_All\\lab5_signatures\\artifacts\\windows\\negative\\ecdsa.pub.pem"
+}

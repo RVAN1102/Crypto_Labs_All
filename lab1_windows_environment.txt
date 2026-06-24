@@ -1,0 +1,57 @@
+===== OS =====
+
+
+WindowsProductName : Windows 10 Home Single Language
+WindowsVersion     : 2009
+OsBuildNumber      : 26200
+OsArchitecture     : 64-bit
+
+
+
+
+===== CPU =====
+
+
+Name                      : AMD Ryzen 5 7535HS with Radeon Graphics        
+NumberOfCores             : 6
+NumberOfLogicalProcessors : 12
+MaxClockSpeed             : 3301
+
+
+
+
+===== RAM =====
+
+
+TotalPhysicalMemory : 7863046144
+
+
+
+
+===== DISK =====
+
+FriendlyName               MediaType         Size
+------------               ---------         ----
+SAMSUNG MZVL8512HELU-00BTW SSD       512110190592
+
+
+
+===== COMPILER =====
+g++.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+cmake version 4.3.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+===== CRYPTOPP =====
+
+
+FullName      : D:\Newfolder\Crypto++\libcryptopp.a
+Length        : 94339698
+LastWriteTime : 6/9/2026 2:35:33 PM
+
+
+
