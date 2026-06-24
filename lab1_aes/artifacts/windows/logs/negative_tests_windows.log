@@ -1,5 +1,5 @@
-Running negative tests with: .\build\aestool.exe
-Working directory: D:\Newfolder\Lab1_AES_CryptoPP\tmp_negative_tests
+Running negative tests with: D:\Newfolder\Crypto_Labs_All\lab1_aes\build\aestool.exe
+Working directory: D:\Newfolder\Crypto_Labs_All\lab1_aes\tmp_negative_tests
 
 [PASS] keygen AES-256
 [PASS] keygen wrong AES-256 key

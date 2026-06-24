@@ -1,0 +1,33 @@
+aestool - Lab 1 AES tool using Crypto++
+
+Commands:
+  keygen  --bits 128|192|256 --out key.bin
+  kat     --kat vectors/aes_kat_sample.json
+  encrypt --mode ecb|cbc|cfb|ofb|ctr|xts|gcm|ccm --key key.bin --in msg.bin --out ct.bin
+  encrypt --mode gcm --aead --key key.bin --text "message" --out ct.bin [--aad-text "aad"]
+  decrypt --mode ecb|cbc|cfb|ofb|ctr|xts|gcm|ccm --key key.bin --in ct.bin --out pt.bin
+
+  bench   --out bench_windows.csv [--runs 30] [--ops 1000] [--sizes 1k,4k,16k,256k,1m,8m]
+Options:
+  --key FILE                 Raw AES key file, length must be 16, 24, or 32 bytes
+  --key-hex HEX              AES key in hex format
+  --kat FILE                 Run JSON Known Answer Tests
+  --iv FILE                  Raw 16-byte IV/tweak file for CBC/CFB/OFB/CTR/XTS
+  --iv-hex HEX               16-byte IV/tweak in hex format for CBC/CFB/OFB/CTR/XTS
+  --nonce FILE               Raw 12-byte nonce file for GCM
+  --nonce-hex HEX            12-byte nonce in hex format for GCM
+  --aad FILE                 AAD file for GCM
+  --aad-text TEXT            AAD text for GCM
+  --allow-ecb                Allow ECB for files larger than 16 KiB in lab testing
+  --nonce-registry FILE      Registry file for CTR/GCM nonce reuse detection
+  --meta FILE                Metadata JSON sidecar path
+  --encode hex|base64|raw    Console encoding for ciphertext/key display
+
+  --runs N                  Benchmark repeated runs, default 30
+  --ops N                   Operations per timed run, default 1000
+  --warmup-ms N             Warm-up time per case, default 1000
+  --sizes LIST              Payload sizes, e.g. 1k,4k,16k,256k,1m,8m
+  --modes LIST              Modes, e.g. cbc,ctr,gcm,ccm,xts
+  --platform TEXT           Platform label for CSV, default windows-mingw64
+  --summary FILE            Summary CSV output path
+Current milestone supports ECB, CBC, CFB, OFB, CTR, XTS, GCM, and CCM.

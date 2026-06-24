@@ -1,0 +1,40 @@
+Running main() from C:/M/B/src/googletest-1.17.0/googletest/src/gtest_main.cc
+[==========] Running 11 tests from 4 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from AesGcmUnitTest
+[ RUN      ] AesGcmUnitTest.EncryptDecryptRoundTripWorks
+[       OK ] AesGcmUnitTest.EncryptDecryptRoundTripWorks (0 ms)
+[ RUN      ] AesGcmUnitTest.TamperedTagIsRejected
+[       OK ] AesGcmUnitTest.TamperedTagIsRejected (0 ms)
+[ RUN      ] AesGcmUnitTest.WrongAadIsRejected
+[       OK ] AesGcmUnitTest.WrongAadIsRejected (0 ms)
+[----------] 3 tests from AesGcmUnitTest (0 ms total)
+
+[----------] 2 tests from AesCcmUnitTest
+[ RUN      ] AesCcmUnitTest.EncryptDecryptRoundTripWorks
+[       OK ] AesCcmUnitTest.EncryptDecryptRoundTripWorks (0 ms)
+[ RUN      ] AesCcmUnitTest.TamperedCiphertextIsRejected
+[       OK ] AesCcmUnitTest.TamperedCiphertextIsRejected (0 ms)
+[----------] 2 tests from AesCcmUnitTest (0 ms total)
+
+[----------] 4 tests from AesClassicUnitTest
+[ RUN      ] AesClassicUnitTest.CtrRoundTripWorks
+[       OK ] AesClassicUnitTest.CtrRoundTripWorks (0 ms)
+[ RUN      ] AesClassicUnitTest.CbcRoundTripWorks
+[       OK ] AesClassicUnitTest.CbcRoundTripWorks (0 ms)
+[ RUN      ] AesClassicUnitTest.InvalidCbcIvLengthIsRejected
+[       OK ] AesClassicUnitTest.InvalidCbcIvLengthIsRejected (1 ms)
+[ RUN      ] AesClassicUnitTest.EcbLargeFileIsBlockedWithoutAllowFlag
+[       OK ] AesClassicUnitTest.EcbLargeFileIsBlockedWithoutAllowFlag (0 ms)
+[----------] 4 tests from AesClassicUnitTest (1 ms total)
+
+[----------] 2 tests from AesXtsUnitTest
+[ RUN      ] AesXtsUnitTest.EncryptDecryptRoundTripWorks
+[       OK ] AesXtsUnitTest.EncryptDecryptRoundTripWorks (0 ms)
+[ RUN      ] AesXtsUnitTest.ShortDataUnitIsRejected
+[       OK ] AesXtsUnitTest.ShortDataUnitIsRejected (0 ms)
+[----------] 2 tests from AesXtsUnitTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 11 tests from 4 test suites ran. (2 ms total)
+[  PASSED  ] 11 tests.
