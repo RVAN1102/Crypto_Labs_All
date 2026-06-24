@@ -39,3 +39,8 @@ Select-String -Path artifacts\windows\logs\negative_tests_windows.log -Pattern "
 ## W10 - Tamper / malformed envelope evidence
 cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
 Select-String -Path artifacts\windows\logs\negative_tests_windows.log -Pattern "tamper|malformed|ciphertext|tag|version|algorithm|envelope"
+
+## W11 - Hybrid 100 MiB benchmark
+cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
+Get-Content artifacts\windows\logs\bench_windows_hybrid_100m.log
+Import-Csv artifacts\windows\bench\bench_windows_hybrid_100m_summary.csv | Where-Object { $_.family -eq "hybrid" -and $_.payload_bytes -eq "104857600" } | Format-Table platform, rsa_bits, operation, payload_bytes, runs, ops_per_run, mean_ms_per_op, mean_mib_s -AutoSize
