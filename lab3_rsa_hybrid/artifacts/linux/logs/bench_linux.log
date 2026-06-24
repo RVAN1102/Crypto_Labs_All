@@ -1,0 +1,20 @@
+Benchmark raw CSV: artifacts/linux/bench/bench_linux_raw.csv
+Benchmark summary CSV: artifacts/linux/bench/bench_linux_summary.csv
+Runs=10, ops=10
+Generating RSA-3072 benchmark key...
+RSA-OAEP bits=3072 size=32
+RSA-OAEP bits=3072 size=190
+RSA-OAEP bits=3072 size=318
+Hybrid bits=3072 size=1024
+Hybrid bits=3072 size=16384
+Hybrid bits=3072 size=262144
+Hybrid bits=3072 size=1048576
+Generating RSA-4096 benchmark key...
+RSA-OAEP bits=4096 size=32
+RSA-OAEP bits=4096 size=190
+RSA-OAEP bits=4096 size=318
+Hybrid bits=4096 size=1024
+Hybrid bits=4096 size=16384
+Hybrid bits=4096 size=262144
+Hybrid bits=4096 size=1048576
+Benchmark completed. Anti-optimization sink: 531628000

@@ -1,0 +1,111 @@
+===== OS =====
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.4 LTS
+Release:	24.04
+Codename:	noble
+
+===== Kernel =====
+Linux RVAN1102-TUF-GAMINGA15 6.17.0-35-generic #35~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 19:30:42 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+===== CPU =====
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           48 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  12
+On-line CPU(s) list:                     0-11
+Vendor ID:                               AuthenticAMD
+Model name:                              AMD Ryzen 5 7535HS with Radeon Graphics
+CPU family:                              25
+Model:                                   68
+Thread(s) per core:                      2
+Core(s) per socket:                      6
+Socket(s):                               1
+Stepping:                                1
+Frequency boost:                         enabled
+CPU(s) scaling MHz:                      85%
+CPU max MHz:                             4604.7568
+CPU min MHz:                             416.0930
+BogoMIPS:                                6587.35
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca fsrm debug_swap
+Virtualization:                          AMD-V
+L1d cache:                               192 KiB (6 instances)
+L1i cache:                               192 KiB (6 instances)
+L2 cache:                                3 MiB (6 instances)
+L3 cache:                                16 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-11
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Mitigation; Safe RET
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; IBRS_FW; STIBP always-on; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Vulnerable: No microcode
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Mitigation; IBPB before exit to userspace
+
+===== RAM =====
+               total        used        free      shared  buff/cache   available
+Mem:           7.1Gi       4.8Gi       694Mi        43Mi       1.4Gi       2.3Gi
+Swap:          7.6Gi       721Mi       6.9Gi
+
+===== Disk =====
+NAME        MODEL                        SIZE TYPE MOUNTPOINT
+loop0                                      4K loop /snap/bare/5
+loop1                                   63.8M loop /snap/core20/2866
+loop2                                     74M loop /snap/core22/2411
+loop3                                   66.8M loop /snap/core24/1643
+loop4                                  251.7M loop /snap/firefox/7766
+loop5                                   18.5M loop /snap/firmware-updater/210
+loop6                                   16.5M loop /snap/firmware-updater/226
+loop7                                  531.4M loop /snap/gnome-42-2204/247
+loop8                                  606.1M loop /snap/gnome-46-2404/153
+loop9                                   91.7M loop /snap/gtk-common-themes/1535
+loop10                                  15.7M loop /snap/snap-store/1367
+loop11                                   395M loop /snap/mesa-2404/1165
+loop12                                  48.1M loop /snap/snapd/25935
+loop13                                  49.3M loop /snap/snapd/26865
+loop14                                   576K loop /snap/snapd-desktop-integration/343
+loop15                                   828K loop /snap/snapd-desktop-integration/387
+loop16                                 252.6M loop /snap/firefox/8545
+nvme0n1     SAMSUNG MZVL8512HELU-00BTW 476.9G disk 
+├─nvme0n1p1                              100M part /boot/efi
+├─nvme0n1p2                               16M part 
+├─nvme0n1p3                            277.7G part 
+├─nvme0n1p4                              811M part 
+├─nvme0n1p5                             23.3G part /
+├─nvme0n1p6                              7.6G part [SWAP]
+├─nvme0n1p7                             39.1G part /home
+└─nvme0n1p8                              127G part 
+
+===== Compiler =====
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+cmake version 3.28.3
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+===== Crypto++ =====
+ii  libcrypto++-dev:amd64                           8.9.0-1.1build1                                  amd64        General purpose cryptographic library - C++ development
+ii  libcrypto++-utils                               8.9.0-1.1build1                                  amd64        General purpose cryptographic library - utilities and data files
+ii  libcrypto++8t64:amd64                           8.9.0-1.1build1                                  amd64        General purpose cryptographic library - shared library
+-rw-r--r-- 1 root root 181761 Mar 31  2024 /usr/include/cryptopp/cryptlib.h
+-rw-r--r-- 1 root root 181761 Mar 31  2024 /usr/include/crypto++/cryptlib.h
+lrwxrwxrwx 1 root root 13 Mar 31  2024 /usr/lib/x86_64-linux-gnu/libcryptopp.a -> libcrypto++.a
+lrwxrwxrwx 1 root root 14 Mar 31  2024 /usr/lib/x86_64-linux-gnu/libcryptopp.so -> libcrypto++.so
+lrwxrwxrwx 1 root root 16 Mar 31  2024 /usr/lib/x86_64-linux-gnu/libcryptopp.so.8 -> libcrypto++.so.8

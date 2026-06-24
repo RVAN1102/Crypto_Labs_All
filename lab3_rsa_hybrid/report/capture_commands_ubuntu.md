@@ -1,0 +1,41 @@
+# Lab 3 Ubuntu screenshot commands
+
+## U01 - Ubuntu artifacts tree
+cd ~/Crypto_Labs_All
+find lab3_rsa_hybrid/artifacts/linux -maxdepth 4 -type f | sort
+
+## U02 - Lab 3 tool help
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/help_linux.log
+
+## U03 - CTest result
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/ctest_linux.log
+
+## U04 - KAT result
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/kat_linux.log
+
+## U05 - Negative tests
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/negative_tests_linux.log
+
+## U06 - Benchmark files
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+find artifacts/linux/bench -maxdepth 1 -type f -print -exec ls -lh {} \;
+
+## U07 - RSA-OAEP direct mode evidence
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "oaep|direct|small|limit|3072|4096" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
+
+## U08 - Hybrid encryption evidence
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "hybrid|seal|open|aes|gcm|wrap|envelope" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
+
+## U09 - Wrong key / wrong label evidence
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "wrong|label|private|reject|fail" artifacts/linux/logs/negative_tests_linux.log
+
+## U10 - Tamper / malformed envelope evidence
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "tamper|malformed|ciphertext|tag|version|algorithm|envelope" artifacts/linux/logs/negative_tests_linux.log
