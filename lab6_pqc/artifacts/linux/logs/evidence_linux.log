@@ -23,7 +23,10 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 === Git branch ===
 master
 === Git status ===
-?? lab6_pqc/
+ M lab6_pqc/artifacts/linux/logs/build_linux.log
+ M lab6_pqc/artifacts/linux/logs/ctest_linux.log
+ M lab6_pqc/artifacts/linux/logs/evidence_linux.log
+ M lab6_pqc/scripts/demo_linux.sh
 === pqtool SHA-256 ===
 d72c81afd1a2874e57829a53bc117be339212dfe96d8365f128b3bad41ae0a45  /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux/pqtool
 === Quality logs ===

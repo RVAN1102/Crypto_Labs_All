@@ -13,9 +13,9 @@ CPUINFO: OPENSSL_ia32cap=0x7ef8320b078bffff:0x0040069c219c97a9:0x000000000000001
 -- Build files have been written to: /home/rvan1102/Crypto_Labs_All/lab6_pqc/build-linux
 [ 46%] Built target pqtool_core
 [ 53%] Built target pqtool
-[ 61%] Built target test_json_canonical
-[ 69%] Built target test_mldsa_roundtrip
-[ 76%] Built target test_pq_cert
-[ 84%] Built target test_cli_negative
-[ 92%] Built target test_mlkem_roundtrip
-[100%] Built target test_encoding
+[ 61%] Built target test_mldsa_roundtrip
+[ 76%] Built target test_encoding
+[ 69%] Built target test_mlkem_roundtrip
+[ 84%] Built target test_pq_cert
+[ 92%] Built target test_json_canonical
+[100%] Built target test_cli_negative

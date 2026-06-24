@@ -10,7 +10,9 @@ CERTS="${ROOT}/artifacts/linux/certs"
 LOG="${ROOT}/artifacts/linux/logs/demo_linux.log"
 export LD_LIBRARY_PATH="${OPENSSL_ROOT_DIR}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 mkdir -p "${DEMO}" "${KEYS}" "${CERTS}" "$(dirname "${LOG}")"
-rm -f "${DEMO}"/* "${KEYS}"/* "${CERTS}"/*
+find "${DEMO}" -mindepth 1 -maxdepth 1 ! -name .gitkeep -exec rm -rf -- {} +
+find "${KEYS}" -mindepth 1 -maxdepth 1 ! -name .gitkeep -exec rm -rf -- {} +
+find "${CERTS}" -mindepth 1 -maxdepth 1 ! -name .gitkeep -exec rm -rf -- {} +
 
 {
     printf 'Lab 6 binary-safe demo\n\0payload\n' > "${DEMO}/message.bin"
@@ -48,4 +50,3 @@ rm -f "${DEMO}"/* "${KEYS}"/* "${CERTS}"/*
     "${EXE}" selftest
     echo "DEMO PASS"
 } 2>&1 | tee "${LOG}"
-
