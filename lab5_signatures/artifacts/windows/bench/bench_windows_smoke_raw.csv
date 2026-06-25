@@ -1,7 +1,7 @@
 platform,algorithm,operation,message_size,run,ops,latency_ms
-windows-mingw64,ecdsa-p256,keygen,na,1,1,5.337700
-windows-mingw64,ecdsa-p256,sign,1KiB,1,1,0.306700
-windows-mingw64,ecdsa-p256,verify,1KiB,1,1,0.699300
-windows-mingw64,rsa-pss-3072,keygen,na,1,1,179.153100
-windows-mingw64,rsa-pss-3072,sign,1KiB,1,1,3.620500
-windows-mingw64,rsa-pss-3072,verify,1KiB,1,1,0.179300
+windows-mingw64,ecdsa-p256,keygen,na,1,1,4.959900
+windows-mingw64,ecdsa-p256,sign,1KiB,1,1,0.176900
+windows-mingw64,ecdsa-p256,verify,1KiB,1,1,0.437500
+windows-mingw64,rsa-pss-3072,keygen,na,1,1,228.815900
+windows-mingw64,rsa-pss-3072,sign,1KiB,1,1,3.668100
+windows-mingw64,rsa-pss-3072,verify,1KiB,1,1,0.182800

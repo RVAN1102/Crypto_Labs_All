@@ -1,9 +1,9 @@
-param(
+﻿param(
     [Parameter(Mandatory = $true)]
     [string]$Exe
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 $Root = Resolve-Path (Join-Path $PSScriptRoot "..")
 $Work = Join-Path $Root "artifacts\windows\negative"
 New-Item -ItemType Directory -Force $Work | Out-Null
