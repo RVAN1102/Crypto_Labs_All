@@ -1,0 +1,7 @@
+subject=CN = bavan.infinityfreeapp.com
+issuer=C = AT, O = ZeroSSL GmbH, CN = ZeroSSL ECC DV SSL CA 2
+notBefore=Jun 19 00:00:00 2026 GMT
+notAfter=Sep 17 23:59:59 2026 GMT
+sha256 Fingerprint=DD:14:4D:32:03:8F:E5:B0:FC:4F:1F:F1:B1:A6:AE:2F:9B:6C:6E:79:D9:B8:D8:1F:43:19:2C:7E:3B:7E:B6:AD
+X509v3 Subject Alternative Name: 
+    DNS:bavan.infinityfreeapp.com

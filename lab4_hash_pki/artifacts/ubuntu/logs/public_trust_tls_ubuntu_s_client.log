@@ -1,0 +1,147 @@
+Lab 4 Public Trust TLS Evidence - Ubuntu
+Domain: bavan.infinityfreeapp.com
+RootCA: /home/rvan1102/https-lab/chain/Sectigo_Public_Server_Authentication_Root_E46.crt
+Partial chain mode: enabled
+Generated: 2026-06-25 23:04:18
+OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+
+==== OpenSSL local Apache verification, SNI + hostname check ====
+depth=2 C = GB, O = Sectigo Limited, CN = Sectigo Public Server Authentication Root E46
+verify return:1
+depth=1 C = AT, O = ZeroSSL GmbH, CN = ZeroSSL ECC DV SSL CA 2
+verify return:1
+depth=0 CN = bavan.infinityfreeapp.com
+verify return:1
+CONNECTED(00000003)
+---
+Certificate chain
+ 0 s:CN = bavan.infinityfreeapp.com
+   i:C = AT, O = ZeroSSL GmbH, CN = ZeroSSL ECC DV SSL CA 2
+   a:PKEY: id-ecPublicKey, 384 (bit); sigalg: ecdsa-with-SHA256
+   v:NotBefore: Jun 19 00:00:00 2026 GMT; NotAfter: Sep 17 23:59:59 2026 GMT
+-----BEGIN CERTIFICATE-----
+MIIDsDCCA1egAwIBAgIQNECA4j3NlpBAtqqymhVPojAKBggqhkjOPQQDAjBGMQsw
+CQYDVQQGEwJBVDEVMBMGA1UEChMMWmVyb1NTTCBHbWJIMSAwHgYDVQQDExdaZXJv
+U1NMIEVDQyBEViBTU0wgQ0EgMjAeFw0yNjA2MTkwMDAwMDBaFw0yNjA5MTcyMzU5
+NTlaMCQxIjAgBgNVBAMTGWJhdmFuLmluZmluaXR5ZnJlZWFwcC5jb20wdjAQBgcq
+hkjOPQIBBgUrgQQAIgNiAAQxS3KZF4jGKFBi91t4mz7kJlUClJPXjSvxe1WDh5z/
+e/TDayl7P1p3JtjNTKvAUm91by7GiOqu1qIrUoAvbkV80bXE7+s+nUshLPqAyx2i
+3aKaNCjFFWKNothvmVT1SQ2jggIqMIICJjAfBgNVHSMEGDAWgBSURZ/aUUdx1XOu
+rB2rCHISba18YjAdBgNVHQ4EFgQUjpxoqh1vss6hhps6wld20nvL/mYwDgYDVR0P
+AQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwEwYD
+VR0gBAwwCjAIBgZngQwBAgEwbgYIKwYBBQUHAQEEYjBgMDkGCCsGAQUFBzAChi1o
+dHRwOi8vY3J0LnNlY3RpZ28uY29tL1plcm9TU0xFQ0NEVlNTTENBMi5jcnQwIwYI
+KwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNlY3RpZ28uY29tMIIBBAYKKwYBBAHWeQIE
+AgSB9QSB8gDwAHYA1219ENGn9XfCx+lf1wC/+YLJM1pl4dCzAXMXwMjFaXcAAAGe
+4PVoyAAABAMARzBFAiBkoLQJ/HxwfrasnYyjsNNDhXF3Lr9xd63+tRS8ICtAzQIh
+AKCzpD9mazLb/Mugob/zm/sVmoZnU0am28S3FTTs8zVpAHYAyKPEf8ezrbk1awE/
+anoSbeM6TkOlxkb5l605dZkdz5oAAAGe4PVoUgAABAMARzBFAiEAkh04p7JfrEH3
+E3DMUOtEh+CFkc2UJilXfI5MwrpVcb4CIHMT6EIxEOeM5Dort7tfWOI8pMbD/buM
+wt9S4bw++s4OMCQGA1UdEQQdMBuCGWJhdmFuLmluZmluaXR5ZnJlZWFwcC5jb20w
+CgYIKoZIzj0EAwIDRwAwRAIgU4v4VsaRMzLYHnB/fORLYj1aocJYIbTuajN+jt6r
+kCwCIBu8z4ctErAJ53CXbzufgxyMtVC7OGImgvkGbFISLlCK
+-----END CERTIFICATE-----
+ 1 s:C = AT, O = ZeroSSL GmbH, CN = ZeroSSL ECC DV SSL CA 2
+   i:C = GB, O = Sectigo Limited, CN = Sectigo Public Server Authentication Root E46
+   a:PKEY: id-ecPublicKey, 256 (bit); sigalg: ecdsa-with-SHA384
+   v:NotBefore: Sep 24 00:00:00 2025 GMT; NotAfter: Sep 23 23:59:59 2035 GMT
+-----BEGIN CERTIFICATE-----
+MIIDNTCCArugAwIBAgIRAMThxbsA8CePNHvk+F1j/MowCgYIKoZIzj0EAwMwXzEL
+MAkGA1UEBhMCR0IxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE2MDQGA1UEAxMt
+U2VjdGlnbyBQdWJsaWMgU2VydmVyIEF1dGhlbnRpY2F0aW9uIFJvb3QgRTQ2MB4X
+DTI1MDkyNDAwMDAwMFoXDTM1MDkyMzIzNTk1OVowRjELMAkGA1UEBhMCQVQxFTAT
+BgNVBAoTDFplcm9TU0wgR21iSDEgMB4GA1UEAxMXWmVyb1NTTCBFQ0MgRFYgU1NM
+IENBIDIwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATjn4qR1IOXAceCMsej8Qyr
+4PrFw+PwjPm2vrAfijBj4u2C++Y3pZqpeLi1z05b2owKKJzQk1AtL+m1fEoFeDka
+o4IBbzCCAWswHwYDVR0jBBgwFoAU0SLaTFnxS18mOKqd1u7rDcP7qWEwHQYDVR0O
+BBYEFJRFn9pRR3HVc66sHasIchJtrXxiMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMB
+Af8ECDAGAQH/AgEAMBMGA1UdJQQMMAoGCCsGAQUFBwMBMBMGA1UdIAQMMAowCAYG
+Z4EMAQIBMFQGA1UdHwRNMEswSaBHoEWGQ2h0dHA6Ly9jcmwuc2VjdGlnby5jb20v
+U2VjdGlnb1B1YmxpY1NlcnZlckF1dGhlbnRpY2F0aW9uUm9vdEU0Ni5jcmwwgYQG
+CCsGAQUFBwEBBHgwdjBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5zZWN0aWdvLmNv
+bS9TZWN0aWdvUHVibGljU2VydmVyQXV0aGVudGljYXRpb25Sb290RTQ2LnA3YzAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wCgYIKoZIzj0EAwMD
+aAAwZQIwXKxxvuUkvPftBuaOFx73U3FxmFtKxP1Fd/+8Jq/ut2XgDrJ1vEUDdJb3
+iSDXVe9AAjEA8iUwhrRHdZrIWqfgGmDMBbuXRZ4GoQbLpwxgcPhKo3OZR7SecTp4
+juWAOpuawM2n
+-----END CERTIFICATE-----
+---
+Server certificate
+subject=CN = bavan.infinityfreeapp.com
+issuer=C = AT, O = ZeroSSL GmbH, CN = ZeroSSL ECC DV SSL CA 2
+---
+No client certificate CA names sent
+Peer signing digest: SHA384
+Peer signature type: ECDSA
+Server Temp Key: X25519, 253 bits
+---
+SSL handshake has read 2185 bytes and written 407 bytes
+Verification: OK
+Verified peername: bavan.infinityfreeapp.com
+---
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Server public key is 384 bit
+Secure Renegotiation IS NOT supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 0 (ok)
+---
+DONE
+
+==== OpenSSL brief verification ====
+CONNECTION ESTABLISHED
+Protocol version: TLSv1.3
+Ciphersuite: TLS_AES_256_GCM_SHA384
+Peer certificate: CN = bavan.infinityfreeapp.com
+Hash used: SHA384
+Signature type: ECDSA
+Verification: OK
+Verified peername: bavan.infinityfreeapp.com
+Server Temp Key: X25519, 253 bits
+DONE
+
+==== Apache configured certificate chain PEM ====
+-----BEGIN CERTIFICATE-----
+MIIDsDCCA1egAwIBAgIQNECA4j3NlpBAtqqymhVPojAKBggqhkjOPQQDAjBGMQsw
+CQYDVQQGEwJBVDEVMBMGA1UEChMMWmVyb1NTTCBHbWJIMSAwHgYDVQQDExdaZXJv
+U1NMIEVDQyBEViBTU0wgQ0EgMjAeFw0yNjA2MTkwMDAwMDBaFw0yNjA5MTcyMzU5
+NTlaMCQxIjAgBgNVBAMTGWJhdmFuLmluZmluaXR5ZnJlZWFwcC5jb20wdjAQBgcq
+hkjOPQIBBgUrgQQAIgNiAAQxS3KZF4jGKFBi91t4mz7kJlUClJPXjSvxe1WDh5z/
+e/TDayl7P1p3JtjNTKvAUm91by7GiOqu1qIrUoAvbkV80bXE7+s+nUshLPqAyx2i
+3aKaNCjFFWKNothvmVT1SQ2jggIqMIICJjAfBgNVHSMEGDAWgBSURZ/aUUdx1XOu
+rB2rCHISba18YjAdBgNVHQ4EFgQUjpxoqh1vss6hhps6wld20nvL/mYwDgYDVR0P
+AQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwEwYD
+VR0gBAwwCjAIBgZngQwBAgEwbgYIKwYBBQUHAQEEYjBgMDkGCCsGAQUFBzAChi1o
+dHRwOi8vY3J0LnNlY3RpZ28uY29tL1plcm9TU0xFQ0NEVlNTTENBMi5jcnQwIwYI
+KwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNlY3RpZ28uY29tMIIBBAYKKwYBBAHWeQIE
+AgSB9QSB8gDwAHYA1219ENGn9XfCx+lf1wC/+YLJM1pl4dCzAXMXwMjFaXcAAAGe
+4PVoyAAABAMARzBFAiBkoLQJ/HxwfrasnYyjsNNDhXF3Lr9xd63+tRS8ICtAzQIh
+AKCzpD9mazLb/Mugob/zm/sVmoZnU0am28S3FTTs8zVpAHYAyKPEf8ezrbk1awE/
+anoSbeM6TkOlxkb5l605dZkdz5oAAAGe4PVoUgAABAMARzBFAiEAkh04p7JfrEH3
+E3DMUOtEh+CFkc2UJilXfI5MwrpVcb4CIHMT6EIxEOeM5Dort7tfWOI8pMbD/buM
+wt9S4bw++s4OMCQGA1UdEQQdMBuCGWJhdmFuLmluZmluaXR5ZnJlZWFwcC5jb20w
+CgYIKoZIzj0EAwIDRwAwRAIgU4v4VsaRMzLYHnB/fORLYj1aocJYIbTuajN+jt6r
+kCwCIBu8z4ctErAJ53CXbzufgxyMtVC7OGImgvkGbFISLlCK
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIDNTCCArugAwIBAgIRAMThxbsA8CePNHvk+F1j/MowCgYIKoZIzj0EAwMwXzEL
+MAkGA1UEBhMCR0IxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE2MDQGA1UEAxMt
+U2VjdGlnbyBQdWJsaWMgU2VydmVyIEF1dGhlbnRpY2F0aW9uIFJvb3QgRTQ2MB4X
+DTI1MDkyNDAwMDAwMFoXDTM1MDkyMzIzNTk1OVowRjELMAkGA1UEBhMCQVQxFTAT
+BgNVBAoTDFplcm9TU0wgR21iSDEgMB4GA1UEAxMXWmVyb1NTTCBFQ0MgRFYgU1NM
+IENBIDIwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATjn4qR1IOXAceCMsej8Qyr
+4PrFw+PwjPm2vrAfijBj4u2C++Y3pZqpeLi1z05b2owKKJzQk1AtL+m1fEoFeDka
+o4IBbzCCAWswHwYDVR0jBBgwFoAU0SLaTFnxS18mOKqd1u7rDcP7qWEwHQYDVR0O
+BBYEFJRFn9pRR3HVc66sHasIchJtrXxiMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMB
+Af8ECDAGAQH/AgEAMBMGA1UdJQQMMAoGCCsGAQUFBwMBMBMGA1UdIAQMMAowCAYG
+Z4EMAQIBMFQGA1UdHwRNMEswSaBHoEWGQ2h0dHA6Ly9jcmwuc2VjdGlnby5jb20v
+U2VjdGlnb1B1YmxpY1NlcnZlckF1dGhlbnRpY2F0aW9uUm9vdEU0Ni5jcmwwgYQG
+CCsGAQUFBwEBBHgwdjBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5zZWN0aWdvLmNv
+bS9TZWN0aWdvUHVibGljU2VydmVyQXV0aGVudGljYXRpb25Sb290RTQ2LnA3YzAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wCgYIKoZIzj0EAwMD
+aAAwZQIwXKxxvuUkvPftBuaOFx73U3FxmFtKxP1Fd/+8Jq/ut2XgDrJ1vEUDdJb3
+iSDXVe9AAjEA8iUwhrRHdZrIWqfgGmDMBbuXRZ4GoQbLpwxgcPhKo3OZR7SecTp4
+juWAOpuawM2n
+-----END CERTIFICATE-----
