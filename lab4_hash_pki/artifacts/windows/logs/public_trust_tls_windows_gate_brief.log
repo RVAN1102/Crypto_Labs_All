@@ -1,0 +1,11 @@
+Connecting to 127.0.0.1
+CONNECTION ESTABLISHED
+Protocol version: TLSv1.3
+Ciphersuite: TLS_AES_256_GCM_SHA384
+Peer certificate: CN=bavan.infinityfreeapp.com
+Hash used: SHA384
+Signature type: ecdsa_secp384r1_sha384
+Verification: OK
+Verified peername: bavan.infinityfreeapp.com
+Negotiated TLS1.3 group: X25519MLKEM768
+DONE
