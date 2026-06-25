@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param([string]$BuildDir = "build-windows-mingw", [string]$OpenSSLRoot = "")
 $Root = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot "_common_windows.ps1")
@@ -10,12 +10,50 @@ New-Item -ItemType Directory -Force -Path $Work, $Logs | Out-Null
 Get-ChildItem $Work -ErrorAction SilentlyContinue | Remove-Item -Force
 $failures = 0
 function Expect-Failure([string]$Name, [string[]]$Arguments) {
-    & $Exe @Arguments *> $null
-    if ($LASTEXITCODE -eq 0) { "FAIL: $Name"; $script:failures++ } else { "PASS: $Name" }
+    $oldErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "SilentlyContinue"
+    try {
+        & $Exe @Arguments 1>$null 2>$null
+        $exitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $oldErrorActionPreference
+    }
+
+    if ($exitCode -eq 0) {
+        "FAIL: $Name"
+        $script:failures++
+    } else {
+        "PASS: $Name"
+    }
 }
-function Tamper-FirstByte([string]$Input, [string]$Output) {
-    $bytes = [System.IO.File]::ReadAllBytes($Input); $bytes[0] = $bytes[0] -bxor 1
-    [System.IO.File]::WriteAllBytes($Output, $bytes)
+function Tamper-FirstByte {
+    param(
+        [Parameter(Mandatory=$true, Position=0)]
+        [Alias("Input")]
+        [string]$InputPath,
+
+        [Parameter(Mandatory=$true, Position=1)]
+        [Alias("Output")]
+        [string]$OutputPath
+    )
+
+    if ([string]::IsNullOrWhiteSpace($InputPath)) {
+        throw "Internal script error: Tamper-FirstByte received empty InputPath."
+    }
+    if ([string]::IsNullOrWhiteSpace($OutputPath)) {
+        throw "Internal script error: Tamper-FirstByte received empty OutputPath."
+    }
+    if (-not (Test-Path -LiteralPath $InputPath)) {
+        throw "Internal script error: Tamper-FirstByte input does not exist: $InputPath"
+    }
+
+    $bytes = [System.IO.File]::ReadAllBytes($InputPath)
+    if ($bytes.Length -eq 0) {
+        throw "Internal script error: Tamper-FirstByte cannot tamper empty file: $InputPath"
+    }
+
+    $bytes[0] = $bytes[0] -bxor 1
+    [System.IO.File]::WriteAllBytes($OutputPath, $bytes)
 }
 & {
     [System.IO.File]::WriteAllText((Join-Path $Work "msg"), "negative", [System.Text.UTF8Encoding]::new($false))
@@ -52,3 +90,6 @@ function Tamper-FirstByte([string]$Input, [string]$Output) {
     if ($failures -ne 0) { throw "$failures negative test(s) failed." }
     "NEGATIVE TESTS PASS"
 } 2>&1 | Tee-Object (Join-Path $Logs "negative_tests_windows.log")
+
+
+
