@@ -1,0 +1,22 @@
+Lab 5 DER key end-to-end checks
+Generated ecdsa-p256 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/ecdsa_priv.der
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/ecdsa_pub.der
+Format:      DER
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/ecdsa.sig
+[PASS] signature verified
+Generated rsa-pss-3072 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/rsa_priv.der
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/rsa_pub.der
+Format:      DER
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/der/rsa.sig
+[PASS] signature verified
+DER key checks passed

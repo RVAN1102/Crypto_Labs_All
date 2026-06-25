@@ -1,0 +1,104 @@
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool keygen --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --meta /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.meta.json
+Generated ecdsa-p256 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem
+Format:      PEM
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool keygen --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.wrong.priv.pem --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.wrong.pub.pem
+Generated ecdsa-p256 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.wrong.priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.wrong.pub.pem
+Format:      PEM
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha256 --encode der
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha256 --encode der
+[PASS] signature verified
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg_tampered.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha256 --encode der
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig.bad --hash sha256 --encode der
+error: malformed ECDSA DER signature
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.wrong.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha256 --encode der
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha256 --encode der
+error: key type is not RSA for rsa-pss-3072
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.sig --hash sha512 --encode der
+error: unsupported hash: sha512 (Lab 5 requires sha256)
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/malformed.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.badkey.sig --hash sha256 --encode der
+error: malformed private key: error:0680008E:asn1 encoding routines::not enough data
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/malformed.sig --hash sha256 --encode der
+error: malformed ECDSA DER signature
+[PASS] command failed as expected
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool keygen --algo rsa-pss-3072 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.priv.pem --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --meta /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.meta.json
+Generated rsa-pss-3072 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem
+Format:      PEM
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool keygen --algo rsa-pss-3072 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.wrong.priv.pem --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.wrong.pub.pem
+Generated rsa-pss-3072 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.wrong.priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.wrong.pub.pem
+Format:      PEM
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo rsa-pss-3072 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha256 --encode raw
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha256 --encode raw
+[PASS] signature verified
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg_tampered.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha256 --encode raw
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig.bad --hash sha256 --encode raw
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.wrong.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha256 --encode raw
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha256 --encode raw
+error: key type is not EC for ecdsa-p256
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.sig --hash sha512 --encode raw
+error: unsupported hash: sha512 (Lab 5 requires sha256)
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo rsa-pss-3072 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/malformed.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.badkey.sig --hash sha256 --encode raw
+error: malformed private key: error:0680008E:asn1 encoding routines::not enough data
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo rsa-pss-3072 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/malformed.sig --hash sha256 --encode raw
+[FAIL] signature verification failed
+[PASS] command failed as expected
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.b64 --hash sha256 --encode base64
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  base64
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.b64
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --sig /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.b64 --hash sha256 --encode base64
+[PASS] signature verified
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/unsupported.sig --hash sha256 --encode hex
+error: unsupported signature encoding: hex
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool keygen --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/unsupported.priv --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/unsupported.pub --format pkcs8
+error: unsupported key format: pkcs8
+[PASS] command failed as expected
+[EXPECT FAIL] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo rsa-pss-3072 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/rsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/unsupported-parameter.sig --hash sha256 --encode raw --salt-len 20
+error: unsupported option for this command: --salt-len
+[PASS] command failed as expected
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool sign --algo ecdsa-p256 --priv /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.priv.pem --in /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/msg.bin --out /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa2.sig --hash sha256 --encode der
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa2.sig
+[RUN] /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux/sigtool batch-verify --algo ecdsa-p256 --pub /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/ecdsa.pub.pem --manifest /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/negative/batch_manifest.csv --hash sha256 --encode der
+Batch verify: total=1 pass=1 fail=0
+negative tests passed

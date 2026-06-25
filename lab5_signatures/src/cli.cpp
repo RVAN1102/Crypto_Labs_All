@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -70,6 +71,20 @@ bool require_option(const ParsedArgs& args, const std::string& name, std::string
         return false;
     }
     value = it->second;
+    return true;
+}
+
+bool reject_unsupported_options(
+    const ParsedArgs& args,
+    const std::set<std::string>& allowed,
+    std::string& error) {
+
+    for (const auto& entry : args.values) {
+        if (allowed.find(entry.first) == allowed.end()) {
+            error = "unsupported option for this command: --" + entry.first;
+            return false;
+        }
+    }
     return true;
 }
 
@@ -247,6 +262,10 @@ std::string trim_ascii_ws(std::string value) {
 
 int command_keygen(const ParsedArgs& args) {
     std::string error;
+    if (!reject_unsupported_options(args, {"algo", "pub", "priv", "format", "meta"}, error)) {
+        return fail(error);
+    }
+
     Algorithm algorithm;
     if (!parse_algorithm_option(args, algorithm, error)) {
         return fail(error);
@@ -285,6 +304,10 @@ int command_keygen(const ParsedArgs& args) {
 
 int command_sign(const ParsedArgs& args) {
     std::string error;
+    if (!reject_unsupported_options(args, {"algo", "priv", "in", "out", "hash", "encode"}, error)) {
+        return fail(error);
+    }
+
     Algorithm algorithm;
     if (!parse_algorithm_option(args, algorithm, error) || !require_sha256(args, error)) {
         return fail(error);
@@ -324,6 +347,10 @@ int command_sign(const ParsedArgs& args) {
 
 int command_verify(const ParsedArgs& args, bool quiet) {
     std::string error;
+    if (!reject_unsupported_options(args, {"algo", "pub", "in", "sig", "hash", "encode"}, error)) {
+        return fail(error);
+    }
+
     Algorithm algorithm;
     if (!parse_algorithm_option(args, algorithm, error) || !require_sha256(args, error)) {
         return fail(error);
@@ -368,6 +395,10 @@ int command_verify(const ParsedArgs& args, bool quiet) {
 
 int command_batch_verify(const ParsedArgs& args) {
     std::string error;
+    if (!reject_unsupported_options(args, {"algo", "pub", "manifest", "hash", "encode"}, error)) {
+        return fail(error);
+    }
+
     Algorithm algorithm;
     if (!parse_algorithm_option(args, algorithm, error) || !require_sha256(args, error)) {
         return fail(error);
@@ -424,6 +455,13 @@ int command_batch_verify(const ParsedArgs& args) {
 
 int command_bench(const ParsedArgs& args) {
     std::string error;
+    if (!reject_unsupported_options(
+            args,
+            {"out", "summary", "platform", "runs", "ops", "algos", "sizes"},
+            error)) {
+        return fail(error);
+    }
+
     BenchConfig config;
     config.out_path = option_or(args, "out", "artifacts/windows/bench/bench_windows_raw.csv");
     config.summary_path = option_or(args, "summary", "artifacts/windows/bench/bench_windows_summary.csv");
@@ -460,8 +498,12 @@ int command_bench(const ParsedArgs& args) {
     return 0;
 }
 
-int command_kat() {
+int command_kat(const ParsedArgs& args) {
     std::string error;
+    if (!reject_unsupported_options(args, {}, error)) {
+        return fail(error);
+    }
+
     const Bytes message = {'L', 'a', 'b', '5', '-', 'K', 'A', 'T', 0x00, 0x01};
 
     KeyPair ecdsa;
@@ -540,7 +582,7 @@ int run_cli(int argc, char** argv) {
         return command_batch_verify(args);
     }
     if (command == "kat") {
-        return command_kat();
+        return command_kat(args);
     }
     if (command == "bench") {
         return command_bench(args);

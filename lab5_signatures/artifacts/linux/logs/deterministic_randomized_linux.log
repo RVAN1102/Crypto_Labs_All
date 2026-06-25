@@ -1,0 +1,25 @@
+Lab 5 deterministic/randomized behavior checks
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_det_a.sig
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_det_b.sig
+[PASS] ECDSA-P256 signatures are identical for the same key and message
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_rand_a.sig
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_rand_b.sig
+[PASS] signature verified
+[PASS] signature verified
+[PASS] RSA-PSS signatures differ and both verify

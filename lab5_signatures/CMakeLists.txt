@@ -50,6 +50,13 @@ enable_testing()
 
 add_test(NAME sigtool_help COMMAND sigtool --help)
 add_test(NAME sigtool_kat COMMAND sigtool kat)
+add_test(
+    NAME sigtool_cli_requirements
+    COMMAND ${CMAKE_COMMAND}
+        "-DSIGTOOL=$<TARGET_FILE:sigtool>"
+        "-DWORK_DIR=${CMAKE_CURRENT_BINARY_DIR}/cli-requirements"
+        -P "${PROJECT_SOURCE_DIR}/tests/cli_requirements.cmake"
+)
 
 find_package(GTest CONFIG QUIET)
 if(NOT GTest_FOUND)

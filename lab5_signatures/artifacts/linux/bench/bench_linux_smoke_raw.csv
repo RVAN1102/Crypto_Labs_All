@@ -1,0 +1,7 @@
+platform,algorithm,operation,message_size,run,ops,latency_ms
+ubuntu-linux,ecdsa-p256,keygen,na,1,1,1.406048
+ubuntu-linux,ecdsa-p256,sign,1KiB,1,1,0.369927
+ubuntu-linux,ecdsa-p256,verify,1KiB,1,1,0.346082
+ubuntu-linux,rsa-pss-3072,keygen,na,1,1,531.241900
+ubuntu-linux,rsa-pss-3072,sign,1KiB,1,1,2.309910
+ubuntu-linux,rsa-pss-3072,verify,1KiB,1,1,0.321526

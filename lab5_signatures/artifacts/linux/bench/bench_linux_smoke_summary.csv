@@ -1,0 +1,7 @@
+platform,algorithm,operation,message_size,runs,ops,mean_ms,median_ms,stddev_ms,ci95_ms,ops_per_sec
+ubuntu-linux,ecdsa-p256,keygen,na,1,1,1.406048,1.406048,0.000000,0.000000,711.213273
+ubuntu-linux,ecdsa-p256,sign,1KiB,1,1,0.369927,0.369927,0.000000,0.000000,2703.236044
+ubuntu-linux,ecdsa-p256,verify,1KiB,1,1,0.346082,0.346082,0.000000,0.000000,2889.488618
+ubuntu-linux,rsa-pss-3072,keygen,na,1,1,531.241900,531.241900,0.000000,0.000000,1.882382
+ubuntu-linux,rsa-pss-3072,sign,1KiB,1,1,2.309910,2.309910,0.000000,0.000000,432.917300
+ubuntu-linux,rsa-pss-3072,verify,1KiB,1,1,0.321526,0.321526,0.000000,0.000000,3110.168385

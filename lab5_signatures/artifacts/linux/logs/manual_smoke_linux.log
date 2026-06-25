@@ -1,0 +1,46 @@
+Lab 5 manual smoke: PEM keys and all signature encodings
+Generated ecdsa-p256 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_pub.pem
+Format:      PEM
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_raw.sig
+[PASS] signature verified
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_der.sig
+[PASS] signature verified
+Signature created
+Algorithm: ecdsa-p256
+Hash:      sha256
+Encoding:  base64
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/ecdsa_base64.sig
+[PASS] signature verified
+Generated rsa-pss-3072 key pair
+Private key: /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_priv.pem
+Public key:  /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_pub.pem
+Format:      PEM
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  raw
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_raw.sig
+[PASS] signature verified
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  der
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_der.sig
+[PASS] signature verified
+Signature created
+Algorithm: rsa-pss-3072
+Hash:      sha256
+Encoding:  base64
+Output:    /home/rvan1102/Crypto_Labs_All/lab5_signatures/artifacts/linux/manual/rsa_base64.sig
+[PASS] signature verified
+manual smoke passed

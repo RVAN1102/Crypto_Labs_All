@@ -7,14 +7,17 @@ WORK="$ROOT/artifacts/linux/negative"
 mkdir -p "$WORK"
 
 run_ok() {
+    echo "[RUN] $EXE $*"
     "$EXE" "$@"
 }
 
 run_fail() {
+    echo "[EXPECT FAIL] $EXE $*"
     if "$EXE" "$@"; then
         echo "expected failure: $EXE $*" >&2
         exit 1
     fi
+    echo "[PASS] command failed as expected"
 }
 
 printf 'lab5\000msg' > "$WORK/msg.bin"
@@ -65,6 +68,9 @@ done
 B64="$WORK/ecdsa.b64"
 run_ok sign --algo ecdsa-p256 --priv "$WORK/ecdsa.priv.pem" --in "$MSG" --out "$B64" --hash sha256 --encode base64
 run_ok verify --algo ecdsa-p256 --pub "$WORK/ecdsa.pub.pem" --in "$MSG" --sig "$B64" --hash sha256 --encode base64
+run_fail sign --algo ecdsa-p256 --priv "$WORK/ecdsa.priv.pem" --in "$MSG" --out "$WORK/unsupported.sig" --hash sha256 --encode hex
+run_fail keygen --algo ecdsa-p256 --priv "$WORK/unsupported.priv" --pub "$WORK/unsupported.pub" --format pkcs8
+run_fail sign --algo rsa-pss-3072 --priv "$WORK/rsa.priv.pem" --in "$MSG" --out "$WORK/unsupported-parameter.sig" --hash sha256 --encode raw --salt-len 20
 
 MANIFEST="$WORK/batch_manifest.csv"
 SIG2="$WORK/ecdsa2.sig"

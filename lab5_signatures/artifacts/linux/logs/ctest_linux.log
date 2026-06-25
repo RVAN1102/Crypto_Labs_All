@@ -1,0 +1,22 @@
+Internal ctest changing into directory: /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux
+Test project /home/rvan1102/Crypto_Labs_All/lab5_signatures/build-linux
+    Start 1: SigtoolCore.EcdsaP256DeterministicAndNegativeCases
+1/8 Test #1: SigtoolCore.EcdsaP256DeterministicAndNegativeCases ...   Passed    0.01 sec
+    Start 2: SigtoolCore.RsaPss3072RandomizedAndNegativeCases
+2/8 Test #2: SigtoolCore.RsaPss3072RandomizedAndNegativeCases .....   Passed    0.74 sec
+    Start 3: SigtoolCore.ParsingRejectsUnsupportedParameters
+3/8 Test #3: SigtoolCore.ParsingRejectsUnsupportedParameters ......   Passed    0.00 sec
+    Start 4: sigtool_help
+4/8 Test #4: sigtool_help .........................................   Passed    0.00 sec
+    Start 5: sigtool_kat
+5/8 Test #5: sigtool_kat ..........................................   Passed    0.45 sec
+    Start 6: sigtool_cli_requirements
+6/8 Test #6: sigtool_cli_requirements .............................   Passed    0.29 sec
+    Start 7: sigtool_bench_smoke_linux
+7/8 Test #7: sigtool_bench_smoke_linux ............................   Passed    0.54 sec
+    Start 8: negative_tests_linux
+8/8 Test #8: negative_tests_linux .................................   Passed    0.96 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Total Test time (real) =   3.01 sec

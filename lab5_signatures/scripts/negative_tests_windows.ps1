@@ -10,6 +10,7 @@ New-Item -ItemType Directory -Force $Work | Out-Null
 
 function Run-Ok {
     param([string[]]$ToolArgs)
+    Write-Host "[RUN] $Exe $($ToolArgs -join ' ')"
     & $Exe @ToolArgs
     if ($LASTEXITCODE -ne 0) {
         throw "expected success: $Exe $($ToolArgs -join ' ')"
@@ -18,10 +19,12 @@ function Run-Ok {
 
 function Run-Fail {
     param([string[]]$ToolArgs)
+    Write-Host "[EXPECT FAIL] $Exe $($ToolArgs -join ' ')"
     & $Exe @ToolArgs
     if ($LASTEXITCODE -eq 0) {
         throw "expected failure: $Exe $($ToolArgs -join ' ')"
     }
+    Write-Host "[PASS] command failed as expected"
 }
 
 function Write-Bytes {
@@ -71,6 +74,9 @@ foreach ($algo in @("ecdsa-p256", "rsa-pss-3072")) {
 $b64 = Join-Path $Work "ecdsa.b64"
 Run-Ok @("sign", "--algo", "ecdsa-p256", "--priv", (Join-Path $Work "ecdsa.priv.pem"), "--in", $msg, "--out", $b64, "--hash", "sha256", "--encode", "base64")
 Run-Ok @("verify", "--algo", "ecdsa-p256", "--pub", (Join-Path $Work "ecdsa.pub.pem"), "--in", $msg, "--sig", $b64, "--hash", "sha256", "--encode", "base64")
+Run-Fail @("sign", "--algo", "ecdsa-p256", "--priv", (Join-Path $Work "ecdsa.priv.pem"), "--in", $msg, "--out", (Join-Path $Work "unsupported.sig"), "--hash", "sha256", "--encode", "hex")
+Run-Fail @("keygen", "--algo", "ecdsa-p256", "--priv", (Join-Path $Work "unsupported.priv"), "--pub", (Join-Path $Work "unsupported.pub"), "--format", "pkcs8")
+Run-Fail @("sign", "--algo", "rsa-pss-3072", "--priv", (Join-Path $Work "rsa.priv.pem"), "--in", $msg, "--out", (Join-Path $Work "unsupported-parameter.sig"), "--hash", "sha256", "--encode", "raw", "--salt-len", "20")
 
 $manifest = Join-Path $Work "batch_manifest.csv"
 $sig2 = Join-Path $Work "ecdsa2.sig"

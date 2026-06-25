@@ -1,6 +1,6 @@
 # Lab 5 - Classical Digital Signatures
 
-This lab implements `sigtool`, a C++17 command-line tool for detached digital signatures using OpenSSL.
+This lab implements the full main Lab 5 requirements in `sigtool`, a C++17 command-line tool for detached digital signatures using OpenSSL.
 
 ## Features
 
@@ -13,6 +13,7 @@ This lab implements `sigtool`, a C++17 command-line tool for detached digital si
   - ECDSA: `der`, `raw` as `r || s`, and `base64` over DER.
   - RSA-PSS: `raw` and `base64`; `der` is accepted as the same detached RSA signature bytes.
 - CTest integration, unit tests, CLI negative tests, KAT/correctness runner, and CSV benchmarks.
+- Batch verification using a CSV manifest.
 
 ## Dependencies
 
@@ -64,7 +65,12 @@ Helper scripts:
 ```bash
 bash lab5_signatures/scripts/build_linux.sh
 bash lab5_signatures/scripts/test_linux.sh
+bash lab5_signatures/scripts/run_lab5_ubuntu_evidence.sh
 ```
+
+The evidence script configures, builds, runs CTest, exercises PEM and DER keys,
+checks deterministic ECDSA and randomized RSA-PSS behavior, runs negative and
+batch tests, and executes the final 30-run benchmark.
 
 ## CLI Usage
 
@@ -111,7 +117,12 @@ CTest includes:
 - Windows or Linux negative CLI tests
 - smoke benchmark test
 
-Negative tests cover modified messages, modified signatures, wrong public keys, wrong algorithm identifiers, wrong hash names, malformed keys, malformed signatures, base64 signatures, and batch verification.
+Negative tests cover modified messages, modified signatures, wrong public keys,
+wrong algorithm identifiers, wrong hash names, malformed keys, malformed
+signatures, unsupported encodings, unsupported key formats, unsupported
+parameters, base64 signatures, and batch verification. The
+`sigtool_cli_requirements` CTest performs DER keygen/sign/verify end to end for
+both required algorithms.
 
 ## Benchmarks
 
@@ -127,7 +138,11 @@ Full benchmark target:
 lab5_signatures\build\sigtool.exe bench --out lab5_signatures\artifacts\windows\bench\bench_windows_raw.csv --summary lab5_signatures\artifacts\windows\bench\bench_windows_summary.csv --runs 30 --ops 1 --sizes 1k,16k,1m,8m --algos ecdsa-p256,rsa-pss-3072 --platform windows-mingw64
 ```
 
-The summary CSV reports mean, median, sample standard deviation, approximate 95% confidence interval, and throughput in operations per second.
+The final protocol runs both algorithms and all three operations (`keygen`,
+`sign`, and `verify`) with at least 30 runs. Sign and verify use 1 KiB, 16 KiB,
+1 MiB, and 8 MiB messages. The raw CSV contains every timing sample. The summary
+CSV reports mean, median, sample standard deviation, approximate 95% confidence
+interval, and throughput in operations per second.
 
 ## File Formats and Metadata
 
@@ -151,6 +166,7 @@ The summary CSV reports mean, median, sample standard deviation, approximate 95%
 - [x] Benchmark runner writes raw and summary CSV.
 - [x] Artifact/log directories included.
 - [x] No Lab 2 work and no Lab 1/3/4 implementation changes.
+- [x] Ubuntu evidence script covers the complete main-requirement workflow.
 
 ## Academic Integrity and AI Assistance
 
@@ -159,5 +175,6 @@ This implementation was prepared with AI coding assistance. The algorithms, para
 ## Current Limitations
 
 - ECDSA-P384 is not included; the required ECDSA-P256 and RSA-PSS-3072 paths are prioritized.
+- Advanced formula-level bonus work is not included or claimed.
 - The `kat` command is a local correctness runner rather than a third-party published vector parser.
-- Full benchmark CSV outputs should be generated locally; committed benchmark placeholders are intentionally small.
+- Windows evidence scripts are provided, but Windows commands are not run from Ubuntu.
