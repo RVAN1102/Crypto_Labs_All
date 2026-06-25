@@ -1,0 +1,26 @@
+Running Lab 4 negative tests with: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/build-linux/hashtool
+Working directory: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/tmp_negative_tests/20260625_141213_162124399
+
+[PASS] unsupported algorithm rejected
+[PASS] SHAKE without outlen rejected
+[PASS] fixed hash with outlen rejected
+[PASS] missing input rejected
+[PASS] both in and text rejected
+[PASS] invalid encoding rejected
+[PASS] file not found rejected
+[PASS] wrong HMAC fails verification
+[PASS] malformed key hex rejected
+[PASS] valid hash still works
+[PASS] malformed certificate rejected
+[PASS] wrong issuer fails certificate verification
+[PASS] correct issuer verifies certificate
+[PASS] missing SAN flagged
+[PASS] expired certificate flagged
+[PASS] unsupported benchmark algorithm rejected
+[PASS] invalid benchmark size rejected
+[PASS] missing benchmark output rejected
+[PASS] length-extension demo runs
+[PASS] forged naive MAC accepted
+[PASS] forged message rejected under HMAC
+
+Negative test summary: pass=21 fail=0

@@ -1,0 +1,52 @@
+Local self-signed TLS practice files created under: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/tls/local
+No public trust is claimed.
+TLS local self-signed practice run: PASS
+
+Generated:
+- /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/tls/local/localhost_ecdsa_key.pem
+- /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/tls/local/localhost_self_signed_cert.pem
+
+This certificate is self-signed and valid only for local configuration practice.
+It includes SAN DNS:localhost and IP:127.0.0.1.
+No admin privileges were required.
+No public trusted-root TLS deployment is claimed.
+Trusted-root evidence remains pending until an owned domain and CA-issued certificate chain are available.
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            0d:de:09:9b:43:e2:77:10:57:db:37:af:97:60:4d:12:5b:91:f5:6f
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: CN = localhost
+        Validity
+            Not Before: Jun 25 07:12:13 2026 GMT
+            Not After : Jul 25 07:12:13 2026 GMT
+        Subject: CN = localhost
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:59:80:9f:12:0c:81:a0:d1:22:99:32:4b:26:f5:
+                    b9:6b:c4:e8:40:6a:11:3d:be:14:1e:f3:69:73:95:
+                    2f:e5:f3:ed:19:9a:02:52:a7:d5:9a:12:81:2f:69:
+                    d6:f2:b6:1e:65:c3:7c:be:bc:55:ec:bd:82:98:bf:
+                    3f:96:60:3a:33
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Key Usage: critical
+                Digital Signature
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication
+            X509v3 Subject Alternative Name: 
+                DNS:localhost, IP Address:127.0.0.1
+            X509v3 Subject Key Identifier: 
+                34:82:5B:27:CD:F5:D8:99:DE:6B:C1:3A:6A:8A:92:79:2C:FB:D1:70
+    Signature Algorithm: ecdsa-with-SHA256
+    Signature Value:
+        30:45:02:21:00:fb:e7:ce:16:cb:26:93:a6:2f:2f:e8:28:89:
+        06:58:d3:04:46:5b:e9:c0:10:ce:36:85:41:ef:99:22:a9:49:
+        25:02:20:71:2e:80:f6:62:9e:c8:fe:64:f6:9e:ef:cf:09:df:
+        71:23:c1:26:17:80:ac:dc:99:3b:95:b0:3a:23:5c:cd:f7

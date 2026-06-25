@@ -1,0 +1,23 @@
+Lab 4 Ubuntu Environment
+Generated: 2026-06-25 14:13:32
+OS: Ubuntu 24.04.4 LTS
+Kernel: Linux RVAN1102-TUF-GAMINGA15 6.17.0-35-generic #35~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue May 26 19:30:42 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+Compiler: g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+CMake: cmake version 3.28.3
+OpenSSL: OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+g++ path: /usr/bin/g++
+cmake path: /usr/bin/cmake
+openssl path: /usr/bin/openssl
+Build type: Release
+Generator: default Unix Makefiles
+Tool: lab4_hash_pki/build-linux/hashtool
+Core library bonus artifact: lab4_hash_pki/artifacts/linux/binaries/libhashtool_core.a
+
+CPU(s):                                  12
+On-line CPU(s) list:                     0-11
+Model name:                              AMD Ryzen 5 7535HS with Radeon Graphics
+Thread(s) per core:                      2
+Core(s) per socket:                      6
+Socket(s):                               1
+CPU(s) scaling MHz:                      72%
+NUMA node0 CPU(s):                       0-11

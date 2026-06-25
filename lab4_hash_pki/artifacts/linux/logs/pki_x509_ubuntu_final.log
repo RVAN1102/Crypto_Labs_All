@@ -1,0 +1,52 @@
+subject: CN=lab4-valid.test
+issuer: CN=Lab4 Test CA
+subject_public_key_algorithm: RSA
+subject_public_key_parameters: bits=2048
+subject_public_key_bits: 2048
+signature_algorithm: sha256WithRSAEncryption
+not_before: Jun 15 03:50:29 2026 GMT
+not_after: Jun 15 03:50:29 2027 GMT
+key_usage: digitalSignature, keyEncipherment
+extended_key_usage: TLS Web Server Authentication, TLS Web Client Authentication
+subject_alt_names: DNS:lab4-valid.test, DNS:localhost
+serial_number: 3B29911059D7C85A1133C8F4985A4596E3E6D448
+fingerprint_sha256: 783a30c3d9a18a67c0a54e8b01968a54198a084516f9f8134f62c26ee3d3bab2
+fingerprint_sha1_legacy: 59e754d17e932f8ab2838f0d155b8e81dd92f96c
+subject: CN=lab4-valid.test
+issuer: CN=Lab4 Test CA
+subject_public_key_algorithm: RSA
+subject_public_key_parameters: bits=2048
+subject_public_key_bits: 2048
+signature_algorithm: sha256WithRSAEncryption
+not_before: Jun 15 03:50:29 2026 GMT
+not_after: Jun 15 03:50:29 2027 GMT
+key_usage: digitalSignature, keyEncipherment
+extended_key_usage: TLS Web Server Authentication, TLS Web Client Authentication
+subject_alt_names: DNS:lab4-valid.test, DNS:localhost
+serial_number: 3B29911059D7C85A1133C8F4985A4596E3E6D448
+fingerprint_sha256: 783a30c3d9a18a67c0a54e8b01968a54198a084516f9f8134f62c26ee3d3bab2
+fingerprint_sha1_legacy: 59e754d17e932f8ab2838f0d155b8e81dd92f96c
+[PASS] certificate signature verified
+signature_algorithm: sha256WithRSAEncryption
+signature_algorithm_consistent: yes
+CHECK signature_md5 PASS detail=sha256withrsaencryption
+CHECK signature_sha1 PASS detail=sha256withrsaencryption
+CHECK public_key_strength PASS detail=bits=2048
+CHECK validity_not_before PASS detail=active
+CHECK validity_not_after PASS detail=not_expired
+CHECK tls_server_san FAIL detail=missing
+Policy summary: pass=5 warn=0 fail=1 total=6
+CHECK signature_md5 PASS detail=sha256withrsaencryption
+CHECK signature_sha1 PASS detail=sha256withrsaencryption
+CHECK public_key_strength WARN detail=rsa_bits=1024
+CHECK validity_not_before PASS detail=active
+CHECK validity_not_after PASS detail=not_expired
+CHECK tls_server_san PASS detail=present
+Policy summary: pass=5 warn=1 fail=0 total=6
+CHECK signature_md5 PASS detail=sha256withrsaencryption
+CHECK signature_sha1 PASS detail=sha256withrsaencryption
+CHECK public_key_strength PASS detail=bits=2048
+CHECK validity_not_before PASS detail=active
+CHECK validity_not_after FAIL detail=expired
+CHECK tls_server_san PASS detail=present
+Policy summary: pass=5 warn=0 fail=1 total=6

@@ -1,0 +1,7 @@
+Length-extension demo complete: /home/rvan1102/Crypto_Labs_All/lab4_hash_pki/demos/length_extension
+naive_original_verify=PASS
+naive_forged_verify=PASS
+hmac_forged_verify=FAIL
+naive_original_verify=PASS
+naive_forged_verify=PASS
+hmac_forged_verify=FAIL
