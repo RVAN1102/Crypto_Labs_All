@@ -39,3 +39,15 @@ grep -iE "wrong|label|private|reject|fail" artifacts/linux/logs/negative_tests_l
 ## U10 - Tamper / malformed envelope evidence
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
 grep -iE "tamper|malformed|ciphertext|tag|version|algorithm|envelope" artifacts/linux/logs/negative_tests_linux.log
+
+## U11 - Hybrid 100 MiB benchmark
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/bench_linux_hybrid_100m.log
+python3 - <<'PY'
+import csv
+p='artifacts/linux/bench/bench_linux_hybrid_100m_summary.csv'
+with open(p, newline='') as f:
+    for r in csv.DictReader(f):
+        if r.get('family') == 'hybrid' and r.get('payload_bytes') == '104857600':
+            print(r)
+PY
