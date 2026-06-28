@@ -137,19 +137,25 @@ The negative test script checks wrong key handling, wrong AAD handling, tampered
 
 ## 9. CTest
 
-Run all configured tests:
+Run all configured tests on Windows:
 
 ```bat
 ctest --test-dir build --output-on-failure
 ```
 
+Run all configured tests on Ubuntu:
+
+```bash
+ctest --test-dir build-linux --output-on-failure
+```
+
 Expected result:
 
 ```text
-100% tests passed, 0 tests failed
+100% tests passed, 0 tests failed out of 14
 ```
 
-The current CTest configuration runs the KAT sample and the Windows negative test script.
+The standardized evidence runners save CTest output to `artifacts/windows/logs/ctest_windows_standard.log` and `artifacts/linux/logs/ctest_linux_standard.log`.
 
 ## 10. Benchmarking
 
@@ -157,40 +163,59 @@ Run benchmark on Windows:
 
 ```bat
 build\aestool.exe bench ^
-  --out bench_windows_raw.csv ^
-  --summary bench_windows_summary.csv ^
+  --out artifacts\windows\bench\bench_windows_raw.csv ^
+  --summary artifacts\windows\bench\bench_windows_summary.csv ^
   --runs 30 ^
   --ops 100 ^
-  --warmup-ms 1000 ^
+  --warmup-ms 100 ^
   --sizes 1k,4k,16k,256k,1m,8m ^
   --modes ecb,cbc,cfb,ofb,ctr,gcm,ccm,xts ^
-  --platform windows11-mingw64
+  --platform windows
+```
+
+Run benchmark on Ubuntu:
+
+```bash
+build-linux/aestool bench \
+  --out artifacts/linux/bench/bench_linux_raw.csv \
+  --summary artifacts/linux/bench/bench_linux_summary.csv \
+  --runs 30 \
+  --ops 100 \
+  --warmup-ms 100 \
+  --sizes 1k,4k,16k,256k,1m,8m \
+  --modes ecb,cbc,cfb,ofb,ctr,gcm,ccm,xts \
+  --platform linux
 ```
 
 The raw CSV contains per-run measurements. The summary CSV contains mean, median, standard deviation, and 95% confidence interval for latency and throughput.
 
 ## 11. Artifacts
 
-Windows artifacts are stored under:
+Windows artifacts are stored under `artifacts/windows/`; Ubuntu artifacts are stored under `artifacts/linux/`.
 
 ```text
-artifacts/windows/
+artifacts/<platform>/
 ```
 
 Recommended structure:
 
 ```text
-artifacts/windows/
-â”œâ”€â”€ binaries/
-â”‚   â””â”€â”€ aestool.exe
-â”œâ”€â”€ bench/
-â”‚   â”œâ”€â”€ bench_windows_raw.csv
-â”‚   â””â”€â”€ bench_windows_summary.csv
-â””â”€â”€ logs/
-    â”œâ”€â”€ build_windows_mingw64.log
-    â”œâ”€â”€ kat_windows.log
-    â”œâ”€â”€ negative_tests_windows.log
-    â””â”€â”€ ctest_windows.log
+binaries/
+  aestool(.exe)
+  aestool_unit_tests(.exe)
+bench/
+  bench_<platform>_raw.csv
+  bench_<platform>_summary.csv
+logs/
+  environment_<platform>_standard.log
+  configure_<platform>_standard.log
+  build_<platform>_standard.log
+  help_<platform>_standard.log
+  ctest_<platform>_standard.log
+  kat_<platform>_standard.log
+  negative_tests_<platform>_standard.log
+  bench_<platform>_standard.log
+  artifact_inventory_<platform>_standard.log
 ```
 
 ## 12. Security Notes
@@ -205,4 +230,4 @@ CBC, CFB, OFB, CTR, ECB, and XTS do not provide integrity protection. Tampering 
 
 ## 13. Current Limitations
 
-Linux build and benchmark results are not included yet. MSVC build verification is not included yet. KAT coverage is currently representative and can be extended with more vectors. The nonce reuse registry is a local misuse-prevention mechanism and is not a tamper-resistant security database.
+MSVC build verification is not included yet. KAT coverage is currently representative and can be extended with more vectors. The nonce reuse registry is a local misuse-prevention mechanism and is not a tamper-resistant security database.

@@ -1,49 +1,71 @@
-# Lab 1 Windows screenshot commands
+# Lab 1 Windows Capture Commands
 
-## W01 - Windows artifacts tree
-cd D:\Newfolder\Crypto_Labs_All
-tree lab1_aes\artifacts\windows /F
+Run these commands from PowerShell.
 
-## W02 - Windows aestool help
+## W01 - Environment summary
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-artifacts\windows\binaries\aestool.exe --help
+Get-Content artifacts\windows\logs\environment_windows_standard.log
+```
 
-## W03 - Windows CTest evidence
+## W02 - Configure and build summary
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\ctest_windows.log
+Get-Content artifacts\windows\logs\configure_windows_standard.log
+Get-Content artifacts\windows\logs\build_windows_standard.log
+```
 
-## W04 - Windows KAT evidence
+## W03 - Help / CLI usage
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\kat_windows_clean.log
+Get-Content artifacts\windows\logs\help_windows_standard.log
+```
 
-## W05 - Windows negative tests evidence
+## W04 - CTest result
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\negative_tests_windows.log
+Get-Content artifacts\windows\logs\ctest_windows_standard.log
+```
 
-## W06 - Windows benchmark files
+## W05 - KAT sample and extended result
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-dir artifacts\windows\bench
+Get-Content artifacts\windows\logs\kat_windows_standard.log
+```
 
-## W07 - Windows CBC evidence
+## W06 - Negative test result
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\kat_windows_clean.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CBC|Cbc|cbc"
+Get-Content artifacts\windows\logs\negative_tests_windows_standard.log
+```
 
-## W08 - Windows CTR/reuse evidence
+## W07 - Benchmark file list and benchmark summary
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CTR|Ctr|ctr|reuse|nonce|IV"
+Get-ChildItem artifacts\windows\bench
+Get-Content artifacts\windows\bench\bench_windows_summary.csv -TotalCount 20
+```
 
-## W09 - Windows GCM fail-closed evidence
+## W08 - ECB restriction evidence
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "GCM|Gcm|gcm|AAD|aad|tag|tamper|wrong key"
+Select-String -Path artifacts\windows\logs\negative_tests_windows_standard.log -Pattern "ECB|allow flag|large file"
+```
 
-## W10 - Windows CCM fail-closed evidence
+## W09 - GCM fail-closed evidence
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CCM|Ccm|ccm|tag|tamper|nonce"
+Select-String -Path artifacts\windows\logs\negative_tests_windows_standard.log -Pattern "GCM|AAD|tag|tampered|wrong key|malformed|invalid"
+```
 
-## W11 - Windows XTS evidence
+## W10 - CTR/GCM nonce or IV reuse evidence
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "XTS|Xts|xts|short|tamper"
+Select-String -Path artifacts\windows\logs\negative_tests_windows_standard.log -Pattern "GCM first fixed nonce|GCM second fixed nonce|CTR first IV|CTR reused IV|nonce|IV"
+```
 
-## W12 - Windows ECB restriction evidence
+## W11 - XTS limitation evidence
+```powershell
 cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "ECB|Ecb|ecb|allow|large"
+Select-String -Path artifacts\windows\logs\negative_tests_windows_standard.log -Pattern "XTS|short input|without authentication|corrupted plaintext"
+```

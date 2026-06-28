@@ -1,10 +1,10 @@
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $false
 
 Set-StrictMode -Version Latest
 
-$Repo = "D:\Newfolder\Crypto_Labs_All"
-$Lab = Join-Path $Repo "lab1_aes"
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$Lab = (Resolve-Path (Join-Path $ScriptDir "..\..")).Path
 
 Set-Location $Lab
 
@@ -12,17 +12,80 @@ $WinArtifacts = Join-Path $Lab "artifacts\windows"
 $LogDir = Join-Path $WinArtifacts "logs"
 $BenchDir = Join-Path $WinArtifacts "bench"
 $BinDir = Join-Path $WinArtifacts "binaries"
-$ReportDir = Join-Path $Lab "report"
 
-New-Item -ItemType Directory -Force -Path $LogDir, $BenchDir, $BinDir, $ReportDir | Out-Null
+New-Item -ItemType Directory -Force -Path $LogDir, $BenchDir, $BinDir | Out-Null
+
+$EnvironmentLog = Join-Path $LogDir "environment_windows_standard.log"
+$ConfigureLog = Join-Path $LogDir "configure_windows_standard.log"
+$BuildLog = Join-Path $LogDir "build_windows_standard.log"
+$HelpLog = Join-Path $LogDir "help_windows_standard.log"
+$UnitLog = Join-Path $LogDir "unit_tests_windows_standard.log"
+$CTestLog = Join-Path $LogDir "ctest_windows_standard.log"
+$KatLog = Join-Path $LogDir "kat_windows_standard.log"
+$NegativeLog = Join-Path $LogDir "negative_tests_windows_standard.log"
+$BenchLog = Join-Path $LogDir "bench_windows_standard.log"
+$InventoryLog = Join-Path $LogDir "artifact_inventory_windows_standard.log"
+
+function Copy-CompatLog($StandardName, $CompatName) {
+  Copy-Item (Join-Path $LogDir $StandardName) (Join-Path $LogDir $CompatName) -Force
+}
+
+function Write-Section($Path, $Title) {
+  "`n===== $Title =====" | Out-File $Path -Append -Encoding utf8
+}
+
+function Append-KatSummary($Path, $Label) {
+  $Text = Get-Content -LiteralPath $Path -Raw
+  $Matches = [regex]::Matches($Text, "KAT summary:\s*pass=(\d+),\s*fail=(\d+),\s*total=(\d+)")
+
+  if ($Matches.Count -eq 0) {
+    "${Label}: missing KAT summary" | Out-File $Path -Append -Encoding utf8
+    return
+  }
+
+  $Last = $Matches[$Matches.Count - 1]
+  "${Label}: pass=$($Last.Groups[1].Value) fail=$($Last.Groups[2].Value) total=$($Last.Groups[3].Value)" |
+    Out-File $Path -Append -Encoding utf8
+}
 
 Write-Host "===== Lab 1 Windows evidence run started ====="
 
-Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force tmp_negative_tests -ErrorAction SilentlyContinue
+Write-Host "===== Environment ====="
+"===== OS =====" | Out-File $EnvironmentLog -Encoding utf8
+Get-ComputerInfo |
+  Select-Object WindowsProductName, WindowsVersion, OsBuildNumber, OsArchitecture |
+  Format-List |
+  Out-File $EnvironmentLog -Append -Encoding utf8
+
+Write-Section $EnvironmentLog "CPU"
+Get-CimInstance Win32_Processor |
+  Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed |
+  Format-List |
+  Out-File $EnvironmentLog -Append -Encoding utf8
+
+Write-Section $EnvironmentLog "RAM"
+Get-CimInstance Win32_ComputerSystem |
+  Select-Object TotalPhysicalMemory |
+  Format-List |
+  Out-File $EnvironmentLog -Append -Encoding utf8
+
+Write-Section $EnvironmentLog "COMPILER"
+g++ --version | Out-File $EnvironmentLog -Append -Encoding utf8
+cmake --version | Out-File $EnvironmentLog -Append -Encoding utf8
+
+Write-Section $EnvironmentLog "CRYPTOPP"
+Get-ChildItem "D:\Newfolder\Crypto++" -Filter "libcryptopp.a" -Recurse -ErrorAction SilentlyContinue |
+  Select-Object FullName, Length, LastWriteTime |
+  Format-List |
+  Out-File $EnvironmentLog -Append -Encoding utf8
 
 Write-Host "===== Configure ====="
-$ConfigureLog = Join-Path $LogDir "configure_windows.log"
+if (Test-Path (Join-Path $Lab "build")) {
+  Remove-Item (Join-Path $Lab "build") -Recurse -Force
+}
+if (Test-Path (Join-Path $Lab "tmp_negative_tests")) {
+  Remove-Item (Join-Path $Lab "tmp_negative_tests") -Recurse -Force
+}
 
 & cmake -S . -B build `
   -G "MinGW Makefiles" `
@@ -30,109 +93,64 @@ $ConfigureLog = Join-Path $LogDir "configure_windows.log"
   -DCMAKE_CXX_COMPILER="C:\msys64\mingw64\bin\g++.exe" `
   *> $ConfigureLog
 
-Get-Content $ConfigureLog
-
 if ($LASTEXITCODE -ne 0) {
-  throw "CMake configure failed. See artifacts\windows\logs\configure_windows.log"
+  throw "CMake configure failed. See artifacts\windows\logs\configure_windows_standard.log"
 }
 
 Write-Host "===== Build ====="
-$BuildLog = Join-Path $LogDir "build_windows.log"
-
 & cmake --build build --parallel *> $BuildLog
 
-Get-Content $BuildLog
-
 if ($LASTEXITCODE -ne 0) {
-  throw "CMake build failed. See artifacts\windows\logs\build_windows.log"
+  throw "CMake build failed. See artifacts\windows\logs\build_windows_standard.log"
 }
 
 $ToolCandidates = @(
   (Join-Path $Lab "build\aestool.exe"),
   (Join-Path $Lab "build\Release\aestool.exe")
 )
-
-$Tool = $ToolCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+$Tool = $ToolCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if (-not $Tool) {
   throw "Cannot find aestool.exe in build output."
 }
+$Tool = (Resolve-Path -LiteralPath $Tool).Path
 
 $UnitCandidates = @(
   (Join-Path $Lab "build\aestool_unit_tests.exe"),
   (Join-Path $Lab "build\Release\aestool_unit_tests.exe")
 )
+$UnitTool = $UnitCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $UnitTool) {
+  throw "Cannot find aestool_unit_tests.exe in build output."
+}
+$UnitTool = (Resolve-Path -LiteralPath $UnitTool).Path
 
-$UnitTool = $UnitCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+"`nBuilt binary: $Tool" | Out-File $BuildLog -Append -Encoding utf8
+"Built unit test binary: $UnitTool" | Out-File $BuildLog -Append -Encoding utf8
 
 Copy-Item $Tool (Join-Path $BinDir "aestool.exe") -Force
-if ($UnitTool) {
-  Copy-Item $UnitTool (Join-Path $BinDir "aestool_unit_tests.exe") -Force
-}
-
-Write-Host "===== Environment ====="
-@"
-===== OS =====
-"@ | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Encoding utf8
-
-Get-ComputerInfo |
-  Select-Object WindowsProductName, WindowsVersion, OsBuildNumber, OsArchitecture |
-  Format-List |
-  Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-
-"`n===== CPU =====" | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-Get-CimInstance Win32_Processor |
-  Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed |
-  Format-List |
-  Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-
-"`n===== RAM =====" | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-Get-CimInstance Win32_ComputerSystem |
-  Select-Object TotalPhysicalMemory |
-  Format-List |
-  Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-
-"`n===== DISK =====" | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-Get-PhysicalDisk |
-  Select-Object FriendlyName, MediaType, Size |
-  Format-Table |
-  Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-
-"`n===== COMPILER =====" | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-g++ --version | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-cmake --version | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-
-"`n===== CRYPTOPP =====" | Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
-Get-ChildItem "D:\Newfolder\Crypto++" -Filter "libcryptopp.a" -Recurse -ErrorAction SilentlyContinue |
-  Select-Object FullName,Length,LastWriteTime |
-  Format-List |
-  Out-File (Join-Path $Repo "lab1_windows_environment.txt") -Append -Encoding utf8
+Copy-Item $UnitTool (Join-Path $BinDir "aestool_unit_tests.exe") -Force
 
 Write-Host "===== Help ====="
-& $Tool --help > (Join-Path $LogDir "help_windows.log") 2>&1
+& $Tool --help > $HelpLog 2>&1
 
 Write-Host "===== Unit tests ====="
-if ($UnitTool) {
-  & $UnitTool > (Join-Path $LogDir "unit_tests_windows.log") 2>&1
-} else {
-  "aestool_unit_tests.exe not found" > (Join-Path $LogDir "unit_tests_windows.log")
-}
+& $UnitTool > $UnitLog 2>&1
 
 Write-Host "===== CTest ====="
-ctest --test-dir build --output-on-failure > (Join-Path $LogDir "ctest_windows.log") 2>&1
+ctest --test-dir build --output-on-failure > $CTestLog 2>&1
 
-Write-Host "===== KAT clean scope ====="
-$KatLog = Join-Path $LogDir "kat_windows_clean.log"
+Write-Host "===== KAT ====="
 "===== KAT sample =====" | Out-File $KatLog -Encoding utf8
 & $Tool kat --kat "vectors\aes_kat_sample.json" | Out-File $KatLog -Append -Encoding utf8
+Append-KatSummary $KatLog "KAT sample"
 
 "`n===== KAT extended =====" | Out-File $KatLog -Append -Encoding utf8
 & $Tool kat --kat "vectors\aes_kat_extended.json" | Out-File $KatLog -Append -Encoding utf8
-
-Copy-Item $KatLog (Join-Path $LogDir "kat_windows.log") -Force
+Append-KatSummary $KatLog "KAT extended"
 
 Write-Host "===== Negative tests ====="
 powershell -ExecutionPolicy Bypass -File "scripts\negative_tests_windows.ps1" $Tool `
-  > (Join-Path $LogDir "negative_tests_windows.log") 2>&1
+  > $NegativeLog 2>&1
 
 Write-Host "===== Benchmark ====="
 & $Tool bench `
@@ -144,65 +162,32 @@ Write-Host "===== Benchmark ====="
   --sizes "1k,4k,16k,256k,1m,8m" `
   --modes "ecb,cbc,cfb,ofb,ctr,gcm,ccm,xts" `
   --platform "windows" `
-  > (Join-Path $LogDir "bench_windows.log") 2>&1
+  > $BenchLog 2>&1
 
-Write-Host "===== Screenshot command guide ====="
-@"
-# Lab 1 Windows screenshot commands
+Write-Host "===== Artifact inventory ====="
+"===== Artifact inventory: Windows =====" | Out-File $InventoryLog -Encoding utf8
+"Binaries:" | Out-File $InventoryLog -Append -Encoding utf8
+Get-ChildItem $BinDir | Select-Object Name, Length, LastWriteTime | Format-Table | Out-File $InventoryLog -Append -Encoding utf8
+"`nLogs:" | Out-File $InventoryLog -Append -Encoding utf8
+Get-ChildItem $LogDir -Filter "*_windows_standard.log" | Select-Object Name, Length, LastWriteTime | Sort-Object Name | Format-Table | Out-File $InventoryLog -Append -Encoding utf8
+"`nBenchmark CSV:" | Out-File $InventoryLog -Append -Encoding utf8
+Get-ChildItem $BenchDir -Filter "*.csv" | Select-Object Name, Length, LastWriteTime | Sort-Object Name | Format-Table | Out-File $InventoryLog -Append -Encoding utf8
 
-## W01 - Windows artifacts tree
-cd D:\Newfolder\Crypto_Labs_All
-tree lab1_aes\artifacts\windows /F
-
-## W02 - Windows aestool help
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-artifacts\windows\binaries\aestool.exe --help
-
-## W03 - Windows CTest evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\ctest_windows.log
-
-## W04 - Windows KAT evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\kat_windows_clean.log
-
-## W05 - Windows negative tests evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-type artifacts\windows\logs\negative_tests_windows.log
-
-## W06 - Windows benchmark files
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-dir artifacts\windows\bench
-
-## W07 - Windows CBC evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\kat_windows_clean.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CBC|Cbc|cbc"
-
-## W08 - Windows CTR/reuse evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CTR|Ctr|ctr|reuse|nonce|IV"
-
-## W09 - Windows GCM fail-closed evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "GCM|Gcm|gcm|AAD|aad|tag|tamper|wrong key"
-
-## W10 - Windows CCM fail-closed evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "CCM|Ccm|ccm|tag|tamper|nonce"
-
-## W11 - Windows XTS evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "XTS|Xts|xts|short|tamper"
-
-## W12 - Windows ECB restriction evidence
-cd D:\Newfolder\Crypto_Labs_All\lab1_aes
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log -Pattern "ECB|Ecb|ecb|allow|large"
-"@ | Out-File (Join-Path $ReportDir "capture_commands_windows.md") -Encoding utf8
+Copy-CompatLog "environment_windows_standard.log" "environment_windows.log"
+Copy-CompatLog "configure_windows_standard.log" "configure_windows.log"
+Copy-CompatLog "build_windows_standard.log" "build_windows.log"
+Copy-CompatLog "help_windows_standard.log" "help_windows.log"
+Copy-CompatLog "unit_tests_windows_standard.log" "unit_tests_windows.log"
+Copy-CompatLog "ctest_windows_standard.log" "ctest_windows.log"
+Copy-CompatLog "kat_windows_standard.log" "kat_windows.log"
+Copy-CompatLog "negative_tests_windows_standard.log" "negative_tests_windows.log"
+Copy-CompatLog "bench_windows_standard.log" "bench_windows.log"
+Copy-CompatLog "artifact_inventory_windows_standard.log" "artifact_inventory_windows.log"
 
 Write-Host "===== Verification summary ====="
-Select-String -Path (Join-Path $LogDir "ctest_windows.log") -Pattern "100% tests passed|tests failed"
-Select-String -Path (Join-Path $LogDir "kat_windows_clean.log") -Pattern "KAT summary"
-Select-String -Path (Join-Path $LogDir "negative_tests_windows.log") -Pattern "summary|fail=0"
+Select-String -Path $CTestLog -Pattern "100% tests passed|tests failed"
+Select-String -Path $KatLog -Pattern "KAT sample:|KAT extended:"
+Select-String -Path $NegativeLog -Pattern "Windows negative test summary"
 Get-ChildItem $BenchDir
 
 Write-Host "===== Lab 1 Windows evidence run completed ====="
