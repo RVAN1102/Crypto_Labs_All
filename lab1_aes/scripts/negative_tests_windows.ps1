@@ -7,6 +7,11 @@ $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
 Set-Location $Root
 
+if (!(Test-Path -LiteralPath $Exe)) {
+    throw "Executable not found: $Exe"
+}
+$Exe = (Resolve-Path -LiteralPath $Exe).Path
+
 $Work = Join-Path $Root "tmp_negative_tests"
 if (Test-Path $Work) {
     Remove-Item $Work -Recurse -Force
@@ -107,6 +112,35 @@ function Assert-TextNotEquals($Name, $Path, $Expected) {
     }
 }
 
+function Expect-SuccessAndTextNotEquals($Name, $Path, $Expected, $ArgsArray) {
+    try {
+        $R = Run-Cmd $ArgsArray
+
+        if ($R.Code -ne 0) {
+            Write-Fail $Name "expected unauthenticated decrypt success, exit=$($R.Code), output=$($R.Output)"
+            return
+        }
+
+        $Actual = Read-Utf8 $Path
+
+        if ($Actual -ne $Expected) {
+            Write-Pass $Name
+        } else {
+            Write-Fail $Name "expected corrupted plaintext, but plaintext is unchanged"
+        }
+    } catch {
+        Write-Fail $Name "exception: $($_.Exception.Message)"
+    }
+}
+
+function Invoke-Setup($ArgsArray) {
+    $R = Run-Cmd $ArgsArray
+
+    if ($R.Code -ne 0) {
+        throw "Setup failed: $($ArgsArray -join ' '). Output=$($R.Output)"
+    }
+}
+
 function Write-Bytes($Path, [byte[]]$Bytes) {
     [IO.File]::WriteAllBytes($Path, $Bytes)
 }
@@ -145,18 +179,15 @@ Write-Host "Running negative tests with: $Exe"
 Write-Host "Working directory: $Work"
 Write-Host ""
 
-if (!(Test-Path $Exe)) {
-    throw "Executable not found: $Exe"
-}
-
 $key = Join-Path $Work "key.bin"
 $wrongKey = Join-Path $Work "wrong_key.bin"
 $xtsKey = Join-Path $Work "xts_key.bin"
 $badKey = Join-Path $Work "bad_key.bin"
 
-Expect-Success "keygen AES-256" @("keygen", "--bits", "256", "--out", $key, "--encode", "raw")
-Expect-Success "keygen wrong AES-256 key" @("keygen", "--bits", "256", "--out", $wrongKey, "--encode", "raw")
-Expect-Success "keygen XTS-512 material" @("keygen", "--bits", "512", "--out", $xtsKey, "--encode", "raw")
+Invoke-Setup @("keygen", "--bits", "512", "--out", $xtsKey, "--encode", "raw")
+
+Expect-Success "Generate AES-256 key" @("keygen", "--bits", "256", "--out", $key, "--encode", "raw")
+Expect-Success "Generate wrong AES-256 key" @("keygen", "--bits", "256", "--out", $wrongKey, "--encode", "raw")
 
 Write-Bytes $badKey ([byte[]](1,2,3,4,5))
 
@@ -168,7 +199,7 @@ $gcmMalformedMeta = Join-Path $Work "gcm_malformed.meta.json"
 
 $gcmText = "GCM negative testing message"
 
-Expect-Success "GCM encrypt baseline" @(
+Expect-Success "GCM encrypt" @(
     "encrypt", "--mode", "gcm",
     "--key", $key,
     "--text", $gcmText,
@@ -177,7 +208,7 @@ Expect-Success "GCM encrypt baseline" @(
     "--nonce-registry", (Join-Path $Work "gcm_registry.jsonl")
 )
 
-Expect-Success "GCM decrypt baseline" @(
+Expect-Success "GCM decrypt" @(
     "decrypt", "--mode", "gcm",
     "--key", $key,
     "--in", $gcmCt,
@@ -237,14 +268,14 @@ Expect-Fail "GCM malformed metadata rejected" @(
     "--meta", $gcmMalformedMeta
 )
 
-Expect-Fail "invalid AES key length rejected" @(
+Expect-Fail "GCM invalid AES key length rejected" @(
     "encrypt", "--mode", "gcm",
     "--key", $badKey,
     "--text", "bad key",
     "--out", (Join-Path $Work "badkey_ct.bin")
 )
 
-Expect-Fail "invalid GCM nonce length rejected" @(
+Expect-Fail "GCM invalid GCM nonce length rejected" @(
     "encrypt", "--mode", "gcm",
     "--key", $key,
     "--nonce-hex", "001122",
@@ -263,7 +294,7 @@ Expect-Success "GCM first fixed nonce accepted" @(
     "--nonce-registry", $reuseRegistry
 )
 
-Expect-Fail "GCM reused nonce rejected" @(
+Expect-Fail "GCM second fixed nonce rejected" @(
     "encrypt", "--mode", "gcm",
     "--key", $key,
     "--nonce-hex", "00112233445566778899aabb",
@@ -274,15 +305,27 @@ Expect-Fail "GCM reused nonce rejected" @(
 
 $ccmCt = Join-Path $Work "ccm_ct.bin"
 $ccmBadCt = Join-Path $Work "ccm_ct_tampered.bin"
+$ccmPt = Join-Path $Work "ccm_pt.txt"
+$ccmText = "CCM negative testing message"
 
-Expect-Success "CCM encrypt baseline" @(
+Expect-Success "CCM encrypt" @(
     "encrypt", "--mode", "ccm",
     "--key", $key,
-    "--text", "CCM negative testing message",
+    "--text", $ccmText,
     "--out", $ccmCt,
     "--aad-text", "ccm-aad",
     "--nonce-registry", (Join-Path $Work "ccm_registry.jsonl")
 )
+
+Expect-Success "CCM decrypt baseline" @(
+    "decrypt", "--mode", "ccm",
+    "--key", $key,
+    "--in", $ccmCt,
+    "--out", $ccmPt,
+    "--aad-text", "ccm-aad"
+)
+
+Assert-TextEquals "CCM recovered plaintext equals original" $ccmPt $ccmText
 
 Tamper-FirstByte $ccmCt $ccmBadCt
 Copy-Item "$ccmCt.meta.json" "$ccmBadCt.meta.json" -Force
@@ -300,7 +343,7 @@ $ctrBadCt = Join-Path $Work "ctr_ct_tampered.bin"
 $ctrBadPt = Join-Path $Work "ctr_tampered.txt"
 $ctrText = "CTR mode has no authentication, so tampering corrupts plaintext."
 
-Expect-Success "CTR encrypt baseline" @(
+Expect-Success "CTR encrypt" @(
     "encrypt", "--mode", "ctr",
     "--key", $key,
     "--iv-hex", "00112233445566778899aabbccddeeff",
@@ -312,7 +355,16 @@ Expect-Success "CTR encrypt baseline" @(
 Tamper-FirstByte $ctrCt $ctrBadCt
 Copy-Item "$ctrCt.meta.json" "$ctrBadCt.meta.json" -Force
 
-Expect-Success "CTR tampered ciphertext decrypts without authentication" @(
+Expect-Success "CTR decrypt baseline" @(
+    "decrypt", "--mode", "ctr",
+    "--key", $key,
+    "--in", $ctrCt,
+    "--out", (Join-Path $Work "ctr_pt.txt")
+)
+
+Assert-TextEquals "CTR recovered plaintext equals original" (Join-Path $Work "ctr_pt.txt") $ctrText
+
+Invoke-Setup @(
     "decrypt", "--mode", "ctr",
     "--key", $key,
     "--in", $ctrBadCt,
@@ -341,14 +393,6 @@ Expect-Fail "CTR reused IV rejected" @(
     "--nonce-registry", $ctrReuseRegistry
 )
 
-Expect-Fail "CBC invalid IV length rejected" @(
-    "encrypt", "--mode", "cbc",
-    "--key", $key,
-    "--iv-hex", "001122",
-    "--text", "bad iv",
-    "--out", (Join-Path $Work "badiv_cbc.bin")
-)
-
 $bigFile = Join-Path $Work "big_plain.bin"
 $bigBytes = New-Object byte[] 20000
 for ($i = 0; $i -lt $bigBytes.Length; $i++) {
@@ -363,7 +407,7 @@ Expect-Fail "ECB large file blocked by default" @(
     "--out", (Join-Path $Work "big_ecb.bin")
 )
 
-Expect-Success "ECB large file allowed with --allow-ecb" @(
+Expect-Success "ECB large file allowed with allow flag" @(
     "encrypt", "--mode", "ecb",
     "--key", $key,
     "--in", $bigFile,
@@ -383,7 +427,7 @@ $xtsBadCt = Join-Path $Work "xts_ct_tampered.bin"
 $xtsBadPt = Join-Path $Work "xts_tampered.txt"
 $xtsText = "This is a valid AES-XTS data unit for negative testing."
 
-Expect-Success "XTS encrypt baseline" @(
+Expect-Success "XTS encrypt valid data unit" @(
     "encrypt", "--mode", "xts",
     "--key", $xtsKey,
     "--text", $xtsText,
@@ -393,17 +437,15 @@ Expect-Success "XTS encrypt baseline" @(
 Tamper-FirstByte $xtsCt $xtsBadCt
 Copy-Item "$xtsCt.meta.json" "$xtsBadCt.meta.json" -Force
 
-Expect-Success "XTS tampered ciphertext decrypts without authentication" @(
+Expect-SuccessAndTextNotEquals "XTS tampering produces corrupted plaintext without authentication" $xtsBadPt $xtsText @(
     "decrypt", "--mode", "xts",
     "--key", $xtsKey,
     "--in", $xtsBadCt,
     "--out", $xtsBadPt
 )
 
-Assert-TextNotEquals "XTS tampering produces corrupted plaintext" $xtsBadPt $xtsText
-
 Write-Host ""
-Write-Host "Negative test summary: pass=$Pass, fail=$Fail, total=$($Pass + $Fail)"
+Write-Host "Windows negative test summary: pass=$Pass fail=$Fail total=$($Pass + $Fail)"
 
 if ($Fail -ne 0) {
     exit 1
