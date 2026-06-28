@@ -1,0 +1,22 @@
+===== Artifact inventory: Linux =====
+Binaries:
+aestool 753600 bytes
+aestool_unit_tests 989032 bytes
+
+Logs:
+artifact_inventory_linux_standard.log 108 bytes
+bench_linux_standard.log 6098 bytes
+build_linux_standard.log 270 bytes
+configure_linux_standard.log 251 bytes
+ctest_linux_standard.log 2353 bytes
+environment_linux_standard.log 1397 bytes
+help_linux_standard.log 1889 bytes
+kat_linux_standard.log 1342 bytes
+negative_tests_linux_standard.log 1243 bytes
+unit_tests_linux_standard.log 1960 bytes
+
+Benchmark CSV:
+bench_linux_raw.csv 185605 bytes
+bench_linux_smoke_raw.csv 4104 bytes
+bench_linux_smoke_summary.csv 2650 bytes
+bench_linux_summary.csv 11733 bytes

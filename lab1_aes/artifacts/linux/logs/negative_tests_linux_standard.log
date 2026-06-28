@@ -1,0 +1,34 @@
+Running negative tests with: /home/rvan1102/Crypto_Labs_All/lab1_aes/build-linux/aestool
+Working directory: /tmp/lab1_negative_tests.lSWiPx
+
+[PASS] Generate AES-256 key
+[PASS] Generate wrong AES-256 key
+[PASS] GCM encrypt
+[PASS] GCM decrypt
+[PASS] GCM recovered plaintext equals original
+[PASS] GCM wrong key rejected
+[PASS] GCM wrong AAD rejected
+[PASS] GCM tampered ciphertext rejected
+[PASS] GCM tampered tag rejected
+[PASS] GCM malformed metadata rejected
+[PASS] GCM invalid AES key length rejected
+[PASS] GCM invalid GCM nonce length rejected
+[PASS] GCM first fixed nonce accepted
+[PASS] GCM second fixed nonce rejected
+[PASS] CCM encrypt
+[PASS] CCM decrypt baseline
+[PASS] CCM recovered plaintext equals original
+[PASS] CCM tampered ciphertext rejected
+[PASS] CTR encrypt
+[PASS] CTR decrypt baseline
+[PASS] CTR recovered plaintext equals original
+[PASS] CTR tampering produces corrupted plaintext
+[PASS] CTR first IV accepted
+[PASS] CTR reused IV rejected
+[PASS] ECB large file blocked by default
+[PASS] ECB large file allowed with allow flag
+[PASS] XTS short input rejected
+[PASS] XTS encrypt valid data unit
+[PASS] XTS tampering produces corrupted plaintext without authentication
+
+Linux negative test summary: pass=29 fail=0 total=29

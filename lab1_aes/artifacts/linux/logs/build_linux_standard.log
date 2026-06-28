@@ -1,0 +1,6 @@
+[ 76%] Built target aestool_core
+[100%] Built target aestool
+[100%] Built target aestool_unit_tests
+
+Built binary: /home/rvan1102/Crypto_Labs_All/lab1_aes/build-linux/aestool
+Built unit test binary: /home/rvan1102/Crypto_Labs_All/lab1_aes/build-linux/aestool_unit_tests
