@@ -5,10 +5,22 @@ param(
 $ErrorActionPreference = "Stop"
 
 $Root = Split-Path -Parent $PSScriptRoot
+$ExeCandidate = $Exe
+if (![IO.Path]::IsPathRooted($ExeCandidate)) {
+    $FromCurrent = Join-Path (Get-Location) $ExeCandidate
+    $FromRoot = Join-Path $Root $ExeCandidate
+    if (Test-Path -LiteralPath $FromCurrent) {
+        $ExeCandidate = $FromCurrent
+    } else {
+        $ExeCandidate = $FromRoot
+    }
+}
+$Exe = [IO.Path]::GetFullPath($ExeCandidate)
 Set-Location $Root
 
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss_ffff"
-$Work = Join-Path $Root "tmp_negative_tests\$Stamp"
+$TempRoot = Join-Path $Root "tmp_negative_tests"
+$Work = Join-Path $TempRoot $Stamp
 New-Item -ItemType Directory -Force -Path $Work | Out-Null
 
 $Pass = 0
@@ -103,14 +115,23 @@ function Assert-BytesEqual($Name, $A, $B) {
     Write-Pass $Name
 }
 
+function Clear-TemporaryWork($Path) {
+    $ResolvedTempRoot = [IO.Path]::GetFullPath($TempRoot)
+    $ResolvedPath = [IO.Path]::GetFullPath($Path)
+    if ($ResolvedPath.StartsWith($ResolvedTempRoot, [StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $ResolvedPath)) {
+        Remove-Item -LiteralPath $ResolvedPath -Recurse -Force
+    }
+}
+
 Write-Host "Running Lab 3 negative tests with: $Exe"
 Write-Host "Working directory: $Work"
 Write-Host ""
 
-if (!(Test-Path $Exe)) {
+if (!(Test-Path -LiteralPath $Exe)) {
     throw "Executable not found: $Exe"
 }
 
+try {
 $priv = Join-Path $Work "private.der"
 $pub = Join-Path $Work "public.der"
 $wrongPriv = Join-Path $Work "wrong_private.der"
@@ -229,10 +250,13 @@ Assert-BytesEqual "auto large plaintext recovered" $tooLarge $autoLargeOut
 Expect-Fail "auto decrypt malformed envelope rejected" @("decrypt", "--priv", $priv, "--in", $autoLargeCt, "--envelope", $autoLargeMalformedEnv, "--out", (Join-Path $Work "auto_malformed.out"), "--label-text", "auto")
 
 Write-Host ""
-Write-Host "Negative test summary: pass=$Pass fail=$Fail"
+Write-Host "Windows negative test summary: pass=$Pass fail=$Fail total=$($Pass + $Fail)"
 
-if ($Fail -ne 0) {
+if ($Fail -ne 0 -or (($Pass + $Fail) -ne 40)) {
     exit 1
 }
 
 exit 0
+} finally {
+    Clear-TemporaryWork $Work
+}

@@ -1,7 +1,8 @@
 $ErrorActionPreference = "Stop"
 
-$Repo = "D:\Newfolder\Crypto_Labs_All"
-$Lab = Join-Path $Repo "lab3_rsa_hybrid"
+$ScriptDir = $PSScriptRoot
+$Lab = (Resolve-Path (Join-Path $ScriptDir "..\..")).Path
+$Repo = Split-Path -Parent $Lab
 
 Set-Location $Lab
 
@@ -9,173 +10,212 @@ $WinArtifacts = Join-Path $Lab "artifacts\windows"
 $LogDir = Join-Path $WinArtifacts "logs"
 $BenchDir = Join-Path $WinArtifacts "bench"
 $BinDir = Join-Path $WinArtifacts "binaries"
-$ReportDir = Join-Path $Lab "report"
+$VectorDir = Join-Path $WinArtifacts "vectors"
 
-New-Item -ItemType Directory -Force $LogDir, $BenchDir, $BinDir, $ReportDir | Out-Null
+New-Item -ItemType Directory -Force -Path $LogDir, $BenchDir, $BinDir, $VectorDir | Out-Null
 
-Write-Host "===== Lab 3 Windows evidence run started ====="
+$Logs = @{
+    Environment = Join-Path $LogDir "environment_windows_standard.log"
+    Configure = Join-Path $LogDir "configure_windows_standard.log"
+    Build = Join-Path $LogDir "build_windows_standard.log"
+    Help = Join-Path $LogDir "help_windows_standard.log"
+    CTest = Join-Path $LogDir "ctest_windows_standard.log"
+    Unit = Join-Path $LogDir "unit_tests_windows_standard.log"
+    Kat = Join-Path $LogDir "kat_windows_standard.log"
+    Negative = Join-Path $LogDir "negative_tests_windows_standard.log"
+    Bench = Join-Path $LogDir "bench_windows_standard.log"
+    Bench100M = Join-Path $LogDir "bench_windows_hybrid_100m_standard.log"
+    Inventory = Join-Path $LogDir "artifact_inventory_windows_standard.log"
+    Verification = Join-Path $LogDir "verification_summary_windows_standard.log"
+}
 
-Remove-Item -Recurse -Force build-windows -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force tmp_negative_tests -ErrorAction SilentlyContinue
+function Invoke-Text($Action) {
+    try {
+        return ((& $Action) 2>&1 | Out-String).Trim()
+    } catch {
+        return "unavailable: $($_.Exception.Message)"
+    }
+}
+
+function Invoke-LoggedNative([string]$Name, [string]$LogPath, [string]$FilePath, [string[]]$Arguments) {
+    Write-Host "===== $Name ====="
+    & $FilePath @Arguments *> $LogPath
+    $Code = $LASTEXITCODE
+    if ($Code -ne 0) {
+        Get-Content -LiteralPath $LogPath -ErrorAction SilentlyContinue
+        throw "$Name failed with exit code $Code"
+    }
+    Get-Content -LiteralPath $LogPath
+}
+
+function Assert-LogContains([string]$Name, [string]$LogPath, [string]$Pattern) {
+    if (!(Select-String -Path $LogPath -Pattern $Pattern -Quiet)) {
+        throw "$Name missing expected pattern: $Pattern"
+    }
+}
+
+function Copy-LegacyLog([string]$StandardPath, [string]$LegacyName) {
+    Copy-Item -LiteralPath $StandardPath -Destination (Join-Path $LogDir $LegacyName) -Force
+}
+
+Write-Host "===== Lab 3 Windows standardized evidence run started ====="
+
+Remove-Item -Recurse -Force (Join-Path $Lab "build-windows") -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force (Join-Path $Lab "tmp_negative_tests") -ErrorAction SilentlyContinue
 
 Write-Host "===== Environment ====="
-$EnvFile = Join-Path $Repo "lab3_windows_environment.txt"
-
+$CompilerPath = "C:\msys64\mingw64\bin\g++.exe"
 @"
 ===== OS =====
-$((Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture | Format-List | Out-String).Trim())
+$(Invoke-Text { Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture | Format-List })
 
-===== Computer =====
-$((Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model, TotalPhysicalMemory | Format-List | Out-String).Trim())
+===== Architecture =====
+PROCESSOR_ARCHITECTURE=$env:PROCESSOR_ARCHITECTURE
 
-===== CPU =====
-$((Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed | Format-List | Out-String).Trim())
+===== Machine / model =====
+$(Invoke-Text { Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model, TotalPhysicalMemory | Format-List })
 
-===== Disk =====
-$((Get-CimInstance Win32_DiskDrive | Select-Object Model, Size, MediaType | Format-Table -AutoSize | Out-String).Trim())
+===== CPU / cores / threads =====
+$(Invoke-Text { Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors, MaxClockSpeed | Format-List })
 
-===== PowerShell =====
-$($PSVersionTable | Out-String)
+===== RAM =====
+$(Invoke-Text { Get-CimInstance Win32_ComputerSystem | Select-Object TotalPhysicalMemory | Format-List })
 
 ===== Compiler =====
-$((& "C:\msys64\mingw64\bin\g++.exe" --version) 2>&1 | Out-String)
+$(Invoke-Text { & $CompilerPath --version })
 
 ===== CMake =====
-$((cmake --version) 2>&1 | Out-String)
+$(Invoke-Text { cmake --version })
 
-===== Crypto++ candidates =====
-$(Get-ChildItem "D:\Newfolder\Crypto++" -ErrorAction SilentlyContinue | Select-Object Name, Length | Format-Table -AutoSize | Out-String)
-"@ | Set-Content -Encoding UTF8 $EnvFile
+===== Crypto++ =====
+Include: D:\Newfolder\Crypto++
+Library: D:\Newfolder\Crypto++\libcryptopp.a
+$(Invoke-Text { Get-Item "D:\Newfolder\Crypto++\cryptlib.h", "D:\Newfolder\Crypto++\libcryptopp.a" | Select-Object FullName, Length | Format-Table -AutoSize })
+"@ | Set-Content -Encoding UTF8 $Logs.Environment
+Get-Content -LiteralPath $Logs.Environment
+Copy-LegacyLog $Logs.Environment "environment_windows.log"
 
 $CryptoInclude = "D:/Newfolder/Crypto++"
 $CryptoLib = "D:/Newfolder/Crypto++/libcryptopp.a"
-
-if (!(Test-Path "D:\Newfolder\Crypto++\libcryptopp.a")) {
+if (!(Test-Path -LiteralPath "D:\Newfolder\Crypto++\libcryptopp.a")) {
     throw "Cannot find Crypto++ library: D:\Newfolder\Crypto++\libcryptopp.a"
 }
 
-Write-Host "===== Configure ====="
-& cmake -S . -B build-windows `
-    -G "MinGW Makefiles" `
-    -DCMAKE_BUILD_TYPE=Release `
-    -DCMAKE_CXX_COMPILER="C:/msys64/mingw64/bin/g++.exe" `
-    -DCRYPTOPP_INCLUDE_DIR="$CryptoInclude" `
-    -DCRYPTOPP_LIBRARY="$CryptoLib" `
-    *> "$LogDir\configure_windows.log"
+Invoke-LoggedNative "Configure" $Logs.Configure "cmake" @(
+    "-S", ".",
+    "-B", "build-windows",
+    "-G", "MinGW Makefiles",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_CXX_COMPILER=C:/msys64/mingw64/bin/g++.exe",
+    "-DCRYPTOPP_INCLUDE_DIR=$CryptoInclude",
+    "-DCRYPTOPP_LIBRARY=$CryptoLib"
+)
+Copy-LegacyLog $Logs.Configure "configure_windows.log"
 
-Get-Content "$LogDir\configure_windows.log"
+Invoke-LoggedNative "Build" $Logs.Build "cmake" @("--build", "build-windows", "-j", $env:NUMBER_OF_PROCESSORS)
+Assert-LogContains "Build" $Logs.Build "Built target rsatool"
+Assert-LogContains "Build" $Logs.Build "Built target rsatool_unit_tests"
+Copy-LegacyLog $Logs.Build "build_windows.log"
 
-Write-Host "===== Build ====="
-& cmake --build build-windows -j $env:NUMBER_OF_PROCESSORS `
-    *> "$LogDir\build_windows.log"
+$Tool = (Resolve-Path (Join-Path $Lab "build-windows\rsatool.exe")).Path
+$UnitTool = (Resolve-Path (Join-Path $Lab "build-windows\rsatool_unit_tests.exe")).Path
 
-Get-Content "$LogDir\build_windows.log"
+Copy-Item -LiteralPath $Tool -Destination (Join-Path $BinDir "rsatool.exe") -Force
+Copy-Item -LiteralPath $UnitTool -Destination (Join-Path $BinDir "rsatool_unit_tests.exe") -Force
+Copy-Item -LiteralPath (Join-Path $Lab "vectors\rsa_hybrid_kat.json") -Destination (Join-Path $VectorDir "rsa_hybrid_kat.json") -Force
 
-Write-Host "===== Locate executable ====="
-$Tool = Join-Path $Lab "build-windows\rsatool.exe"
-$UnitTool = Join-Path $Lab "build-windows\rsatool_unit_tests.exe"
+Invoke-LoggedNative "Help / CLI" $Logs.Help $Tool @("--help")
+Copy-LegacyLog $Logs.Help "help_windows.log"
 
-if (!(Test-Path $Tool)) {
-    Write-Host "Executable files found:"
-    Get-ChildItem build-windows -Recurse -File | Where-Object { $_.Name -like "*.exe" } | Select-Object FullName
-    throw "Cannot find Lab 3 executable: $Tool"
-}
+Invoke-LoggedNative "CTest" $Logs.CTest "ctest" @("--test-dir", "build-windows", "--output-on-failure")
+Assert-LogContains "CTest" $Logs.CTest "100% tests passed, 0 tests failed out of 14"
+Copy-LegacyLog $Logs.CTest "ctest_windows.log"
 
-"Tool path: $Tool" | Tee-Object -FilePath "$LogDir\tool_path_windows.log"
+Invoke-LoggedNative "Unit tests" $Logs.Unit $UnitTool @()
+Copy-LegacyLog $Logs.Unit "unit_tests_windows.log"
 
-Copy-Item $Tool "$BinDir\rsatool.exe" -Force
-if (Test-Path $UnitTool) {
-    Copy-Item $UnitTool "$BinDir\rsatool_unit_tests.exe" -Force
-}
+Invoke-LoggedNative "KAT" $Logs.Kat $Tool @("kat", "--kat", "vectors\rsa_hybrid_kat.json")
+Assert-LogContains "KAT" $Logs.Kat "KAT summary: pass=5, fail=0, total=5"
+Add-Content -LiteralPath $Logs.Kat -Value "KAT standard: pass=5 fail=0 total=5"
+Copy-LegacyLog $Logs.Kat "kat_windows.log"
 
-Write-Host "===== Help ====="
-& $Tool --help *> "$LogDir\help_windows.log"
+Invoke-LoggedNative "Negative tests" $Logs.Negative "powershell.exe" @(
+    "-ExecutionPolicy", "Bypass",
+    "-File", (Join-Path $Lab "scripts\negative_tests_windows.ps1"),
+    $Tool
+)
+Assert-LogContains "Negative tests" $Logs.Negative "Windows negative test summary: pass=40 fail=0 total=40"
+Copy-LegacyLog $Logs.Negative "negative_tests_windows.log"
 
-Write-Host "===== CTest ====="
-& ctest --test-dir build-windows --output-on-failure `
-    *> "$LogDir\ctest_windows.log"
+Invoke-LoggedNative "Benchmark base" $Logs.Bench $Tool @(
+    "bench",
+    "--out", "artifacts\windows\bench\bench_windows_raw.csv",
+    "--summary", "artifacts\windows\bench\bench_windows_summary.csv",
+    "--runs", "10",
+    "--ops", "10",
+    "--sizes", "1k,16k,256k,1m",
+    "--rsa-sizes", "32,190,318",
+    "--rsa-bits", "3072,4096",
+    "--platform", "windows-mingw64"
+)
+Copy-LegacyLog $Logs.Bench "bench_windows.log"
 
-Get-Content "$LogDir\ctest_windows.log"
-
-Write-Host "===== KAT ====="
-& $Tool kat --kat vectors\rsa_hybrid_kat.json `
-    *> "$LogDir\kat_windows.log"
-
-Write-Host "===== Negative tests ====="
-if (Test-Path "scripts\negative_tests_windows.ps1") {
-    try {
-        & powershell -ExecutionPolicy Bypass -File "scripts\negative_tests_windows.ps1" $Tool `
-            *> "$LogDir\negative_tests_windows.log"
-    } catch {
-        "First negative test invocation failed. Retrying without explicit tool argument." | Out-File "$LogDir\negative_tests_windows.log" -Append
-        & powershell -ExecutionPolicy Bypass -File "scripts\negative_tests_windows.ps1" `
-            *>> "$LogDir\negative_tests_windows.log"
-    }
-} else {
-    "scripts\negative_tests_windows.ps1 not found" | Set-Content "$LogDir\negative_tests_windows.log"
-}
-
-Write-Host "===== Benchmark ====="
-& $Tool bench `
-    --out artifacts\windows\bench\bench_windows_raw.csv `
-    --summary artifacts\windows\bench\bench_windows_summary.csv `
-    *> "$LogDir\bench_windows.log"
+Invoke-LoggedNative "Benchmark Hybrid 100 MiB" $Logs.Bench100M $Tool @(
+    "bench",
+    "--out", "artifacts\windows\bench\bench_windows_hybrid_100m_raw.csv",
+    "--summary", "artifacts\windows\bench\bench_windows_hybrid_100m_summary.csv",
+    "--runs", "30",
+    "--ops", "1",
+    "--sizes", "100m",
+    "--rsa-sizes", "32",
+    "--rsa-bits", "3072,4096",
+    "--platform", "windows-mingw64"
+)
+Copy-LegacyLog $Logs.Bench100M "bench_windows_hybrid_100m.log"
 
 Write-Host "===== Artifact inventory ====="
-Get-ChildItem artifacts\windows -Recurse -File |
-    Sort-Object FullName |
-    ForEach-Object { $_.FullName.Replace($Lab + "\", "") } |
-    Set-Content "$LogDir\artifact_inventory_windows.log"
-
-Write-Host "===== Screenshot command guide ====="
-@'
-# Lab 3 Windows screenshot commands
-
-## W01 - Windows artifacts tree
-cd D:\Newfolder\Crypto_Labs_All
-Get-ChildItem lab3_rsa_hybrid\artifacts\windows -Recurse -File | Sort-Object FullName
-
-## W02 - Lab 3 tool help
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Get-Content artifacts\windows\logs\help_windows.log
-
-## W03 - CTest result
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Get-Content artifacts\windows\logs\ctest_windows.log
-
-## W04 - KAT result
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Get-Content artifacts\windows\logs\kat_windows.log
-
-## W05 - Negative tests
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Get-Content artifacts\windows\logs\negative_tests_windows.log
-
-## W06 - Benchmark files
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Get-ChildItem artifacts\windows\bench | Format-Table Name, Length, LastWriteTime -AutoSize
-
-## W07 - RSA-OAEP direct mode evidence
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log,artifacts\windows\logs\kat_windows.log -Pattern "oaep|direct|small|limit|3072|4096"
-
-## W08 - Hybrid encryption evidence
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Select-String -Path artifacts\windows\logs\ctest_windows.log,artifacts\windows\logs\negative_tests_windows.log,artifacts\windows\logs\kat_windows.log -Pattern "hybrid|seal|open|aes|gcm|wrap|envelope"
-
-## W09 - Wrong key / wrong label evidence
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Select-String -Path artifacts\windows\logs\negative_tests_windows.log -Pattern "wrong|label|private|reject|fail"
-
-## W10 - Tamper / malformed envelope evidence
-cd D:\Newfolder\Crypto_Labs_All\lab3_rsa_hybrid
-Select-String -Path artifacts\windows\logs\negative_tests_windows.log -Pattern "tamper|malformed|ciphertext|tag|version|algorithm|envelope"
-'@ | Set-Content -Encoding UTF8 "$ReportDir\capture_commands_windows.md"
+@(
+    "===== logs ====="
+    Get-ChildItem -LiteralPath $LogDir -File | Sort-Object Name | ForEach-Object { "logs/$($_.Name)" }
+    ""
+    "===== benchmark CSVs ====="
+    Get-ChildItem -LiteralPath $BenchDir -File -Filter "*.csv" | Sort-Object Name | ForEach-Object { "bench/$($_.Name)" }
+    ""
+    "===== generated vectors if any ====="
+    Get-ChildItem -LiteralPath $VectorDir -File -ErrorAction SilentlyContinue | Sort-Object Name | ForEach-Object { "vectors/$($_.Name)" }
+    ""
+    "===== binaries copied by evidence runner ====="
+    Get-ChildItem -LiteralPath $BinDir -File -ErrorAction SilentlyContinue | Sort-Object Name | ForEach-Object { "binaries/$($_.Name)" }
+) | Set-Content -Encoding UTF8 $Logs.Inventory
+Get-Content -LiteralPath $Logs.Inventory
+Copy-LegacyLog $Logs.Inventory "artifact_inventory_windows.log"
 
 Write-Host "===== Verification summary ====="
-Select-String -Path "$LogDir\ctest_windows.log" -Pattern "100% tests passed|tests failed" -ErrorAction SilentlyContinue
-Get-Content "$LogDir\kat_windows.log"
-Get-Content "$LogDir\negative_tests_windows.log"
-Get-ChildItem $BenchDir | Format-Table Name, Length, LastWriteTime -AutoSize
+$BaseRaw = Join-Path $BenchDir "bench_windows_raw.csv"
+$BaseSummary = Join-Path $BenchDir "bench_windows_summary.csv"
+$Hybrid100MSummary = Join-Path $BenchDir "bench_windows_hybrid_100m_summary.csv"
+$Checks = @(
+    @{ Name = "CTest 14/14"; Pass = (Select-String -Path $Logs.CTest -Pattern "100% tests passed, 0 tests failed out of 14" -Quiet) },
+    @{ Name = "KAT 5/5"; Pass = (Select-String -Path $Logs.Kat -Pattern "KAT standard: pass=5 fail=0 total=5" -Quiet) },
+    @{ Name = "negative tests 40/40"; Pass = (Select-String -Path $Logs.Negative -Pattern "Windows negative test summary: pass=40 fail=0 total=40" -Quiet) },
+    @{ Name = "base benchmark raw CSV exists"; Pass = (Test-Path -LiteralPath $BaseRaw) },
+    @{ Name = "base benchmark summary CSV exists"; Pass = (Test-Path -LiteralPath $BaseSummary) },
+    @{ Name = "Hybrid 100 MiB summary CSV exists"; Pass = (Test-Path -LiteralPath $Hybrid100MSummary) }
+)
+$VerificationLines = @("Lab 3 Windows standardized verification summary")
+$AllPassed = $true
+foreach ($Check in $Checks) {
+    if ($Check.Pass) {
+        $VerificationLines += "PASS - $($Check.Name)"
+    } else {
+        $VerificationLines += "FAIL - $($Check.Name)"
+        $AllPassed = $false
+    }
+}
+$VerificationLines | Set-Content -Encoding UTF8 $Logs.Verification
+Get-Content -LiteralPath $Logs.Verification
+if (!$AllPassed) {
+    throw "Verification summary contains failures."
+}
 
-Write-Host "===== Lab 3 Windows evidence run completed ====="
+Write-Host "===== Lab 3 Windows standardized evidence run completed ====="
