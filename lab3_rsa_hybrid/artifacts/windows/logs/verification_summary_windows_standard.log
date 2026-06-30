@@ -1,0 +1,7 @@
+﻿Lab 3 Windows standardized verification summary
+PASS - CTest 14/14
+PASS - KAT 5/5
+PASS - negative tests 40/40
+PASS - base benchmark raw CSV exists
+PASS - base benchmark summary CSV exists
+PASS - Hybrid 100 MiB summary CSV exists
