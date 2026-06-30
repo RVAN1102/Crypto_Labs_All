@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="$HOME/Crypto_Labs_All"
-LAB="$REPO/lab3_rsa_hybrid"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAB="$(cd "$SCRIPT_DIR/../.." && pwd)"
+REPO="$(cd "$LAB/.." && pwd)"
 
 cd "$LAB"
 
@@ -10,11 +11,57 @@ LINUX_ARTIFACTS="$LAB/artifacts/linux"
 LOG_DIR="$LINUX_ARTIFACTS/logs"
 BENCH_DIR="$LINUX_ARTIFACTS/bench"
 BIN_DIR="$LINUX_ARTIFACTS/binaries"
-REPORT_DIR="$LAB/report"
+VECTOR_DIR="$LINUX_ARTIFACTS/vectors"
 
-mkdir -p "$LOG_DIR" "$BENCH_DIR" "$BIN_DIR" "$REPORT_DIR"
+mkdir -p "$LOG_DIR" "$BENCH_DIR" "$BIN_DIR" "$VECTOR_DIR"
 
-echo "===== Lab 3 Ubuntu evidence run started ====="
+ENV_LOG="$LOG_DIR/environment_linux_standard.log"
+CONFIGURE_LOG="$LOG_DIR/configure_linux_standard.log"
+BUILD_LOG="$LOG_DIR/build_linux_standard.log"
+HELP_LOG="$LOG_DIR/help_linux_standard.log"
+CTEST_LOG="$LOG_DIR/ctest_linux_standard.log"
+UNIT_LOG="$LOG_DIR/unit_tests_linux_standard.log"
+KAT_LOG="$LOG_DIR/kat_linux_standard.log"
+NEGATIVE_LOG="$LOG_DIR/negative_tests_linux_standard.log"
+BENCH_LOG="$LOG_DIR/bench_linux_standard.log"
+BENCH_100M_LOG="$LOG_DIR/bench_linux_hybrid_100m_standard.log"
+INVENTORY_LOG="$LOG_DIR/artifact_inventory_linux_standard.log"
+VERIFY_LOG="$LOG_DIR/verification_summary_linux_standard.log"
+
+run_logged() {
+  local name="$1"
+  local log="$2"
+  shift 2
+
+  echo "===== $name ====="
+  set +e
+  "$@" > "$log" 2>&1
+  local code=$?
+  set -e
+  cat "$log"
+  if [ "$code" -ne 0 ]; then
+    echo "$name failed with exit code $code" >&2
+    exit "$code"
+  fi
+}
+
+assert_log_contains() {
+  local name="$1"
+  local log="$2"
+  local pattern="$3"
+  if ! grep -qE "$pattern" "$log"; then
+    echo "$name missing expected pattern: $pattern" >&2
+    exit 1
+  fi
+}
+
+copy_legacy_log() {
+  local standard_path="$1"
+  local legacy_name="$2"
+  cp "$standard_path" "$LOG_DIR/$legacy_name"
+}
+
+echo "===== Lab 3 Ubuntu standardized evidence run started ====="
 
 rm -rf build-linux tmp_negative_tests
 
@@ -24,11 +71,17 @@ echo "===== Environment ====="
   lsb_release -a 2>/dev/null || cat /etc/os-release
   echo
 
-  echo "===== Kernel ====="
+  echo "===== Architecture ====="
+  uname -m
   uname -a
   echo
 
-  echo "===== CPU ====="
+  echo "===== Machine / model ====="
+  cat /sys/devices/virtual/dmi/id/sys_vendor 2>/dev/null || true
+  cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null || true
+  echo
+
+  echo "===== CPU / cores / threads ====="
   lscpu
   echo
 
@@ -36,13 +89,11 @@ echo "===== Environment ====="
   free -h
   echo
 
-  echo "===== Disk ====="
-  lsblk -o NAME,MODEL,SIZE,TYPE,MOUNTPOINT
-  echo
-
   echo "===== Compiler ====="
   g++ --version
   echo
+
+  echo "===== CMake ====="
   cmake --version
   echo
 
@@ -51,117 +102,148 @@ echo "===== Environment ====="
   ls -l /usr/include/cryptopp/cryptlib.h 2>/dev/null || true
   ls -l /usr/include/crypto++/cryptlib.h 2>/dev/null || true
   ls -l /usr/lib/x86_64-linux-gnu/libcryptopp.* 2>/dev/null || true
-} > "$REPO/lab3_ubuntu_environment.txt"
+} > "$ENV_LOG"
+cat "$ENV_LOG"
+copy_legacy_log "$ENV_LOG" "environment_linux.log"
 
-echo "===== Configure ====="
-cmake -S . -B build-linux -DCMAKE_BUILD_TYPE=Release \
-  > "$LOG_DIR/configure_linux.log" 2>&1
-cat "$LOG_DIR/configure_linux.log"
+run_logged "Configure" "$CONFIGURE_LOG" cmake -S . -B build-linux -DCMAKE_BUILD_TYPE=Release
+copy_legacy_log "$CONFIGURE_LOG" "configure_linux.log"
 
-echo "===== Build ====="
-cmake --build build-linux -j"$(nproc)" \
-  > "$LOG_DIR/build_linux.log" 2>&1
-cat "$LOG_DIR/build_linux.log"
+run_logged "Build" "$BUILD_LOG" cmake --build build-linux -j"$(nproc)"
+assert_log_contains "Build" "$BUILD_LOG" "Built target rsatool"
+assert_log_contains "Build" "$BUILD_LOG" "Built target rsatool_unit_tests"
+copy_legacy_log "$BUILD_LOG" "build_linux.log"
 
-echo "===== Locate executable ====="
 TOOL="$LAB/build-linux/rsatool"
 UNIT_TOOL="$LAB/build-linux/rsatool_unit_tests"
-
 if [ ! -x "$TOOL" ]; then
   echo "Cannot find Lab 3 executable: $TOOL" >&2
-  find build-linux -maxdepth 3 -type f -executable | sort
+  find build-linux -maxdepth 3 -type f -executable | sort >&2 || true
+  exit 1
+fi
+if [ ! -x "$UNIT_TOOL" ]; then
+  echo "Cannot find Lab 3 unit-test executable: $UNIT_TOOL" >&2
+  find build-linux -maxdepth 3 -type f -executable | sort >&2 || true
   exit 1
 fi
 
-echo "Tool path: $TOOL" | tee "$LOG_DIR/tool_path_linux.log"
-
 cp "$TOOL" "$BIN_DIR/rsatool"
-if [ -x "$UNIT_TOOL" ]; then
-  cp "$UNIT_TOOL" "$BIN_DIR/rsatool_unit_tests"
-fi
+cp "$UNIT_TOOL" "$BIN_DIR/rsatool_unit_tests"
+cp "$LAB/vectors/rsa_hybrid_kat.json" "$VECTOR_DIR/rsa_hybrid_kat.json"
 
-echo "===== Help ====="
-"$TOOL" --help > "$LOG_DIR/help_linux.log" 2>&1 || true
+run_logged "Help / CLI" "$HELP_LOG" "$TOOL" --help
+copy_legacy_log "$HELP_LOG" "help_linux.log"
 
-echo "===== CTest ====="
-ctest --test-dir build-linux --output-on-failure \
-  > "$LOG_DIR/ctest_linux.log" 2>&1
-cat "$LOG_DIR/ctest_linux.log"
+run_logged "CTest" "$CTEST_LOG" ctest --test-dir build-linux --output-on-failure
+assert_log_contains "CTest" "$CTEST_LOG" "100% tests passed, 0 tests failed out of 14"
+copy_legacy_log "$CTEST_LOG" "ctest_linux.log"
 
-echo "===== KAT ====="
-{
-  echo "===== KAT: vectors/rsa_hybrid_kat.json ====="
-  "$TOOL" kat --kat vectors/rsa_hybrid_kat.json
-} > "$LOG_DIR/kat_linux.log" 2>&1
+run_logged "Unit tests" "$UNIT_LOG" "$UNIT_TOOL"
+copy_legacy_log "$UNIT_LOG" "unit_tests_linux.log"
 
-echo "===== Negative tests ====="
-if [ -f scripts/negative_tests_linux.sh ]; then
-  chmod +x scripts/negative_tests_linux.sh
-  bash scripts/negative_tests_linux.sh "$TOOL" \
-    > "$LOG_DIR/negative_tests_linux.log" 2>&1
-else
-  echo "scripts/negative_tests_linux.sh not found" > "$LOG_DIR/negative_tests_linux.log"
-fi
+run_logged "KAT" "$KAT_LOG" "$TOOL" kat --kat vectors/rsa_hybrid_kat.json
+assert_log_contains "KAT" "$KAT_LOG" "KAT summary: pass=5, fail=0, total=5"
+printf '%s\n' "KAT standard: pass=5 fail=0 total=5" >> "$KAT_LOG"
+copy_legacy_log "$KAT_LOG" "kat_linux.log"
 
-echo "===== Benchmark ====="
-"$TOOL" bench \
+run_logged "Negative tests" "$NEGATIVE_LOG" bash scripts/negative_tests_linux.sh "$TOOL"
+assert_log_contains "Negative tests" "$NEGATIVE_LOG" "Linux negative test summary: pass=40 fail=0 total=40"
+copy_legacy_log "$NEGATIVE_LOG" "negative_tests_linux.log"
+
+run_logged "Benchmark base" "$BENCH_LOG" "$TOOL" bench \
   --out artifacts/linux/bench/bench_linux_raw.csv \
   --summary artifacts/linux/bench/bench_linux_summary.csv \
-  > "$LOG_DIR/bench_linux.log" 2>&1 || true
+  --runs 10 \
+  --ops 10 \
+  --sizes 1k,16k,256k,1m \
+  --rsa-sizes 32,190,318 \
+  --rsa-bits 3072,4096 \
+  --platform linux
+copy_legacy_log "$BENCH_LOG" "bench_linux.log"
+
+run_logged "Benchmark Hybrid 100 MiB" "$BENCH_100M_LOG" "$TOOL" bench \
+  --out artifacts/linux/bench/bench_linux_hybrid_100m_raw.csv \
+  --summary artifacts/linux/bench/bench_linux_hybrid_100m_summary.csv \
+  --runs 30 \
+  --ops 1 \
+  --sizes 100m \
+  --rsa-sizes 32 \
+  --rsa-bits 3072,4096 \
+  --platform linux
+copy_legacy_log "$BENCH_100M_LOG" "bench_linux_hybrid_100m.log"
 
 echo "===== Artifact inventory ====="
-find artifacts/linux -maxdepth 4 -type f | sort \
-  > "$LOG_DIR/artifact_inventory_linux.log"
-
-echo "===== Screenshot command guide ====="
-cat > "$REPORT_DIR/capture_commands_ubuntu.md" <<'CMDS'
-# Lab 3 Ubuntu screenshot commands
-
-## U01 - Ubuntu artifacts tree
-cd ~/Crypto_Labs_All
-find lab3_rsa_hybrid/artifacts/linux -maxdepth 4 -type f | sort
-
-## U02 - Lab 3 tool help
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/help_linux.log
-
-## U03 - CTest result
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/ctest_linux.log
-
-## U04 - KAT result
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/kat_linux.log
-
-## U05 - Negative tests
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/negative_tests_linux.log
-
-## U06 - Benchmark files
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-find artifacts/linux/bench -maxdepth 1 -type f -print -exec ls -lh {} \;
-
-## U07 - RSA-OAEP direct mode evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "oaep|direct|small|limit|3072|4096" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
-
-## U08 - Hybrid encryption evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "hybrid|seal|open|aes|gcm|wrap|envelope" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
-
-## U09 - Wrong key / wrong label evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "wrong|label|private|reject|fail" artifacts/linux/logs/negative_tests_linux.log
-
-## U10 - Tamper / malformed envelope evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "tamper|malformed|ciphertext|tag|version|algorithm|envelope" artifacts/linux/logs/negative_tests_linux.log
-CMDS
+{
+  echo "===== logs ====="
+  find "$LOG_DIR" -maxdepth 1 -type f -printf 'logs/%f\n' | sort
+  echo
+  echo "===== benchmark CSVs ====="
+  find "$BENCH_DIR" -maxdepth 1 -type f -name '*.csv' -printf 'bench/%f\n' | sort
+  echo
+  echo "===== generated vectors if any ====="
+  find "$VECTOR_DIR" -maxdepth 1 -type f -printf 'vectors/%f\n' | sort
+  echo
+  echo "===== binaries copied by evidence runner ====="
+  find "$BIN_DIR" -maxdepth 1 -type f -printf 'binaries/%f\n' | sort
+} > "$INVENTORY_LOG"
+cat "$INVENTORY_LOG"
+copy_legacy_log "$INVENTORY_LOG" "artifact_inventory_linux.log"
 
 echo "===== Verification summary ====="
-grep -E "100% tests passed|tests failed" "$LOG_DIR/ctest_linux.log" || true
-grep -Ei "pass|fail|summary|kat" "$LOG_DIR/kat_linux.log" || true
-grep -Ei "pass|fail|summary|reject" "$LOG_DIR/negative_tests_linux.log" || true
-ls -lah "$BENCH_DIR"
+BASE_RAW="$BENCH_DIR/bench_linux_raw.csv"
+BASE_SUMMARY="$BENCH_DIR/bench_linux_summary.csv"
+HYBRID_100M_SUMMARY="$BENCH_DIR/bench_linux_hybrid_100m_summary.csv"
+verify_failed=0
+{
+  echo "Lab 3 Linux standardized verification summary"
 
-echo "===== Lab 3 Ubuntu evidence run completed ====="
+  if grep -q "100% tests passed, 0 tests failed out of 14" "$CTEST_LOG"; then
+    echo "PASS - CTest 14/14"
+  else
+    echo "FAIL - CTest 14/14"
+    verify_failed=1
+  fi
+
+  if grep -q "KAT standard: pass=5 fail=0 total=5" "$KAT_LOG"; then
+    echo "PASS - KAT 5/5"
+  else
+    echo "FAIL - KAT 5/5"
+    verify_failed=1
+  fi
+
+  if grep -q "Linux negative test summary: pass=40 fail=0 total=40" "$NEGATIVE_LOG"; then
+    echo "PASS - negative tests 40/40"
+  else
+    echo "FAIL - negative tests 40/40"
+    verify_failed=1
+  fi
+
+  if [ -f "$BASE_RAW" ]; then
+    echo "PASS - base benchmark raw CSV exists"
+  else
+    echo "FAIL - base benchmark raw CSV exists"
+    verify_failed=1
+  fi
+
+  if [ -f "$BASE_SUMMARY" ]; then
+    echo "PASS - base benchmark summary CSV exists"
+  else
+    echo "FAIL - base benchmark summary CSV exists"
+    verify_failed=1
+  fi
+
+  if [ -f "$HYBRID_100M_SUMMARY" ]; then
+    echo "PASS - Hybrid 100 MiB summary CSV exists"
+  else
+    echo "FAIL - Hybrid 100 MiB summary CSV exists"
+    verify_failed=1
+  fi
+} > "$VERIFY_LOG"
+cat "$VERIFY_LOG"
+
+if [ "$verify_failed" -ne 0 ]; then
+  echo "Verification summary contains failures." >&2
+  exit 1
+fi
+
+echo "===== Lab 3 Ubuntu standardized evidence run completed ====="

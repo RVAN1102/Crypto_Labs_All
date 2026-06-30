@@ -1,53 +1,118 @@
-# Lab 3 Ubuntu screenshot commands
+# Lab 3 Ubuntu Standardized Screenshot Commands
 
-## U01 - Ubuntu artifacts tree
-cd ~/Crypto_Labs_All
-find lab3_rsa_hybrid/artifacts/linux -maxdepth 4 -type f | sort
+Run from Bash.
 
-## U02 - Lab 3 tool help
+## 1. Environment summary
+
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/help_linux.log
+cat artifacts/linux/logs/environment_linux_standard.log
+```
 
-## U03 - CTest result
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/ctest_linux.log
+## 2. Configure and build summary
 
-## U04 - KAT result
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/kat_linux.log
+cat artifacts/linux/logs/configure_linux_standard.log
+cat artifacts/linux/logs/build_linux_standard.log
+```
 
-## U05 - Negative tests
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/negative_tests_linux.log
+## 3. Help / CLI usage
 
-## U06 - Benchmark files
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-find artifacts/linux/bench -maxdepth 1 -type f -print -exec ls -lh {} \;
+cat artifacts/linux/logs/help_linux_standard.log
+```
 
-## U07 - RSA-OAEP direct mode evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "oaep|direct|small|limit|3072|4096" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
+## 4. CTest result
 
-## U08 - Hybrid encryption evidence
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "hybrid|seal|open|aes|gcm|wrap|envelope" artifacts/linux/logs/ctest_linux.log artifacts/linux/logs/negative_tests_linux.log artifacts/linux/logs/kat_linux.log
+cat artifacts/linux/logs/ctest_linux_standard.log
+```
 
-## U09 - Wrong key / wrong label evidence
-cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "wrong|label|private|reject|fail" artifacts/linux/logs/negative_tests_linux.log
+## 5. Unit test result
 
-## U10 - Tamper / malformed envelope evidence
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-grep -iE "tamper|malformed|ciphertext|tag|version|algorithm|envelope" artifacts/linux/logs/negative_tests_linux.log
+cat artifacts/linux/logs/unit_tests_linux_standard.log
+```
 
-## U11 - Hybrid 100 MiB benchmark
+## 6. KAT result
+
+```bash
 cd ~/Crypto_Labs_All/lab3_rsa_hybrid
-cat artifacts/linux/logs/bench_linux_hybrid_100m.log
+cat artifacts/linux/logs/kat_linux_standard.log
+```
+
+## 7. Negative tests full 40-case result
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/negative_tests_linux_standard.log
+```
+
+## 8. Base benchmark file list and benchmark log
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+find artifacts/linux/bench -maxdepth 1 -type f -name 'bench_linux*.csv' -printf '%f %s bytes\n' | sort
+cat artifacts/linux/logs/bench_linux_standard.log
+```
+
+## 9. Hybrid 100 MiB benchmark result
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/bench_linux_hybrid_100m_standard.log
 python3 - <<'PY'
 import csv
-p='artifacts/linux/bench/bench_linux_hybrid_100m_summary.csv'
-with open(p, newline='') as f:
-    for r in csv.DictReader(f):
-        if r.get('family') == 'hybrid' and r.get('payload_bytes') == '104857600':
-            print(r)
+with open('artifacts/linux/bench/bench_linux_hybrid_100m_summary.csv', newline='') as f:
+    for row in csv.DictReader(f):
+        if row.get('family') == 'hybrid' and row.get('payload_bytes') == '104857600':
+            print(row)
 PY
+```
+
+## 10. OAEP limits and label evidence
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "OAEP|oversized|wrong label|plaintext recovered|direct RSA|small" artifacts/linux/logs/negative_tests_linux_standard.log artifacts/linux/logs/ctest_linux_standard.log
+```
+
+## 11. PEM key and corrupted PEM evidence
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "PEM|metadata|corrupted PEM|MGF1-SHA256" artifacts/linux/logs/negative_tests_linux_standard.log
+```
+
+## 12. Hybrid AES-GCM tamper evidence
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "hybrid tampered ciphertext|hybrid tampered GCM tag|hybrid tampered encrypted AES key" artifacts/linux/logs/negative_tests_linux_standard.log
+```
+
+## 13. Envelope metadata/version/algorithm/label-indicator evidence
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "malformed envelope|unsupported version|algorithm mismatch|label indicator mismatch" artifacts/linux/logs/negative_tests_linux_standard.log
+```
+
+## 14. Auto mode small/large switching evidence
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+grep -iE "auto encrypt small|auto small|auto decrypt small|auto encrypt large|auto large" artifacts/linux/logs/negative_tests_linux_standard.log
+```
+
+## 15. Artifact inventory and verification summary
+
+```bash
+cd ~/Crypto_Labs_All/lab3_rsa_hybrid
+cat artifacts/linux/logs/artifact_inventory_linux_standard.log
+cat artifacts/linux/logs/verification_summary_linux_standard.log
+```

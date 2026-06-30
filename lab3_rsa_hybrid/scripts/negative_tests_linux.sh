@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 set -u
 
-EXE="${1:-./build/rsatool}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-WORK="$ROOT/tmp_negative_tests/$(date +%Y%m%d_%H%M%S)_$$"
+INPUT_EXE="${1:-./build/rsatool}"
+if [[ "$INPUT_EXE" = /* ]]; then
+  EXE="$INPUT_EXE"
+elif [ -e "$INPUT_EXE" ]; then
+  EXE="$(cd "$(dirname "$INPUT_EXE")" && pwd)/$(basename "$INPUT_EXE")"
+elif [ -e "$ROOT/$INPUT_EXE" ]; then
+  EXE="$(cd "$(dirname "$ROOT/$INPUT_EXE")" && pwd)/$(basename "$INPUT_EXE")"
+else
+  EXE="$(pwd)/$INPUT_EXE"
+fi
+
+TMP_ROOT="$ROOT/tmp_negative_tests"
+WORK="$TMP_ROOT/$(date +%Y%m%d_%H%M%S)_$$"
 mkdir -p "$WORK"
+
+cleanup() {
+  case "$WORK" in
+    "$TMP_ROOT"/*)
+      rm -rf "$WORK"
+      ;;
+  esac
+}
+trap cleanup EXIT
 
 PASS=0
 FAIL=0
@@ -34,6 +54,29 @@ expect_fail() {
 tamper_first_byte() {
   cp "$1" "$2"
   printf '\x01' | dd of="$2" bs=1 count=1 conv=notrunc status=none
+}
+
+tamper_envelope_hex_field() {
+  python3 - "$1" "$2" "$3" <<'PY'
+import re
+import sys
+
+inp, out, field = sys.argv[1:]
+with open(inp, "r", encoding="ascii") as f:
+    text = f.read()
+
+pattern = rf'"{re.escape(field)}"\s*:\s*"([0-9a-fA-F]+)"'
+match = re.search(pattern, text)
+if not match:
+    raise SystemExit(f"Field not found: {field}")
+
+old = match.group(1)
+new = ("1" if old[0] == "0" else "0") + old[1:]
+text = text[:match.start(1)] + new + text[match.end(1):]
+
+with open(out, "w", encoding="ascii") as f:
+    f.write(text)
+PY
 }
 
 if [ ! -x "$EXE" ]; then
@@ -112,6 +155,15 @@ expect_fail "hybrid wrong private key rejected" open --priv "$WRONG_PRIV" --in "
 tamper_first_byte "$CT" "$WORK/tampered.ct"
 expect_fail "hybrid tampered ciphertext rejected" open --priv "$PRIV" --in "$WORK/tampered.ct" --envelope "$ENV" --out "$WORK/tampered.out" --label-text right
 
+tamper_envelope_hex_field "$ENV" "$WORK/bad_tag.env.json" "tag_hex"
+expect_fail "hybrid tampered GCM tag rejected" open --priv "$PRIV" --in "$CT" --envelope "$WORK/bad_tag.env.json" --out "$WORK/bad_tag.out" --label-text right
+
+tamper_envelope_hex_field "$ENV" "$WORK/bad_key.env.json" "encrypted_key_hex"
+expect_fail "hybrid tampered encrypted AES key rejected" open --priv "$PRIV" --in "$CT" --envelope "$WORK/bad_key.env.json" --out "$WORK/bad_key.out" --label-text right
+
+sed -E 's/"nonce_hex"[[:space:]]*:[[:space:]]*"[0-9a-fA-F]+",[[:space:]]*//' "$ENV" > "$WORK/malformed.env.json"
+expect_fail "hybrid malformed envelope rejected" open --priv "$PRIV" --in "$CT" --envelope "$WORK/malformed.env.json" --out "$WORK/malformed.out" --label-text right
+
 sed -E 's/"version"[[:space:]]*:[[:space:]]*1/"version": 99/' "$ENV" > "$WORK/bad_version.env.json"
 expect_fail "hybrid unsupported version rejected" open --priv "$PRIV" --in "$CT" --envelope "$WORK/bad_version.env.json" --out "$WORK/bad_version.out" --label-text right
 
@@ -144,5 +196,6 @@ cmp -s "$WORK/too_large.bin" "$AUTO_LARGE_OUT" && pass "auto large plaintext rec
 sed -E 's/"tag_hex"[[:space:]]*:[[:space:]]*"[0-9a-fA-F]+"/"tag_hex": "00"/' "$AUTO_LARGE_CT.envelope.json" > "$AUTO_LARGE_MALFORMED_ENV"
 expect_fail "auto decrypt malformed envelope rejected" decrypt --priv "$PRIV" --in "$AUTO_LARGE_CT" --envelope "$AUTO_LARGE_MALFORMED_ENV" --out "$WORK/auto_malformed.out" --label-text auto
 
-echo "Negative test summary: pass=$PASS fail=$FAIL"
-[ "$FAIL" -eq 0 ]
+TOTAL=$((PASS + FAIL))
+echo "Linux negative test summary: pass=$PASS fail=$FAIL total=$TOTAL"
+[ "$FAIL" -eq 0 ] && [ "$TOTAL" -eq 40 ]
